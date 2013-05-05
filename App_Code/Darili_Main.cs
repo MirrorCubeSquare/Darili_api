@@ -304,13 +304,20 @@ namespace Darili_api
         }
 
         //外部调用：显示所有公共可访问的活动
-        public static Event[] GetTimeSpan(DateTime ST, DateTime ET)
+        public static Event[] GetTimeSpan(DateTime ST, DateTime ET,bool isAll)
         {
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             var quary = from entry in ctx.EventMain
                         where entry.StartTime >= ST && entry.EndTime <= ET && entry.ViewFlag >= 0
                         orderby entry.PublishTime descending
                         select entry;
+            if (isAll == true)
+            {
+               quary = from entry in ctx.EventMain
+                            where entry.StartTime >= ST && entry.EndTime <= ET
+                            orderby entry.PublishTime descending
+                            select entry;
+            }
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
             foreach (EventMain t in temp)
@@ -346,6 +353,8 @@ namespace Darili_api
         }
         public static Event[] GetTimeSpan(DateTime ST, DateTime ET, string type,string subtype,bool IsAll)
         {
+            if (subtype == "") return GetTimeSpan(ST, ET, type, IsAll);
+
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             var quary = from entry in ctx.EventMain
                         where entry.StartTime >= ST && entry.EndTime <= ET && entry.ViewFlag >= 0 && entry.Type == type && entry.SubType == subtype
@@ -376,10 +385,37 @@ namespace Darili_api
             return list.ToArray();
 
         }
-
-        public static Event[] GetTimeSpan(DateTime StartTime, TimeSpan Span)
+        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, string type, bool IsAll)
         {
-            return GetTimeSpan(StartTime, StartTime.Add(Span));
+            if (type == "") return GetTimeSpan(StartTime, EndTime, IsAll);
+            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+            var quary = from entry in ctx.EventMain
+                        where entry.StartTime >= StartTime && entry.EndTime <=EndTime && entry.ViewFlag >= 0 && entry.Type == type 
+                        orderby entry.PublishTime descending
+                        select entry;
+            if (IsAll == true)
+            {
+                quary = from entry in ctx.EventMain
+                        where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type
+                        orderby entry.PublishTime descending
+                        select entry;
+            }
+            EventMain[] temp = quary.ToArray();
+            List<Event> list = new List<Event>();
+            foreach (EventMain t in temp)
+            {
+                list.Add(t);
+
+            }
+            foreach (Event t in list)
+            {
+                t.MultipleTime = GetMultipleTime(t.Id);
+                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
+
+            }
+            var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            list.Sort(comp);
+            return list.ToArray();
         }
         public static Event[] GetTimeSpan(DateTime StartTime, TimeSpan Span,bool IsAll)
 
