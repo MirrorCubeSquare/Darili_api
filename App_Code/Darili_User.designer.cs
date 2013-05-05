@@ -21,7 +21,7 @@ using System.Reflection;
 
 
 
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="newDARILI")]
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Darili")]
 public partial class Darili_UserDataContext : System.Data.Linq.DataContext
 {
 	
@@ -91,6 +91,8 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private string _User_Realname;
 	
+	private System.Nullable<System.DateTime> _User_LastLoginTime;
+	
     #region 可扩展性方法定义
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -107,6 +109,8 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
     partial void OnUser_CellPhoneChanged();
     partial void OnUser_RealnameChanging(string value);
     partial void OnUser_RealnameChanged();
+    partial void OnUser_LastLoginTimeChanging(System.Nullable<System.DateTime> value);
+    partial void OnUser_LastLoginTimeChanged();
     #endregion
 	
 	public Event_Users()
@@ -154,7 +158,7 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Event_Like", DbType="Xml", CanBeNull=true, UpdateCheck=UpdateCheck.Never)]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Event_Like", DbType="Xml", UpdateCheck=UpdateCheck.Never)]
 	public System.Xml.Linq.XElement User_Event_Like
 	{
 		get
@@ -174,7 +178,7 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Event_Go", DbType="Xml", CanBeNull=true, UpdateCheck=UpdateCheck.Never)]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Event_Go", DbType="Xml", UpdateCheck=UpdateCheck.Never)]
 	public System.Xml.Linq.XElement User_Event_Go
 	{
 		get
@@ -230,6 +234,26 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 				this._User_Realname = value;
 				this.SendPropertyChanged("User_Realname");
 				this.OnUser_RealnameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_LastLoginTime", DbType="DateTime")]
+	public System.Nullable<System.DateTime> User_LastLoginTime
+	{
+		get
+		{
+			return this._User_LastLoginTime;
+		}
+		set
+		{
+			if ((this._User_LastLoginTime != value))
+			{
+				this.OnUser_LastLoginTimeChanging(value);
+				this.SendPropertyChanging();
+				this._User_LastLoginTime = value;
+				this.SendPropertyChanged("User_LastLoginTime");
+				this.OnUser_LastLoginTimeChanged();
 			}
 		}
 	}

@@ -217,6 +217,32 @@ public class Darili_User
         return status;
 
     }
+    //记录登陆时间
+    public static void RecordLoginTime(string NickName)
+    {
+        var ctx = new Darili_UserDataContext();
+        if (IsInitialized(NickName))
+        {
+            var user = ctx.Event_Users.Single(c => c.User_NickName == NickName);
+            user.User_LastLoginTime = DateTime.Now;
+            try
+            {
+                ctx.SubmitChanges();
+            }
+            catch (ChangeConflictException)
+            {
+                foreach (ObjectChangeConflict confict in ctx.ChangeConflicts)
+                {
+                    confict.Resolve(RefreshMode.OverwriteCurrentValues);
+                }
+                ctx.SubmitChanges();
+            }
+            finally
+            {
+
+            }
+        }
+    }
     //编辑用户信息（预留管理用借口）
     //1=成功 0=异常 -1=编辑冲突（覆盖前值）
     public static int UpdateUserInfo(string NickName,string RealName, string cellphone)
@@ -311,5 +337,29 @@ public class Darili_User
         }
         return JsonConvert.SerializeXNode(User_Root);
     }
+    public static int GetUnreadMessage(string NickName,string cat,string subcat)
+    {
+        var uctx = new Darili_UserDataContext();
+        var evectx = new Darili_LinqDataContext();
+        if (IsInitialized(NickName))
+        {
+            var user = uctx.Event_Users.Single(c => c.User_NickName == NickName);
+            var events = from entry in evectx.EventMain
+                         where entry.PublishTime >= user.User_LastLoginTime
+                         select entry;
+            if (subcat == "" || subcat == null)
+            {
+                if (cat != null && cat != "")
+                    return events.Count(c => c.Type == cat);
+                else return events.Count();
+            }
+            else
+            {
+                return events.Count(c => c.Type == cat && c.SubType == subcat);
+            }
+            throw new Exception("未知错误");
 
+        }
+        else throw new ArgumentException("人物未初始化");
+    }
 }
