@@ -25,11 +25,23 @@ public partial class Event_Data : System.Web.UI.Page
             string timeoffset = Request.QueryString["timeoffset"];
             XElement Xml_Root = new XElement("allevents", null);
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+            Event[] events=new Event[1];
             try
             {
-                
-                Event[] events = Event.GetTimeSpan(DateTime.Now.Date, DateTime.Now.Date + new TimeSpan(Int32.Parse(timeoffset) + 1, 0, 0, 0), cat, subcat, true);
-              
+
+                if (timeoffset == "0" || timeoffset == "1")
+                    events = Event.GetTimeSpan(DateTime.Now.Date, DateTime.Now.Date + new TimeSpan(Int32.Parse(timeoffset) + 1, 0, 0, 0), cat, subcat, true);
+                if (timeoffset == "2")
+                {
+                    int offset1 = int.Parse(Darili_EventManuever.Convert_DayOfWeek(DateTime.Now.DayOfWeek));
+                    events = Event.GetTimeSpan(DateTime.Now.Date - new TimeSpan(-offset1, 0, 0, 0), DateTime.Now.Date + new TimeSpan(-offset1 + 7, 0, 0, 0), cat, subcat, true);
+                }
+                if (timeoffset == "3")
+                {
+                    int offset1 = int.Parse(Darili_EventManuever.Convert_DayOfWeek(DateTime.Now.DayOfWeek));
+                    events = Event.GetTimeSpan(DateTime.Now.Date - new TimeSpan(-offset1 + 7, 0, 0, 0), DateTime.Now.Date + new TimeSpan(-offset1 + 14, 0, 0, 0), cat, subcat, true);
+
+                }
                 XElement[] Elements = Event.Translte_Xml(events).ToArray();
                 if (Elements != null)
                 {
