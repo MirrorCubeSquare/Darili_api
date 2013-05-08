@@ -422,42 +422,22 @@ namespace Darili_api
         {
             return GetTimeSpan(StartTime, StartTime.Add(Span),"","",IsAll);
         }
-        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, int take)
+        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, string type, string subtype, bool IsAll, int perpage, int page)
         {
+            if (subtype == ""||subtype==null) return GetTimeSpan(StartTime, EndTime, type, IsAll,perpage,page);
+
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             var quary = (from entry in ctx.EventMain
-                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0
-                         orderby entry.PublishTime descending
-                         select entry).Take(take);
-            EventMain[] temp = quary.ToArray();
-            List<Event> list = new List<Event>();
-            foreach (EventMain t in temp)
+                        where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 && entry.Type == type && entry.SubType == subtype
+                        orderby entry.PublishTime descending
+                        select entry).Skip(perpage*(page-1)).Take(page);
+            if (IsAll == true)
             {
-                list.Add(t);
-
-            }
-            foreach (Event t in list)
-            {
-                t.MultipleTime = GetMultipleTime(t.Id);
-                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-
-            }
-            return list.ToArray();
-
-
-        }
-        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, int take,bool IsAll)
-        {
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = (from entry in ctx.EventMain
-                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0
-                         orderby entry.PublishTime descending
-                         select entry).Take(take);
-            if(IsAll==true)
                 quary = (from entry in ctx.EventMain
-                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime
-                         orderby entry.PublishTime descending
-                         select entry).Take(take);
+                        where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type && entry.SubType == subtype
+                        orderby entry.PublishTime descending
+                        select entry).Skip(perpage*(page-1)).Take(page);
+            }
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
             foreach (EventMain t in temp)
@@ -471,9 +451,74 @@ namespace Darili_api
                 if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
 
             }
+            var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            list.Sort(comp);
             return list.ToArray();
+        }
+        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, string type, bool IsAll, int perpage, int page)
+        {
+            if (type == "" || type == null) return GetTimeSpan(StartTime,EndTime,IsAll,perpage,page);
+            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+            var quary = (from entry in ctx.EventMain
+                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 && entry.Type == type 
+                         orderby entry.PublishTime descending
+                         select entry).Skip(perpage * (page - 1)).Take(page);
+            if (IsAll == true)
+            {
+                quary = (from entry in ctx.EventMain
+                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type
+                         orderby entry.PublishTime descending
+                         select entry).Skip(perpage * (page - 1)).Take(page);
+            }
+            EventMain[] temp = quary.ToArray();
+            List<Event> list = new List<Event>();
+            foreach (EventMain t in temp)
+            {
+                list.Add(t);
 
+            }
+            foreach (Event t in list)
+            {
+                t.MultipleTime = GetMultipleTime(t.Id);
+                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
 
+            }
+            var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            list.Sort(comp);
+            return list.ToArray();
+        }
+
+        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, bool IsAll, int perpage, int page)
+        {
+            
+            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+            var quary = (from entry in ctx.EventMain
+                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 
+                         orderby entry.PublishTime descending
+                         select entry).Skip(perpage * (page - 1)).Take(page);
+            if (IsAll == true)
+            {
+                quary = (from entry in ctx.EventMain
+                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime 
+                         orderby entry.PublishTime descending
+                         select entry).Skip(perpage * (page - 1)).Take(page);
+            }
+            EventMain[] temp = quary.ToArray();
+            List<Event> list = new List<Event>();
+            foreach (EventMain t in temp)
+            {
+                list.Add(t);
+
+            }
+            foreach (Event t in list)
+            {
+                t.MultipleTime = GetMultipleTime(t.Id);
+                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
+
+            }
+            var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            list.Sort(comp);
+            return list.ToArray();
         }
         public static Event_Time[] GetMultipleTime(int id)
         {
