@@ -21,7 +21,7 @@ using System.Reflection;
 
 
 
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Darili")]
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="newDARILI")]
 public partial class Darili_UserDataContext : System.Data.Linq.DataContext
 {
 	
@@ -118,7 +118,7 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 		OnCreated();
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 	public int User_Id
 	{
 		get

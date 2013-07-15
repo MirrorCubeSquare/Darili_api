@@ -21,6 +21,30 @@ public class Darili_Extra
 		//TODO: 在此处添加构造函数逻辑
 		//
 	}
+    public static System.Drawing.Imaging.ImageFormat GetExt(string MIME)
+    {
+        switch (MIME.ToLower().Trim())
+        {
+            case "image/gif": return System.Drawing.Imaging.ImageFormat.Gif;
+            case "image/jpeg": return System.Drawing.Imaging.ImageFormat.Jpeg;
+            case "image/png": return System.Drawing.Imaging.ImageFormat.Png;
+            case "application/x-ms-bmp":
+            case "image/nbmp": return System.Drawing.Imaging.ImageFormat.Bmp;
+            default: return null;
+        }
+    }
+    public static string GetFormat(string MIME)
+    {
+        switch (MIME.ToLower().Trim())
+        {
+            case "image/gif": return ".gif";
+            case "image/jpeg": return ".Jpeg";
+            case "image/png": return ".Png";
+            case "application/x-ms-bmp":
+            case "image/nbmp": return ".Bmp";
+            default: return null;
+        }
+    }
     public static int GetSubscriptionNum(int id)
     {
         return 0;
@@ -86,4 +110,14 @@ public class Darili_Extra
         }
         return root.Elements().ToArray();
     }
+}
+public class Extra_Lecture
+{
+    public static readonly string[] HostClass = new string[]
+    {
+       "主办","协办","承办"
+    };
+
+    
+    
 }

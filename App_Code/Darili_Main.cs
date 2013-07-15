@@ -193,16 +193,6 @@ namespace Darili_api
                     eve.Event_MultipleTime.Add(time);
                 }
             }
-            if (ExtraInfo != null)
-            {
-                eve.Lecture = new Lecture
-                {
-                    Speaker = (string)ExtraInfo["speaker"],
-                    Class = (string)ExtraInfo["class"]
-                };
-                 
-
-            }
             ctx.EventMain.InsertOnSubmit(eve);
             try
             {
@@ -430,13 +420,13 @@ namespace Darili_api
             var quary = (from entry in ctx.EventMain
                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 && entry.Type == type && entry.SubType == subtype
                         orderby entry.PublishTime descending
-                        select entry).Skip(perpage*(page-1)).Take(page);
+                        select entry).Skip(perpage*(page-1)).Take(perpage);
             if (IsAll == true)
             {
                 quary = (from entry in ctx.EventMain
                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type && entry.SubType == subtype
                         orderby entry.PublishTime descending
-                        select entry).Skip(perpage*(page-1)).Take(page);
+                        select entry).Skip(perpage*(page-1)).Take(perpage);
             }
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
@@ -462,13 +452,13 @@ namespace Darili_api
             var quary = (from entry in ctx.EventMain
                          where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 && entry.Type == type 
                          orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page - 1)).Take(page);
+                         select entry).Skip(perpage * (page - 1)).Take(perpage);
             if (IsAll == true)
             {
                 quary = (from entry in ctx.EventMain
                          where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type
                          orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page - 1)).Take(page);
+                         select entry).Skip(perpage * (page - 1)).Take(perpage);
             }
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
@@ -495,13 +485,13 @@ namespace Darili_api
             var quary = (from entry in ctx.EventMain
                          where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 
                          orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page - 1)).Take(page);
+                         select entry).Skip(perpage * (page - 1)).Take(perpage);
             if (IsAll == true)
             {
                 quary = (from entry in ctx.EventMain
                          where entry.StartTime >= StartTime && entry.EndTime <= EndTime 
                          orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page - 1)).Take(page);
+                         select entry).Skip(perpage * (page - 1)).Take(perpage);
             }
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();

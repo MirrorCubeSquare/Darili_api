@@ -16,11 +16,78 @@ using Newtonsoft.Json.Linq;
 /// <summary>
 ///Darili_User 的摘要说明
 /// </summary>
+public class Darili_UserDetail
+{
+    public string weibo, major, name, dormitory, phone, birthday,grade,gender;
+    public Darili_UserDetail(string weibo,string major,string name,string dormitory,string phone,string birthday,string grade,string gender)
+    {
+        this.weibo = weibo;
+        this.major = major;
+        this.name = name;
+        this.dormitory = dormitory;
+        this.phone = phone;
+        this.birthday = birthday;
+        this.grade=grade;
+        this.gender=gender;
+    }
+    
+}
 public class Darili_User
 {
     // if (HttpContext.Current.User.Identity.Name != null)
     //Darili_LinqDataContext ctx = new Darili_LinqDataContext();
- 
+ //从stu_info中获取stu.user的Id
+    public static int Get_StuId(HttpCookie oCookie)
+    {
+        CookieContainer cookies = new CookieContainer();
+        HttpWebRequest request = WebRequest.Create("http://stu.fudan.edu.cn/user/info") as HttpWebRequest;
+        request.CookieContainer = cookies;
+
+
+        Cookie oC = new Cookie();
+
+        // Convert between the System.Net.Cookie to a System.Web.HttpCookie...
+        oC.Domain = request.RequestUri.Host;
+        oC.Expires = oCookie.Expires;
+        oC.Name = oCookie.Name;
+        oC.Path = oCookie.Path;
+        oC.Secure = oCookie.Secure;
+        oC.Value = oCookie.Value;
+
+        request.CookieContainer.Add(oC);
+        request.UserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.4 (KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4";
+        request.Accept = "text/plain,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        request.Timeout = 0x1388;
+        request.Method = "POST";
+        request.ContentType = "application/x-www-form-urlencoded";
+        ASCIIEncoding encoding = new ASCIIEncoding();
+        byte[] byteArray = encoding.GetBytes("tucao=411whatthefuck");
+        Stream newStream = request.GetRequestStream();
+        newStream.Write(byteArray, 0, byteArray.Length);//写入参数
+        newStream.Close();
+        HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+        if (response.StatusCode.Equals(HttpStatusCode.OK))
+        {
+            string content = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("GB2312")).ReadToEnd();
+            Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+            String success;
+            if (values.TryGetValue("success", out success))
+            {
+                if (success.Equals("1"))
+                {
+                    string id;
+                    values.TryGetValue("id", out id);
+                    return int.Parse(id);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+        return -1;
+    }
     //从stu_info中获取用户名信息
     public static Tuple<bool,string,string> Validate_StuCommon(HttpCookie oCookie)
     {
@@ -66,6 +133,55 @@ public class Darili_User
                     values.TryGetValue("stuno", out stuno);
                     values.TryGetValue("nickname", out nickname);
                     return new Tuple<bool,string,string>(true,stuno,nickname);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+    //从stu_info中获取用户详细信息
+    public static Darili_UserDetail Validate_StuDeatil(HttpCookie oCookie)
+    {
+        var id = Get_StuId(oCookie);
+        CookieContainer cookies = new CookieContainer();
+        HttpWebRequest request = WebRequest.Create("http://stu.fudan.edu.cn/user/profile/"+id.ToString()) as HttpWebRequest;
+        request.CookieContainer = cookies;
+        Cookie oC = new Cookie();
+        // Convert between the System.Net.Cookie to a System.Web.HttpCookie...
+        oC.Domain = request.RequestUri.Host;
+        oC.Expires = oCookie.Expires;
+        oC.Name = oCookie.Name;
+        oC.Path = oCookie.Path;
+        oC.Secure = oCookie.Secure;
+        oC.Value = oCookie.Value;
+        request.CookieContainer.Add(oC);
+        request.UserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.4 (KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4";
+        request.Accept = "text/plain,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        request.Timeout = 0x1388;
+        request.Method = "GET";
+        HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+        if (response.StatusCode.Equals(HttpStatusCode.OK))
+        {
+            string content = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("GB2312")).ReadToEnd();
+            Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+            String success;
+            if (values.TryGetValue("success", out success))
+            {
+                if (success.Equals("1"))
+                {
+                    string weibo, major, name, dormitory, grade, gender, birthday, phone;
+                    values.TryGetValue("weibo", out weibo);
+                    values.TryGetValue("major", out major);
+                    values.TryGetValue("name", out name);
+                    values.TryGetValue("dormitory", out dormitory);
+                    values.TryGetValue("phone", out phone);
+                    values.TryGetValue("birthday", out birthday);
+                    values.TryGetValue("gender",out gender);
+                    values.TryGetValue("grade",out grade);
+                    return new Darili_UserDetail(weibo, major, name, dormitory, phone, birthday,grade,gender);
                 }
                 else
                 {
@@ -123,7 +239,25 @@ public class Darili_User
 
                 var subscription_event = tar.First().Subscription;
                 if (subscription_event == null) subscription_event = new XElement("root", null);
-                XElement xml_event = new XElement("User", new XAttribute("Id", user.First().User_Id), new XAttribute("Name", user.First().User_NickName));
+                //BETA代码开始：如果存在报名记录则强制擦除后重写
+                var UID = user.First().User_Id;
+                var query = (from el in subscription_event.Elements("User")
+                            where int.Parse(el.Attribute("Id").Value) == UID
+                            select el).ToList();
+                var query2 = (from el in subscription_user.Elements("Event")
+                              where int.Parse(el.Attribute("Id").Value) == id
+                              select el).ToList();
+
+                foreach (var el in query)
+                {
+                    el.Remove();
+                }
+                foreach (var el in query2)
+                {
+                    el.Remove();
+                }
+
+                XElement xml_event = new XElement("User", new XAttribute("Id", user.First().User_Id), new XAttribute("Name", user.First().User_Realname));
                 //待添加：其他需要放在里面的东西（手机号等)
                 //xml_event.add(new XElement("Cellphone",user.First().User_CellPhone);←像这样，待敲定
                 XElement xml_user = new XElement("Event", new XAttribute("Id", tar.First().Id));
@@ -139,6 +273,7 @@ public class Darili_User
                 {
 
                     ctx.SubmitChanges();
+                    main.SubmitChanges();
                     return new XElement("Subscribe",new XAttribute("success",1));
                 }
                 catch (Exception exp)
@@ -181,7 +316,7 @@ public class Darili_User
     //返回值：正数代表成功（为返回的UserId）
      //0表示查无此用户或其他异常
     //-1表示发生编辑冲突，未对数据库做出变动
-    public static int Initialize(string NickName,int UserId)
+    public static int Initialize(string NickName)
     {
         int status = 0;
         if (IsInitialized() == false && IsAuthenticated() == true)
@@ -190,8 +325,7 @@ public class Darili_User
 
             Event_Users user = new Event_Users
             {
-                User_NickName = NickName,
-                User_Id = UserId
+                User_NickName = NickName
             };
             try
             {
@@ -361,5 +495,37 @@ public class Darili_User
 
         }
         else throw new ArgumentException("人物未初始化");
+    }
+    //获取当前用户报名的活动
+    public static List<Event> GetSubscription()
+    {
+        List<Event> list=new List<Event>();
+        var ctx = new Darili_UserDataContext();
+        var query = from entry in ctx.Event_Users
+                    where entry.User_NickName == HttpContext.Current.User.Identity.Name
+                    select entry.User_Event_Go;
+        foreach (var elements in query.Elements("Event"))
+        {
+           list.Add(Event.GetEventById(int.Parse(elements.Attribute("Id").Value)));
+
+        }
+        return list;
+    }
+    public static int STU_UpdateUserInfo(string weibo, string major, string name, string dormitory, string phone, string birthday, HttpCookie oCookie)
+    {
+        var encoding = new ASCIIEncoding();
+        string rStr = "weibo=" + weibo + "&major=" + major + "&name=" + name + "&dormiroty=" + dormitory + "&phone=" + phone + "&birthday=" + birthday;
+        byte[] byteArray = encoding.GetBytes(rStr); //转化
+        HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(new Uri("http://stu.fudan.edu.cn/user/profile"));
+        webReq.Method = "POST";
+        webReq.ContentType = "application/x-www-form-urlencoded";
+        webReq.AllowAutoRedirect = false;
+        webReq.ContentLength = byteArray.Length;
+        Stream newStream = webReq.GetRequestStream();
+        newStream.Write(byteArray, 0, byteArray.Length);//写入参数
+        newStream.Close();
+        HttpWebResponse response = (HttpWebResponse)webReq.GetResponse();
+        
+        return -1;
     }
 }

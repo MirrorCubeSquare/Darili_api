@@ -47,6 +47,10 @@ public class Darili_EventManuever
             LastModified=DateTime.Now,
             IsMultipleTime=false
         };
+        if (eve.Location == null || eve.Location.Trim() == "")
+        {
+            eve.Location = "null";
+        }
         List<Event_Time> multi = new List<Event_Time>();
         try
         {

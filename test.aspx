@@ -7,10 +7,9 @@
     <title></title>
 </head>
 <body>
-    <form id="form1" runat="server">
-    <div>
-    
-    </div>
+    <form id="Form1" method="post" action="test_add_poster.aspx" enctype="multipart/form-data" >
+    <input type="file" name="img" />
+								<input type="submit" />
     </form>
 </body>
 </html>

@@ -20,9 +20,9 @@ public partial class Event_Data : System.Web.UI.Page
         Response.Charset = "utf-8";
         if (!IsPostBack)
         {
-            string cat = Request.QueryString["cat"];
-            string subcat = Request.QueryString["subcat"];
-            string timeoffset = Request.QueryString["timeoffset"];
+            string cat = Request.QueryString["cat"]==null?"":Request.QueryString["cat"];
+            string subcat = Request.QueryString["subcat"]==null?"":Request.QueryString["subcat"];
+            string timeoffset = Request.QueryString["timeoffset"]==null?"0":Request.QueryString["timeoffset"];
             string page = Request.QueryString["page"]==""?Request.QueryString["page"]:"1";
             string perpage = Request.QueryString["perpage"]==""?Request.QueryString["perpage"]:"10";
             XElement Xml_Root = new XElement("allevents", null);
@@ -45,7 +45,7 @@ public partial class Event_Data : System.Web.UI.Page
 
                 }
                 XElement[] Elements = Event.Translte_Xml(events).ToArray();
-                if (Elements != null)
+                if (Elements != null&&events[0]!=null)
                 {
                     foreach (XElement element in Elements)
                     {
