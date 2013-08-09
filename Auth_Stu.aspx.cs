@@ -53,8 +53,21 @@ public partial class Auth_Stu : System.Web.UI.Page
                 string py_cookie=response.GetResponseHeader("Set-Cookie");
                 HttpCookie auth_cookie=Set_Cookie(py_cookie);
                 var result = Darili_User.Validate_StuCommon(auth_cookie);
-                RedictFromLoginPage(result.Item3, result.Item2, auth_cookie);
-                
+                if (result.Item1 == true)
+                {
+                    if (!Darili_User.IsInitialized())
+                    {
+                        //初始化本地用户数据库
+                        int uid = Darili_User.Get_StuId(auth_cookie);
+                        string nickname = result.Item2;
+                        Darili_User.Initialize(nickname, uid);
+                    }
+                    RedictFromLoginPage(result.Item3, result.Item2, auth_cookie);
+                }
+                else
+                {
+                 //未完成，暂时跳白屏
+                }
                // Response.Write(result);
                 /*StreamReader sr = new StreamReader(response.GetResponseStream(), Encoding.Default);
                 ret = sr.ReadToEnd();

@@ -142,6 +142,7 @@ public class Darili_User
         }
         return null;
     }
+   
     //从stu_info中获取用户详细信息
     public static Darili_UserDetail Validate_StuDeatil(HttpCookie oCookie)
     {
@@ -543,5 +544,20 @@ public class Darili_User
         catch { return "Unknown"; }
             
          
+    }
+    public static int Get_Uid_Local(string nickname)
+    {
+        var ctx = new Darili_UserDataContext();
+        try
+        {
+            var quary = (from entry in ctx.Event_Users
+                         where entry.User_NickName == nickname
+                         select entry.User_Id).First();
+            if (quary == null ) return -1;
+            else return quary;
+        }
+        catch { return -1; }
+
+
     }
 }
