@@ -37,7 +37,7 @@ public partial class Event_Detail : System.Web.UI.Page
             var Raiser = Darili_Extra.GetRaiser(id);
             foreach (var entry in Raiser)
             {
-                result_root.Add(new XElement("Raiser",entry));
+                result_root.Add(Darili_Extra.ForceArray(new XElement("Raiser",entry)));
             }
             var LectureEx = Extra_Lecture.GetExtraInfo(id);
             if (LectureEx != null)

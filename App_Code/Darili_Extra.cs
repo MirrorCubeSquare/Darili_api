@@ -12,6 +12,7 @@ using System.Xml.Linq;
 
 /// <summary>
 ///Darili_Extra 的摘要说明
+///一些细小的功能的储藏地
 /// </summary>
 public class Darili_Extra
 {
@@ -122,6 +123,13 @@ public class Darili_Extra
                     where entry.Event_id == id
                     select entry.Name;
         return quary.ToArray();
+    }
+    public static XElement ForceArray(XElement ele)
+    {
+        var temp = ele;
+        temp.SetAttributeValue("json:Array", "true");
+        return temp;
+
     }
 }
 public class Extra_Lecture
