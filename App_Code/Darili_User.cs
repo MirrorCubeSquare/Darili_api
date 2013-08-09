@@ -528,4 +528,19 @@ public class Darili_User
         
         return -1;
     }
+    public static string Get_Nickname_Local(int User_id)
+    {
+        var ctx = new Darili_UserDataContext();
+        try
+        {
+            var quary = (from entry in ctx.Event_Users
+                         where entry.User_Id == User_id
+                         select entry.User_NickName).First();
+            if (quary == null || quary == "") return "Unknown";
+            else return quary;
+        }
+        catch { return "Unknown"; }
+            
+         
+    }
 }

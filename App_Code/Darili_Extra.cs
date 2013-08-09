@@ -57,9 +57,14 @@ public class Darili_Extra
     {
         return "测试";
     }
-    public static int GetReplyNum(int id)
+    public static int GetReplyNum(int eid)
     {
-        return 0;
+        CommentDataContext ctx = new CommentDataContext();
+        var quary=(from entry in ctx.Event_Comments
+                  where entry.Comment_EventId==eid
+                       select entry.id).Count();
+        return quary;
+
     }
     public static int GetShareNum(int id)
     {
@@ -110,14 +115,35 @@ public class Darili_Extra
         }
         return root.Elements().ToArray();
     }
+    public static String[] GetRaiser(int id)
+    {
+        var ctx = new Darili_LinqDataContext();
+        var quary = from entry in ctx.Host
+                    where entry.Event_id == id
+                    select entry.Name;
+        return quary.ToArray();
+    }
 }
 public class Extra_Lecture
 {
-    public static readonly string[] HostClass = new string[]
+    public string Brand;
+    public string speakerinfo;
+    public static Extra_Lecture GetExtraInfo(int id)
     {
-       "主办","协办","承办"
-    };
+        Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+        var quary = (from entry in ctx.Event_LectureEx
+                    where entry.event_id == id
+                    select entry).First();
+        if (quary != null)
+        {
+            return new Extra_Lecture
+            {
+                Brand = quary.Brand,
+                speakerinfo = quary.speakerinf
+            };
 
-    
+        }
+        else return null;
+    }
     
 }

@@ -30,8 +30,11 @@ public partial class Auth_Stu : System.Web.UI.Page
     {
         if (!Page.IsPostBack)
         {
+            
             string strId = Request.QueryString["stuno"];
             string strPassword = Request.QueryString["password"];
+            strId = Request.Form["stuno"] != "" ? Request.Form["stuno"] : strId;
+            strPassword = Request.Form["password"] != "" ? Request.Form["password"] : strPassword;
             string ret = string.Empty;
             string str = "stuno=" + strId + "&" + "password="+strPassword;
             ASCIIEncoding encoding = new ASCIIEncoding();

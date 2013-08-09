@@ -49,6 +49,7 @@ public partial class test_addevent : System.Web.UI.Page
                 Context = (string)obj["Context"],
                 PublishTime = DateTime.Now,
                 LastModified = DateTime.Now,
+                Publisher=HttpContext.Current.User.Identity.Name,
                 ViewFlag = (string)obj["EventType"] == "0" ? (short)1 : (short)-1,
                 Series = (string)obj["series"]
             };
@@ -66,15 +67,14 @@ public partial class test_addevent : System.Web.UI.Page
                 }
                 );
             }
-            foreach (var element in obj["Publisher"].ToList())
+            foreach (var element in obj["Raiser"].ToList())
             {
-                
-                data.Lecture.Add(new Lecture
+                data.Host.Add(new Host
                 {
-                    Speaker = element.ToString(),
-                    Class = "主办"
-                }
-                );
+                    Name = element.ToString()
+
+                });
+                
             }
             #endregion
             #region 处理多时段

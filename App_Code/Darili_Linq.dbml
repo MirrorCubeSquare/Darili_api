@@ -50,6 +50,7 @@
       <Association Name="EventMain_Event_LectureEx" Member="Event_LectureEx" ThisKey="Id" OtherKey="event_id" Type="Event_LectureEx" Cardinality="One" />
       <Association Name="EventMain_Event_MultipleTime" Member="Event_MultipleTime" ThisKey="Id" OtherKey="Event_Id" Type="Event_MultipleTime" />
       <Association Name="EventMain_Lecture" Member="Lecture" ThisKey="Id" OtherKey="Event_Id" Type="Lecture" />
+      <Association Name="EventMain_Host" Member="Host" ThisKey="Id" OtherKey="Event_id" Type="Host" />
     </Type>
   </Table>
   <Table Name="dbo.Lecture" Member="Lecture">
@@ -59,6 +60,14 @@
       <Column Name="Class" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
       <Column Name="sub_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Association Name="EventMain_Lecture" Member="EventMain" ThisKey="Event_Id" OtherKey="Id" Type="EventMain" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Host" Member="Host">
+    <Type Name="Host">
+      <Column Name="Event_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Host_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="EventMain_Host" Member="EventMain" ThisKey="Event_id" OtherKey="Id" Type="EventMain" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

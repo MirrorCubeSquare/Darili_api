@@ -61,6 +61,7 @@ namespace Darili_api
         public string Speaker { get; set; }
         public string Class { get; set; }
         public Event_Time[] MultipleTime { get; set; }
+        public string series { get; set; }
         public bool ShouldSerializeMultipleTime()
         {
             return (this.IsMultipleTime);
@@ -109,7 +110,9 @@ namespace Darili_api
                         new XElement("Publisher", value.Publisher),
                         new XElement("Context", value.Context),
                         new XElement("ViewFlag", value.ViewFlag),
+                        new XElement("series",value.series),
                         new XElement("tag",Darili_Extra.GetTag(value.Id)),
+                        new XElement("reply-num",Darili_Extra.GetReplyNum(value.Id)),
                         new XElement("love-num",Darili_Extra.GetLikeNum(value.Id)),
                         new XElement("pin-num",Darili_Extra.GetSubscriptionNum(value.Id)),
                         new XElement("share-num",Darili_Extra.GetShareNum(value.Id)),
@@ -136,18 +139,19 @@ namespace Darili_api
             {
                 Xml_Root.Add(eve.Translate_Xml());
             }
+            if (value.Count() == 1) Xml_Root.Add(new XElement("Event", ""));
             return Xml_Root.Elements();
 
         }
         public static implicit operator Event(EventMain value)
         {
-            return new Event((int)value.Id, (DateTime)value.StartTime, (DateTime)value.EndTime, (DateTime)value.PublishTime, (DateTime)value.LastModified, (String)value.Publisher, (short)value.ViewFlag, (String)value.Type, (String)value.SubType, (String)value.Title, (String)value.Subtitle, (String)value.Location, (String)value.Context);
+            return new Event((int)value.Id, (DateTime)value.StartTime, (DateTime)value.EndTime, (DateTime)value.PublishTime, (DateTime)value.LastModified, (String)value.Publisher, (short)value.ViewFlag, (String)value.Type, (String)value.SubType, (String)value.Title, (String)value.Subtitle, (String)value.Location, (String)value.Context,(String)value.Series);
         }
 
 
         #region 构造函数
         public Event() { }
-        public Event(int _Id, DateTime _StartTime, DateTime _EndTime, DateTime _PublishTime, DateTime _LastModified, string _Publisher, short _ViewFlag, string _Type, string _Subtype, string _Title, string _Subtitle, string _Location, string _Context)
+        public Event(int _Id, DateTime _StartTime, DateTime _EndTime, DateTime _PublishTime, DateTime _LastModified, string _Publisher, short _ViewFlag, string _Type, string _Subtype, string _Title, string _Subtitle, string _Location, string _Context,string  _series)
         {
             Id = _Id;
             StartTime = _StartTime;
@@ -162,12 +166,38 @@ namespace Darili_api
             Location = _Location;
             Context = _Context;
             Subtype = _Subtype;
+            series = _series;
         }
 
         #endregion
 
+        public static int EventExists(int id)
+        {
+            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+            var quary = (from entry in ctx.EventMain
+                        where entry.Id == id
+                        select entry).Count();
+            return quary;
+        }
 
-        public bool loadExtra() { return false; }
+        public Tuple<string,string> loadExtra(int id) {
+            try
+            {
+                Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+                var quary2 = (from entry in ctx.Lecture
+                              where entry.Event_Id == id
+                              select entry).First();
+                if (quary2 != null)
+                {
+                    return new Tuple<string, string>(quary2.Speaker, quary2.Class);
+                }
+                else return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public int InsertEntry()
         {
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
@@ -335,8 +365,8 @@ namespace Darili_api
                 }
 
             }
-            var comp=new Darili_EventManuever.IEventStarttimeComparer();
-            list.Sort(comp);
+            //var comp=new Darili_EventManuever.IEventStarttimeComparer();
+            //list.Sort(comp);
             return list.ToArray();
 
 
@@ -368,10 +398,24 @@ namespace Darili_api
             {
                 t.MultipleTime = GetMultipleTime(t.Id);
                 if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
+                try
+                {
+                    var quary2 = (from entry in ctx.Lecture
+                                  where entry.Event_Id == t.Id
+                                  select entry).First();
+                    if (quary2 != null)
+                    {
+                        t.Speaker = quary2.Speaker;
+                        t.Class = quary2.Class;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
 
             }
-            var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            list.Sort(comp);
+           // var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            //list.Sort(comp);
             return list.ToArray();
 
         }
@@ -401,10 +445,23 @@ namespace Darili_api
             {
                 t.MultipleTime = GetMultipleTime(t.Id);
                 if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-
+                try
+                {
+                    var quary2 = (from entry in ctx.Lecture
+                                  where entry.Event_Id == t.Id
+                                  select entry).First();
+                    if (quary2 != null)
+                    {
+                        t.Speaker = quary2.Speaker;
+                        t.Class = quary2.Class;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
             }
-            var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            list.Sort(comp);
+            //var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            //list.Sort(comp);
             return list.ToArray();
         }
         public static Event[] GetTimeSpan(DateTime StartTime, TimeSpan Span,bool IsAll)
@@ -420,13 +477,13 @@ namespace Darili_api
             var quary = (from entry in ctx.EventMain
                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 && entry.Type == type && entry.SubType == subtype
                         orderby entry.PublishTime descending
-                        select entry).Skip(perpage*(page-1)).Take(perpage);
+                        select entry).Skip(perpage*(page)).Take(perpage);
             if (IsAll == true)
             {
                 quary = (from entry in ctx.EventMain
                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type && entry.SubType == subtype
                         orderby entry.PublishTime descending
-                        select entry).Skip(perpage*(page-1)).Take(perpage);
+                        select entry).Skip(perpage*(page)).Take(perpage);
             }
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
@@ -439,10 +496,23 @@ namespace Darili_api
             {
                 t.MultipleTime = GetMultipleTime(t.Id);
                 if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-
+                try
+                {
+                    var quary2 = (from entry in ctx.Lecture
+                                  where entry.Event_Id == t.Id
+                                  select entry).First();
+                    if (quary2 != null)
+                    {
+                        t.Speaker = quary2.Speaker;
+                        t.Class = quary2.Class;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
             }
-            var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            list.Sort(comp);
+            //var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            //list.Sort(comp);
             return list.ToArray();
         }
         public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, string type, bool IsAll, int perpage, int page)
@@ -452,13 +522,13 @@ namespace Darili_api
             var quary = (from entry in ctx.EventMain
                          where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 && entry.Type == type 
                          orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page - 1)).Take(perpage);
+                         select entry).Skip(perpage * (page)).Take(perpage);
             if (IsAll == true)
             {
                 quary = (from entry in ctx.EventMain
                          where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type
                          orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page - 1)).Take(perpage);
+                         select entry).Skip(perpage * (page)).Take(perpage);
             }
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
@@ -471,10 +541,23 @@ namespace Darili_api
             {
                 t.MultipleTime = GetMultipleTime(t.Id);
                 if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-
+                try
+                {
+                    var quary2 = (from entry in ctx.Lecture
+                                  where entry.Event_Id == t.Id
+                                  select entry).First();
+                    if (quary2 != null)
+                    {
+                        t.Speaker = quary2.Speaker;
+                        t.Class = quary2.Class;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
             }
-            var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            list.Sort(comp);
+            //var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            //list.Sort(comp);
             return list.ToArray();
         }
 
@@ -485,13 +568,13 @@ namespace Darili_api
             var quary = (from entry in ctx.EventMain
                          where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 
                          orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page - 1)).Take(perpage);
+                         select entry).Skip(perpage * (page)).Take(perpage);
             if (IsAll == true)
             {
                 quary = (from entry in ctx.EventMain
                          where entry.StartTime >= StartTime && entry.EndTime <= EndTime 
                          orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page - 1)).Take(perpage);
+                         select entry).Skip(perpage * (page)).Take(perpage);
             }
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
@@ -504,10 +587,23 @@ namespace Darili_api
             {
                 t.MultipleTime = GetMultipleTime(t.Id);
                 if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-
+                try
+                {
+                    var quary2 = (from entry in ctx.Lecture
+                                  where entry.Event_Id == t.Id
+                                  select entry).First();
+                    if (quary2 != null)
+                    {
+                        t.Speaker = quary2.Speaker;
+                        t.Class = quary2.Class;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
             }
-            var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            list.Sort(comp);
+            //var comp = new Darili_EventManuever.IEventStarttimeComparer();
+            //list.Sort(comp);
             return list.ToArray();
         }
         public static Event_Time[] GetMultipleTime(int id)

@@ -23,8 +23,8 @@ public partial class Event_Data : System.Web.UI.Page
             string cat = Request.QueryString["cat"]==null?"":Request.QueryString["cat"];
             string subcat = Request.QueryString["subcat"]==null?"":Request.QueryString["subcat"];
             string timeoffset = Request.QueryString["timeoffset"]==null?"0":Request.QueryString["timeoffset"];
-            string page = Request.QueryString["page"]==""?Request.QueryString["page"]:"1";
-            string perpage = Request.QueryString["perpage"]==""?Request.QueryString["perpage"]:"10";
+            string page = Request.QueryString["page"]!=null?Request.QueryString["page"]:"0";
+            string perpage = Request.QueryString["perpage"]!=null?Request.QueryString["perpage"]:"10";
             XElement Xml_Root = new XElement("allevents", null);
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             Event[] events=new Event[1];
@@ -44,7 +44,18 @@ public partial class Event_Data : System.Web.UI.Page
                     events = Event.GetTimeSpan(DateTime.Now.Date + new TimeSpan(-offset1 + 7, 0, 0, 0), DateTime.Now.Date + new TimeSpan(-offset1 + 14, 0, 0, 0), cat, subcat, true,int.Parse(perpage),int.Parse(page));
 
                 }
+                if (timeoffset != "0" && timeoffset != "1" && timeoffset != "2" && timeoffset != "3")
+                {
+                    events = Event.GetTimeSpan(DateTime.Parse("1990/1/1"), DateTime.Parse("2013/9/1"), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                }
+                if (events.Count() == 1)
+                {
+                    List<Event> list = events.ToList();
+
+                    events = list.ToArray();
+                }
                 XElement[] Elements = Event.Translte_Xml(events).ToArray();
+
                 if (Elements != null&&events[0]!=null)
                 {
                     foreach (XElement element in Elements)
