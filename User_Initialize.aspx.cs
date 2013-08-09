@@ -24,7 +24,8 @@ public partial class User_Initialize : System.Web.UI.Page
 
             try
             {
-                var User_Id = Darili_User.Initialize(Page.User.Identity.Name);
+                var User_Id = Darili_User.Validate_StuCommon(Request.Cookies["webpy_session_id"]);
+
                 var update_status = Darili_User.UpdateUserInfo(TextBox1.Text, TextBox2.Text);
                 Label3.Text = update_status.ToString() + "|" + DateTime.Now;
 

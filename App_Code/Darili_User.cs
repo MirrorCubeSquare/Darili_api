@@ -316,7 +316,7 @@ public class Darili_User
     //返回值：正数代表成功（为返回的UserId）
      //0表示查无此用户或其他异常
     //-1表示发生编辑冲突，未对数据库做出变动
-    public static int Initialize(string NickName)
+    public static int Initialize(string NickName,int uid)
     {
         int status = 0;
         if (IsInitialized() == false && IsAuthenticated() == true)
@@ -325,7 +325,8 @@ public class Darili_User
 
             Event_Users user = new Event_Users
             {
-                User_NickName = NickName
+                User_NickName = NickName,
+                User_Id=uid
             };
             try
             {
