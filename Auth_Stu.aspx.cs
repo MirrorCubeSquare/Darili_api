@@ -55,7 +55,7 @@ public partial class Auth_Stu : System.Web.UI.Page
                 var result = Darili_User.Validate_StuCommon(auth_cookie);
                 if (result.Item1 == true)
                 {
-                    if (!Darili_User.IsInitialized())
+                    if (!Darili_User.IsInitialized(result.Item3))
                     {
                         //初始化本地用户数据库
                         int uid = Darili_User.Get_StuId(auth_cookie);

@@ -298,8 +298,10 @@ public class Darili_User
         var ctx = new Darili_UserDataContext();
         var quary = (from entry in ctx.Event_Users
                      where entry.User_NickName == NickName
-                     select entry).ToArray().Length;
-        return (quary != 0);
+                     select entry);
+        var result = quary.ToList();
+
+        return (result.Count != 0);
     }
     public static bool IsInitialized()
     {
