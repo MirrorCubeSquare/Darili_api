@@ -22,7 +22,7 @@ public partial class Event_Detail : System.Web.UI.Page
         {
             Event result = Event.GetEventById(id);
             //输出格式不同，懒得再在类里面再写了（好吧我错了），完全把设计思想抛在脑后233max
-            XElement result_root = new XElement("Eventdetail");
+            XElement result_root = Darili_Extra.ForceArray(new XElement("Eventdetail"),true);
             result_root.Add(new XElement("Id", id));
             result_root.Add(new XElement("StartTime", result.StartTime));
             result_root.Add(new XElement("EndTime", result.EndTime));
@@ -37,7 +37,7 @@ public partial class Event_Detail : System.Web.UI.Page
             var Raiser = Darili_Extra.GetRaiser(id);
             foreach (var entry in Raiser)
             {
-                result_root.Add(Darili_Extra.ForceArray(new XElement("Raiser",entry)));
+                result_root.Add(Darili_Extra.ForceArray(new XElement("Raiser",entry),false));
             }
             var LectureEx = Extra_Lecture.GetExtraInfo(id);
             if (LectureEx != null)

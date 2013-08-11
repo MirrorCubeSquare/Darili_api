@@ -132,6 +132,22 @@ public class Darili_Extra
         return new XElement[] { ele, new XElement(ele.Name) };
 
     }
+    public static XElement ForceArray(XElement ele, bool IsRoot)
+    {
+        XElement temp = ele;
+        if (IsRoot)
+        {
+            ele.Add(new XAttribute(XNamespace.Xmlns + "json", "http://james.newtonking.com/projects/json"));
+        }
+        else
+        {
+            string xml = "<root xmlns:json='http://james.newtonking.com/projects/json' id='1'><" + ele.Name + @" json:Array='true'>" + ele.Value + @"</" + ele.Name + "> </root>";
+            var xresult = XElement.Parse(xml);
+            return xresult.Element(ele.Name);
+        }
+        return ele;
+    }
+
 }
 public class Extra_Lecture
 {
