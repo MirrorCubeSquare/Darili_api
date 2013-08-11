@@ -7,6 +7,7 @@ using  Newtonsoft.Json;
 using Darili_api;
 using System.Web;
 using System.IO;
+using System.Xml;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
 
@@ -124,11 +125,11 @@ public class Darili_Extra
                     select entry.Name;
         return quary.ToArray();
     }
-    public static XElement ForceArray(XElement ele)
+    public static XElement[] ForceArray(XElement ele)
     {
-        var temp = ele;
-        temp.SetAttributeValue("json:Array", "true");
-        return temp;
+     
+        
+        return new XElement[] { ele, new XElement(ele.Name) };
 
     }
 }

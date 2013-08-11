@@ -65,7 +65,7 @@ public partial class Event_Detail : System.Web.UI.Page
             result_root.Add(new XElement("success", "1"));
             
             Response.Write(JsonConvert.SerializeXNode(result_root));
-
+           // Response.Write(result_root);
 
         }
 
