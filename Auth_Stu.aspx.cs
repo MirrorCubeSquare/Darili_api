@@ -59,7 +59,7 @@ public partial class Auth_Stu : System.Web.UI.Page
                     {
                         //初始化本地用户数据库
                         int uid = Darili_User.Get_StuId(auth_cookie);
-                        string nickname = result.Item2;
+                        string nickname = result.Item3;
                         if(Darili_User.Initialize(nickname, uid)!=uid)throw new Exception();
                     }
                     Darili_User.RecordLoginTime(Page.User.Identity.Name);

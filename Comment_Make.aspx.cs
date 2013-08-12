@@ -22,7 +22,7 @@ public partial class Comment_Make : System.Web.UI.Page
                 string Content = String.IsNullOrWhiteSpace(Request.QueryString["content"]) ? null : Request.QueryString["content"];
                 //测试用代码
                 string User_id = Request.QueryString["uid"] == null ? "999" : Request.QueryString["uid"];
-                if (Darili_api.Event.EventExists(int.Parse(Event_id)) > 0 && (Content != null || Content != ""))
+                if (Darili_api.Event.EventExists(int.Parse(Event_id)) ==true && (Content != null || Content != ""))
                 {
                     //测试期间，固定用户昵称为TEST,ID为999
                     //测试期间，不对用户是否登录进行验证（重要）

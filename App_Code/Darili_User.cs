@@ -220,76 +220,7 @@ public class Darili_User
     //以当前用户的身份订阅指定ID的活动
     public static XElement Subscribe(int id)
     {
-        string name = HttpContext.Current.User.Identity.Name;
-
-        if (HttpContext.Current.User.Identity.Name != null)
-        {
-            var ctx = new Darili_UserDataContext();
-            var main = new Darili_LinqDataContext();
-            var user = from entry in ctx.Event_Users
-                       where entry.User_NickName == HttpContext.Current.User.Identity.Name
-                       select entry;
-            var subscription_user = user.First().User_Event_Go;
-            if (subscription_user == null) subscription_user = new XElement("root", null);
-            var tar = from entry in main.EventMain
-                      where entry.Id == id
-                      select entry;
-            if (tar.First() == null) return new XElement("Event", new XAttribute("success", 0), new XAttribute("exception", "未找到活动"));
-            else
-            {
-
-                var subscription_event = tar.First().Subscription;
-                if (subscription_event == null) subscription_event = new XElement("root", null);
-                //BETA代码开始：如果存在报名记录则强制擦除后重写
-                var UID = user.First().User_Id;
-                var query = (from el in subscription_event.Elements("User")
-                            where int.Parse(el.Attribute("Id").Value) == UID
-                            select el).ToList();
-                var query2 = (from el in subscription_user.Elements("Event")
-                              where int.Parse(el.Attribute("Id").Value) == id
-                              select el).ToList();
-
-                foreach (var el in query)
-                {
-                    el.Remove();
-                }
-                foreach (var el in query2)
-                {
-                    el.Remove();
-                }
-
-                XElement xml_event = new XElement("User", new XAttribute("Id", user.First().User_Id), new XAttribute("Name", user.First().User_Realname));
-                //待添加：其他需要放在里面的东西（手机号等)
-                //xml_event.add(new XElement("Cellphone",user.First().User_CellPhone);←像这样，待敲定
-                XElement xml_user = new XElement("Event", new XAttribute("Id", tar.First().Id));
-                //由于不是多时段的所以无需写入时段信息
-               //为了节约空间，这里只存储ID，可以通过Event.GetEventById(int Id)方法调去详细信息
-                subscription_event.Add(xml_event);
-                subscription_user.Add(xml_user);
-               
-
-                tar.First().Subscription = subscription_event;
-                user.First().User_Event_Go = subscription_user;
-                try
-                {
-
-                    ctx.SubmitChanges();
-                    main.SubmitChanges();
-                    return new XElement("Subscribe",new XAttribute("success",1));
-                }
-                catch (Exception exp)
-                {
-                     return new XElement("Subscribe",new XAttribute("success",0));
-                }
-                
-
-
-
-            }
-
-            
-        }
-        return new XElement("Subscribe", new XAttribute("success", 0));
+        return null;
     }
    
    //判断本地用户信息库是否已存在该用户
@@ -322,7 +253,7 @@ public class Darili_User
     public static int Initialize(string NickName,int uid)
     {
         int status = 0;
-        if (IsInitialized() == false && IsAuthenticated() == true)
+        if (IsInitialized(NickName) == false)
         {
             var ctx = new Darili_UserDataContext();
 
@@ -341,7 +272,7 @@ public class Darili_User
             {
                 foreach (ObjectChangeConflict confict in ctx.ChangeConflicts)
                 {
-                    confict.Resolve(RefreshMode.OverwriteCurrentValues);
+                    confict.Resolve(RefreshMode.KeepCurrentValues);
                 }
                 status = -1;
                 ctx.SubmitChanges();
@@ -365,7 +296,7 @@ public class Darili_User
             user.User_LastLoginTime = DateTime.Now;
             try
             {
-                ctx.SubmitChanges();
+                ctx.SubmitChanges(ConflictMode.ContinueOnConflict);
             }
             catch (ChangeConflictException)
             {
@@ -382,7 +313,7 @@ public class Darili_User
         }
     }
     //编辑用户信息（预留管理用借口）
-    //1=成功 0=异常 -1=编辑冲突（覆盖前值）
+    //1=成功 0=异常 -1=编辑冲突（覆盖前值）(未切换！）
     public static int UpdateUserInfo(string NickName,string RealName, string cellphone)
     {
         int status=0;
@@ -504,13 +435,14 @@ public class Darili_User
     public static List<Event> GetSubscription()
     {
         List<Event> list=new List<Event>();
-        var ctx = new Darili_UserDataContext();
-        var query = from entry in ctx.Event_Users
-                    where entry.User_NickName == HttpContext.Current.User.Identity.Name
-                    select entry.User_Event_Go;
-        foreach (var elements in query.Elements("Event"))
+        var ctx = new LikeAndGoDataContext();
+        var quary = from entry in ctx.Event_Like
+                    where entry.uid == Darili_User.Get_Uid_Local(HttpContext.Current.User.Identity.Name)
+                    select entry.eid;
+
+        foreach (var ele in quary.ToList())
         {
-           list.Add(Event.GetEventById(int.Parse(elements.Attribute("Id").Value)));
+           list.Add(Event.GetEventById(ele));
 
         }
         return list;

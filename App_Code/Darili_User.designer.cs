@@ -83,10 +83,6 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private string _User_NickName;
 	
-	private System.Xml.Linq.XElement _User_Event_Like;
-	
-	private System.Xml.Linq.XElement _User_Event_Go;
-	
 	private string _User_CellPhone;
 	
 	private string _User_Realname;
@@ -101,10 +97,6 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
     partial void OnUser_IdChanged();
     partial void OnUser_NickNameChanging(string value);
     partial void OnUser_NickNameChanged();
-    partial void OnUser_Event_LikeChanging(System.Xml.Linq.XElement value);
-    partial void OnUser_Event_LikeChanged();
-    partial void OnUser_Event_GoChanging(System.Xml.Linq.XElement value);
-    partial void OnUser_Event_GoChanged();
     partial void OnUser_CellPhoneChanging(string value);
     partial void OnUser_CellPhoneChanged();
     partial void OnUser_RealnameChanging(string value);
@@ -154,46 +146,6 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 				this._User_NickName = value;
 				this.SendPropertyChanged("User_NickName");
 				this.OnUser_NickNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Event_Like", DbType="Xml", UpdateCheck=UpdateCheck.Never)]
-	public System.Xml.Linq.XElement User_Event_Like
-	{
-		get
-		{
-			return this._User_Event_Like;
-		}
-		set
-		{
-			if ((this._User_Event_Like != value))
-			{
-				this.OnUser_Event_LikeChanging(value);
-				this.SendPropertyChanging();
-				this._User_Event_Like = value;
-				this.SendPropertyChanged("User_Event_Like");
-				this.OnUser_Event_LikeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Event_Go", DbType="Xml", UpdateCheck=UpdateCheck.Never)]
-	public System.Xml.Linq.XElement User_Event_Go
-	{
-		get
-		{
-			return this._User_Event_Go;
-		}
-		set
-		{
-			if ((this._User_Event_Go != value))
-			{
-				this.OnUser_Event_GoChanging(value);
-				this.SendPropertyChanging();
-				this._User_Event_Go = value;
-				this.SendPropertyChanged("User_Event_Go");
-				this.OnUser_Event_GoChanged();
 			}
 		}
 	}

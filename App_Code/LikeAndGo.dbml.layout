@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="LikeAndGo">
+  <DataContextMoniker Name="/LikeAndGoDataContext" />
+  <nestedChildShapes>
+    <classShape Id="b8ad1071-8ae8-40c3-b64d-1d0a62c77259" absoluteBounds="3.25, 3.25, 2, 1.4483463541666668">
+      <DataClassMoniker Name="/LikeAndGoDataContext/Event_Like" />
+      <nestedChildShapes>
+        <elementListCompartment Id="114594c1-9d00-4fc3-a8d0-38a22451b1a2" absoluteBounds="3.265, 3.71, 1.9700000000000002, 0.88834635416666674" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

@@ -4,8 +4,6 @@
     <Type Name="Event_Users">
       <Column Name="User_Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="User_NickName" Type="System.String" DbType="NChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="User_Event_Like" Type="System.Xml.Linq.XElement" DbType="Xml" CanBeNull="true" UpdateCheck="Never" />
-      <Column Name="User_Event_Go" Type="System.Xml.Linq.XElement" DbType="Xml" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="User_CellPhone" Type="System.String" DbType="NChar(20)" CanBeNull="true" />
       <Column Name="User_Realname" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
       <Column Name="User_LastLoginTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />

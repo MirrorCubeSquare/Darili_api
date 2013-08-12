@@ -171,13 +171,13 @@ namespace Darili_api
 
         #endregion
 
-        public static int EventExists(int id)
+        public static bool EventExists(int id)
         {
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             var quary = (from entry in ctx.EventMain
                         where entry.Id == id
                         select entry).Count();
-            return quary;
+            return quary>0;
         }
 
         public Tuple<string,string> loadExtra(int id) {

@@ -23,6 +23,8 @@ public class Darili_Extra
 		//TODO: 在此处添加构造函数逻辑
 		//
 	}
+    public static string success = "{\"success\":\"1\"}";
+    public static string fail = "{\"success\":\"0\"}";
     public static System.Drawing.Imaging.ImageFormat GetExt(string MIME)
     {
         switch (MIME.ToLower().Trim())
@@ -53,7 +55,8 @@ public class Darili_Extra
     }
     public static int GetLikeNum(int id)
     {
-        return 0;
+        var ctx = new LikeAndGoDataContext();
+        return (from entry in ctx.Event_Like where entry.eid == id select entry.eid).Count();
     }
     public static string GetTag(int id)
     {
@@ -72,7 +75,14 @@ public class Darili_Extra
     {
         return 0;
     }
-
+    public static bool LikeExists(int uid, int eid)
+    {
+        LikeAndGoDataContext ctx = new LikeAndGoDataContext();
+        var quary = from entry in ctx.Event_Like
+                    where entry.eid == eid && entry.uid == uid
+                    select entry;
+        return quary.Count() > 0;
+    }
     public static Tuple<int, int, int> TimeLeft(Event eve)
     {
         TimeSpan span = eve.StartTime - DateTime.Now;
