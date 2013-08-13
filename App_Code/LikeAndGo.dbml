@@ -8,4 +8,19 @@
       <Column Name="like_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
     </Type>
   </Table>
+  <Table Name="dbo.Event_Subscription" Member="Event_Subscription">
+    <Type Name="Event_Subscription">
+      <Column Name="sid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="eid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="uid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="sdetail" Type="System.Xml.Linq.XElement" DbType="Xml" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="stime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Event_Subscription_Parameters" Member="Event_Subscription_Parameters">
+    <Type Name="Event_Subscription_Parameters">
+      <Column Name="eid" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="parameters" Type="System.Xml.Linq.XElement" DbType="Xml" CanBeNull="true" UpdateCheck="Never" />
+    </Type>
+  </Table>
 </Database>

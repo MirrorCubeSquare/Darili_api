@@ -18,11 +18,12 @@ public partial class Like : System.Web.UI.Page
         {
             var eid = Request.QueryString["id"];
 
-            /* if (Request.HttpMethod.ToLower() != "post")
-             {
-                 Response.StatusCode = 405;
-                 Response.Status = "405 METHOD NOT ALLOWED";
-             }*/
+            if (Request.HttpMethod.ToLower() != "post")
+            {
+                Response.StatusCode = 405;
+                Response.Status = "405 METHOD NOT ALLOWED";
+                Response.End();
+            }
             string user = Page.User.Identity.Name;
             if (Darili_User.IsInitialized())
             {

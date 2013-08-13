@@ -37,6 +37,10 @@ public class Darili_Extra
             default: return null;
         }
     }
+    public static int CalculateTimeSpan(int first, int second)
+    {
+        return first < second ? second - first : second - first + 7;
+    }
     public static string GetFormat(string MIME)
     {
         switch (MIME.ToLower().Trim())

@@ -32,6 +32,12 @@ public partial class LikeAndGoDataContext : System.Data.Linq.DataContext
   partial void InsertEvent_Like(Event_Like instance);
   partial void UpdateEvent_Like(Event_Like instance);
   partial void DeleteEvent_Like(Event_Like instance);
+  partial void InsertEvent_Subscription(Event_Subscription instance);
+  partial void UpdateEvent_Subscription(Event_Subscription instance);
+  partial void DeleteEvent_Subscription(Event_Subscription instance);
+  partial void InsertEvent_Subscription_Parameters(Event_Subscription_Parameters instance);
+  partial void UpdateEvent_Subscription_Parameters(Event_Subscription_Parameters instance);
+  partial void DeleteEvent_Subscription_Parameters(Event_Subscription_Parameters instance);
   #endregion
 	
 	public LikeAndGoDataContext() : 
@@ -69,6 +75,22 @@ public partial class LikeAndGoDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<Event_Like>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Event_Subscription> Event_Subscription
+	{
+		get
+		{
+			return this.GetTable<Event_Subscription>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Event_Subscription_Parameters> Event_Subscription_Parameters
+	{
+		get
+		{
+			return this.GetTable<Event_Subscription_Parameters>();
 		}
 	}
 }
@@ -182,6 +204,250 @@ public partial class Event_Like : INotifyPropertyChanging, INotifyPropertyChange
 				this._like_id = value;
 				this.SendPropertyChanged("like_id");
 				this.Onlike_idChanged();
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_Subscription")]
+public partial class Event_Subscription : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _sid;
+	
+	private int _eid;
+	
+	private int _uid;
+	
+	private System.Xml.Linq.XElement _sdetail;
+	
+	private System.DateTime _stime;
+	
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnsidChanging(int value);
+    partial void OnsidChanged();
+    partial void OneidChanging(int value);
+    partial void OneidChanged();
+    partial void OnuidChanging(int value);
+    partial void OnuidChanged();
+    partial void OnsdetailChanging(System.Xml.Linq.XElement value);
+    partial void OnsdetailChanged();
+    partial void OnstimeChanging(System.DateTime value);
+    partial void OnstimeChanged();
+    #endregion
+	
+	public Event_Subscription()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sid", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int sid
+	{
+		get
+		{
+			return this._sid;
+		}
+		set
+		{
+			if ((this._sid != value))
+			{
+				this.OnsidChanging(value);
+				this.SendPropertyChanging();
+				this._sid = value;
+				this.SendPropertyChanged("sid");
+				this.OnsidChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_eid", DbType="Int NOT NULL")]
+	public int eid
+	{
+		get
+		{
+			return this._eid;
+		}
+		set
+		{
+			if ((this._eid != value))
+			{
+				this.OneidChanging(value);
+				this.SendPropertyChanging();
+				this._eid = value;
+				this.SendPropertyChanged("eid");
+				this.OneidChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_uid", DbType="Int NOT NULL")]
+	public int uid
+	{
+		get
+		{
+			return this._uid;
+		}
+		set
+		{
+			if ((this._uid != value))
+			{
+				this.OnuidChanging(value);
+				this.SendPropertyChanging();
+				this._uid = value;
+				this.SendPropertyChanged("uid");
+				this.OnuidChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sdetail", DbType="Xml", UpdateCheck=UpdateCheck.Never)]
+	public System.Xml.Linq.XElement sdetail
+	{
+		get
+		{
+			return this._sdetail;
+		}
+		set
+		{
+			if ((this._sdetail != value))
+			{
+				this.OnsdetailChanging(value);
+				this.SendPropertyChanging();
+				this._sdetail = value;
+				this.SendPropertyChanged("sdetail");
+				this.OnsdetailChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_stime", DbType="DateTime NOT NULL")]
+	public System.DateTime stime
+	{
+		get
+		{
+			return this._stime;
+		}
+		set
+		{
+			if ((this._stime != value))
+			{
+				this.OnstimeChanging(value);
+				this.SendPropertyChanging();
+				this._stime = value;
+				this.SendPropertyChanged("stime");
+				this.OnstimeChanged();
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_Subscription_Parameters")]
+public partial class Event_Subscription_Parameters : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _eid;
+	
+	private System.Xml.Linq.XElement _parameters;
+	
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OneidChanging(int value);
+    partial void OneidChanged();
+    partial void OnparametersChanging(System.Xml.Linq.XElement value);
+    partial void OnparametersChanged();
+    #endregion
+	
+	public Event_Subscription_Parameters()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_eid", DbType="Int NOT NULL", IsPrimaryKey=true)]
+	public int eid
+	{
+		get
+		{
+			return this._eid;
+		}
+		set
+		{
+			if ((this._eid != value))
+			{
+				this.OneidChanging(value);
+				this.SendPropertyChanging();
+				this._eid = value;
+				this.SendPropertyChanged("eid");
+				this.OneidChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_parameters", DbType="Xml", UpdateCheck=UpdateCheck.Never)]
+	public System.Xml.Linq.XElement parameters
+	{
+		get
+		{
+			return this._parameters;
+		}
+		set
+		{
+			if ((this._parameters != value))
+			{
+				this.OnparametersChanging(value);
+				this.SendPropertyChanging();
+				this._parameters = value;
+				this.SendPropertyChanged("parameters");
+				this.OnparametersChanged();
 			}
 		}
 	}

@@ -619,6 +619,47 @@ namespace Darili_api
             }
             if (list != null) return list.ToArray();
             return null;
+           
+        }
+        public static Tuple<DateTime,DateTime>[] SeparateMultipleTimes(Event_Time[] times)
+        {
+            List<DateTime> result = new List<DateTime>();
+            foreach (Event_Time time in times)
+            {
+            }
+            return null;
+        }
+        public static Tuple<DateTime,DateTime>[] SeparateMultipleTime(Event_Time time)
+        {
+  
+            string routinedetail = Convert.ToString(int.Parse(time.RoutineDetail), 2);
+            String[] r_detail=new String[7]{"0","0","0","0","0","0","0"};
+            if (time.IsRoutine == false) 
+            {
+                return new Tuple<DateTime, DateTime>[1] { new Tuple<DateTime,DateTime>(time.StartTime, time.EndTime) };
+            }
+            if (routinedetail.Length < 8)
+            {
+                //接受RoutineDetail数据
+                for (int i = 0; i < routinedetail.Length; i++)
+                {
+                    r_detail[(i > 6 ? 0 : i)]= routinedetail[i].ToString();
+                }
+                //处理RoutineDetail数据至DateTime.DayOfWeek的格式
+                for (int i = 0; i < 7; i++)
+                {
+                    if (r_detail[i] == "1")
+                    {
+                        DateTime flag = time.StartTime.Date + new TimeSpan(Darili_Extra.CalculateTimeSpan((int)time.StartTime.DayOfWeek, i), 0, 0, 0);
+                        while (flag < time.EndTime.Date)
+                        {
+
+                        }
+                    }
+                }
+            }
+            else throw new ArgumentException("遇到异常的重复时间参数", time.RoutineDetail);
+            return null;
         }
 
     }
