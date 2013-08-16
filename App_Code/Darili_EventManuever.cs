@@ -28,6 +28,12 @@ public class Darili_EventManuever
         else return true;
 
     }
+    public static Event[] SearchTime(DateTime StartTime, DateTime EndTime, string type, string subtype, bool IsAll, int perpage, int page)
+    {
+        List<Event> list = new List<Event>();
+        var predicate = PredicateBuilder.True<EventMain>();
+        return null;
+    }
 	  public static string AddSubscription(string input)//根据传入的JSON（单个活动）创建活动（测试，通过）
     {
         JObject obj = JObject.Parse(input);

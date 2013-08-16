@@ -18,6 +18,14 @@ namespace Darili_api
     //Type：类别
     //Location：地点
     //Publisher:发布者（创建者）
+    public class Event_Time_Helper
+    {
+        public DateTime starttime;
+            public DateTime endtime;
+        public Event_Time_Helper()
+        {
+        }
+    }
     public class Event_Time
     {
         public int sub_id;
@@ -621,45 +629,67 @@ namespace Darili_api
             return null;
            
         }
-        public static Tuple<DateTime,DateTime>[] SeparateMultipleTimes(Event_Time[] times)
+        public static Event_Time_Helper[] SeparateMultipleTimes(Event_Time[] times)
         {
-            List<DateTime> result = new List<DateTime>();
+            List<Event_Time_Helper> result = new List<Event_Time_Helper>();
             foreach (Event_Time time in times)
             {
+                result.AddRange(SeparateMultipleTime(time));
             }
-            return null;
+            return result.ToArray();
         }
-        public static Tuple<DateTime,DateTime>[] SeparateMultipleTime(Event_Time time)
+        public static Event_Time_Helper[] SeparateMultipleTime(Event_Time time)
         {
   
-            string routinedetail = Convert.ToString(int.Parse(time.RoutineDetail), 2);
-            String[] r_detail=new String[7]{"0","0","0","0","0","0","0"};
+            
+            List<Event_Time_Helper> result = new List<Event_Time_Helper>();
+            bool[] r_detail = new bool[7] ;
             if (time.IsRoutine == false) 
             {
-                return new Tuple<DateTime, DateTime>[1] { new Tuple<DateTime,DateTime>(time.StartTime, time.EndTime) };
+                return new Event_Time_Helper[1]{ new Event_Time_Helper{
+                    starttime=time.StartTime,
+                    endtime=time.EndTime}};
             }
-            if (routinedetail.Length < 8)
+            else
             {
+                
+            if (int.Parse(time.RoutineDetail)<256)
+            {
+                int routinedetail = int.Parse(time.RoutineDetail);
                 //接受RoutineDetail数据
-                for (int i = 0; i < routinedetail.Length; i++)
+                for (int i = 0; i < 7; i++)
                 {
-                    r_detail[(i > 6 ? 0 : i)]= routinedetail[i].ToString();
+                    if (i == 0)
+                    {
+                        r_detail[i] = (routinedetail & 128) > 0;
+                    }
+                    else
+                    {
+                        r_detail[i] = (routinedetail & Convert.ToInt32(System.Math.Pow(2 , i))) > 0;
+                    }
                 }
                 //处理RoutineDetail数据至DateTime.DayOfWeek的格式
                 for (int i = 0; i < 7; i++)
                 {
-                    if (r_detail[i] == "1")
+                    if (r_detail[i] == true)
                     {
                         DateTime flag = time.StartTime.Date + new TimeSpan(Darili_Extra.CalculateTimeSpan((int)time.StartTime.DayOfWeek, i), 0, 0, 0);
                         while (flag < time.EndTime.Date)
                         {
-
+                            result.Add(new Event_Time_Helper
+                            {
+                                starttime = flag + time.StartTime.TimeOfDay,
+                                endtime = flag + time.EndTime.TimeOfDay
+                            });
+                            flag += new TimeSpan(7, 0, 0, 0);
                         }
                     }
                 }
             }
             else throw new ArgumentException("遇到异常的重复时间参数", time.RoutineDetail);
-            return null;
+            }
+            
+            return result.ToArray();
         }
 
     }
