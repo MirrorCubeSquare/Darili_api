@@ -110,5 +110,8 @@ css/
 xml/
 js/
 main.html
+addevent.html
+#ignore poster
+Poster/
 
 

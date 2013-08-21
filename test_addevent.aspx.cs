@@ -6,17 +6,19 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Web.UI;
 using System.Drawing;
+using System.Xml.Linq;
 using System.Web.UI.WebControls;
 
 public partial class test_addevent : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if(Darili_User.IsAuthenticated())
+        {
         try
         {
             //以下为测试用代码
-            
+            string Publisher = Page.User.Identity.Name;
             Response.AddHeader("Access-Control-Allow-Origin", "*");
             //以上为测试用代码
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
@@ -55,27 +57,41 @@ public partial class test_addevent : System.Web.UI.Page
             };
             #endregion
             #region 处理speaker,class
-            foreach (var element in obj["speaker"].ToList())
+            if (obj["speaker"] != null)
             {
-                string raw = element.ToString();
-                raw=System.Text.RegularExpressions.Regex.Replace(raw,@"\s{4}","|");
-                string[]speaker=raw.Split('|');
-                data.Lecture.Add(new Lecture
+                foreach (var element in obj["speaker"].ToList())
                 {
-                    Speaker = speaker[0],
-                    Class = speaker[1]
+                    string raw = element.ToString();
+                    raw = System.Text.RegularExpressions.Regex.Replace(raw, @"\s{4}", "|");
+                    string[] speaker = raw.Split('|');
+                    data.Lecture.Add(new Lecture
+                    {
+                        Speaker = speaker[0],
+                        Class = speaker[1]
+                    }
+                    );
                 }
-                );
-            }
-            foreach (var element in obj["Raiser"].ToList())
-            {
-                data.Host.Add(new Host
+                foreach (var element in obj["Raiser"].ToList())
                 {
-                    Name = element.ToString()
+                    data.Host.Add(new Host
+                    {
+                        Name = element.ToString()
 
-                });
-                
+                    });
+
+                }
             }
+            else
+            {
+                foreach (var element in obj["Publisher"].ToList())
+                {
+                    data.Host.Add(new Host
+                    {
+                        Name=element.ToString()
+                    });
+                }
+            }
+         
             #endregion
             #region 处理多时段
             foreach (var element in obj["multipletime"].ToList())
@@ -129,19 +145,25 @@ public partial class test_addevent : System.Web.UI.Page
             #endregion
 
             #region 处理报名时间
-            var event_bm = new Event_BM();
-            string time_s = obj["PublishTime"]["StartTime"].ToString().Replace('/', ' ');
-            string time_r = obj["PublishTime"]["EndTime"].ToString().Replace('/', ' ');
-            event_bm.StartTime = DateTime.Parse(time_s);
-            event_bm.EndTime = DateTime.Parse(time_r);
-            event_bm.numlimit = int.Parse(obj["numlimit"].ToString()); 
+            if (obj["PublishTime"] != null)
+            {
+                var event_bm = new Event_BM();
+
+                string time_s = obj["PublishTime"]["StartTime"].ToString().Replace('/', ' ');
+                string time_r = obj["PublishTime"]["EndTime"].ToString().Replace('/', ' ');
+                event_bm.StartTime = DateTime.Parse(time_s);
+                event_bm.EndTime = DateTime.Parse(time_r);
+                event_bm.numlimit = int.Parse(obj["numlimit"].ToString());
+            }
             #endregion
+            #region 计算总时间范围
             data.StartTime = (from entry in data.Event_MultipleTime
                               orderby entry.StartDate ascending
                               select entry.StartDate).First();
             data.EndTime = (from entry in data.Event_MultipleTime
                             orderby entry.EndDate descending
                             select entry.EndDate).First();
+            #endregion
             #region 插入记录，返回
             if (data.Publisher == null || data.Publisher.Trim() == "")
             {
@@ -149,6 +171,37 @@ public partial class test_addevent : System.Web.UI.Page
             }
             ctx.EventMain.InsertOnSubmit(data);
             ctx.SubmitChanges();
+            #region 处理报名参数
+            var paractx = new LikeAndGoDataContext();
+            Event_Subscription_Parameters para = new Event_Subscription_Parameters
+            {
+                eid = data.Id,
+                parameters = new System.Xml.Linq.XElement("root")
+            };
+            if (obj["parameters"] != null)
+            {
+                try
+                {
+                    int count = obj["parameters"].Count();
+                    if (count > 0)
+                    {
+                        foreach (var element in obj["parameters"].ToList())
+                        {
+                            para.parameters.Add(new XElement("Para", (string)element));
+                        }
+
+                        paractx.Event_Subscription_Parameters.InsertOnSubmit(para);
+                        paractx.SubmitChanges();
+                    }
+                }
+                catch (Exception exp)
+                {
+                    ctx.EventMain.DeleteOnSubmit(data);
+                    ctx.SubmitChanges();
+                    Response.End();
+                }
+            }
+            #endregion
             Session["post_id"] = data.Id;
             JObject response = new JObject(new JProperty("success", 1),
                 new JProperty("id", data.Id));
@@ -161,7 +214,11 @@ public partial class test_addevent : System.Web.UI.Page
             JObject obj = new JObject(new JProperty("success", 0),
                 new JProperty("err", exp.Message));
             Response.Write(obj);
+            Response.End();
         }
+
+        }
+        
     }
     
 }

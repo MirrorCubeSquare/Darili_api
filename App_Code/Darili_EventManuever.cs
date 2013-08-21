@@ -31,8 +31,63 @@ public class Darili_EventManuever
     public static Event[] SearchTime(DateTime StartTime, DateTime EndTime, string type, string subtype, bool IsAll, int perpage, int page)
     {
         List<Event> list = new List<Event>();
+        Darili_LinqDataContext ctx = new Darili_LinqDataContext();
         var predicate = PredicateBuilder.True<EventMain>();
-        return null;
+
+        if (type != null&&type!="")
+        {
+            predicate = predicate.And(p => p.Type == type);
+
+        }
+        if (subtype != null&&subtype!="")
+        {
+            predicate = predicate.And(p => p.SubType == type);
+
+        }
+        if (IsAll == false)
+        {
+            predicate = predicate.And(p => p.ViewFlag > 0);
+        }
+        predicate = predicate.And(p => StartTime > p.StartTime);
+        predicate = predicate.And(p => p.EndTime > EndTime);
+        var result = ctx.EventMain.Where(predicate).Skip(perpage * page).Take(perpage);
+        EventMain[] temp = result.ToArray();
+
+        foreach (EventMain t in temp)
+        {
+            list.Add(t);
+
+        }
+        foreach (Event t in list)
+        {
+            t.Hosts = Darili_Extra.GetHosts(t.Id);
+            t.MultipleTime = Event.GetMultipleTime(t.Id);
+            if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
+            try
+            {
+                var quary2 = (from entry in ctx.Lecture
+                              where entry.Event_Id == t.Id
+                              select entry).ToArray();
+                if (quary2.Length > 0)
+                {
+                    t.C_Speaker = new Speaker[quary2.Length];
+                    for (int i = 0; i < quary2.Length; i++)
+                    {
+                        t.C_Speaker[i] = new Speaker
+                        {
+                            Name = quary2[i].Speaker,
+                            Class = quary2[i].Class
+                        };
+                    }
+                    t.Speaker = quary2[0].Speaker;
+                    t.Class = quary2[0].Class;
+                }
+                
+            }
+            catch (Exception e)
+            { throw e; }
+        }
+        return list.ToArray();
     }
 	  public static string AddSubscription(string input)//根据传入的JSON（单个活动）创建活动（测试，通过）
     {

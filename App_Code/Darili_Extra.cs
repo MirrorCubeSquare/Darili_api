@@ -4,6 +4,7 @@ using System.Linq;
 using System.Data.SqlClient;
 using System.Data;
 using  Newtonsoft.Json;
+using System.Drawing.Imaging;
 using Darili_api;
 using System.Web;
 using System.IO;
@@ -37,10 +38,31 @@ public class Darili_Extra
             default: return null;
         }
     }
+   
+    public static EncoderParameters GetJpegQuality(int quality)
+    {
+        var myEncoderParameters = new EncoderParameters(1);
+        var myEncoderParameter = new EncoderParameter(Encoder.Quality, 25L);
+        myEncoderParameters.Param[0] = myEncoderParameter;
+        return myEncoderParameters;
+    }
+    public static ImageCodecInfo GetEncoderInfo(String mimeType)
+    {
+        int j;
+        ImageCodecInfo[] encoders;
+        encoders = ImageCodecInfo.GetImageEncoders();
+        for (j = 0; j < encoders.Length; ++j)
+        {
+            if (encoders[j].MimeType == mimeType)
+                return encoders[j];
+        }
+        return null;
+    }
     public static int CalculateTimeSpan(int first, int second)
     {
         return first <= second ? second - first : second - first + 7;
     }
+
     public static string GetFormat(string MIME)
     {
         switch (MIME.ToLower().Trim())
@@ -55,7 +77,8 @@ public class Darili_Extra
     }
     public static int GetSubscriptionNum(int id)
     {
-        return 0;
+        var ctx = new LikeAndGoDataContext();
+        return (from entry in ctx.Event_Subscription where entry.eid == id select entry.eid).Count();
     }
     public static int GetLikeNum(int id)
     {
@@ -83,6 +106,14 @@ public class Darili_Extra
     {
         LikeAndGoDataContext ctx = new LikeAndGoDataContext();
         var quary = from entry in ctx.Event_Like
+                    where entry.eid == eid && entry.uid == uid
+                    select entry;
+        return quary.Count() > 0;
+    }
+    public static bool SubscribeExists(int uid, int eid)
+    {
+        LikeAndGoDataContext ctx = new LikeAndGoDataContext();
+        var quary = from entry in ctx.Event_Subscription
                     where entry.eid == eid && entry.uid == uid
                     select entry;
         return quary.Count() > 0;
@@ -115,7 +146,7 @@ public class Darili_Extra
     public static XElement[] GetAlbum(int id, string FatherPath)
     {
         List<FileInfo> result = new List<FileInfo>();
-        string path = FatherPath + "images/" + id.ToString();
+        string path = FatherPath + "img/album/" + id.ToString();
 
         if (Directory.Exists(path))
         {
@@ -126,12 +157,12 @@ public class Darili_Extra
         XElement root = new XElement("root");
         foreach (var elements in result)
         {
-            root.Add(new XElement("Album", path + "/" + elements));
+            root.Add(new XElement("Album","http://"+HttpContext.Current.Request.Url.Host+":"+HttpContext.Current.Request.Url.Port+ "/img/album/" +id.ToString()+ "/"+elements.ToString()));
 
         }
         return root.Elements().ToArray();
     }
-    public static String[] GetRaiser(int id)
+    public static String[] GetHosts(int id)
     {
         var ctx = new Darili_LinqDataContext();
         var quary = from entry in ctx.Host
@@ -172,13 +203,13 @@ public class Extra_Lecture
         Darili_LinqDataContext ctx = new Darili_LinqDataContext();
         var quary = (from entry in ctx.Event_LectureEx
                     where entry.event_id == id
-                    select entry).First();
-        if (quary != null)
+                    select entry);
+        if (quary.Count() >0)
         {
             return new Extra_Lecture
             {
-                Brand = quary.Brand,
-                speakerinfo = quary.speakerinf
+                Brand = quary.First().Brand,
+                speakerinfo = quary.First().speakerinf
             };
 
         }

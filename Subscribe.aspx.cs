@@ -13,31 +13,31 @@ public partial class Subscribe : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        XElement Ele=new XElement("root",
-            new XElement("Cellphone",18817361921),
-            new XElement("Realname","徐一唯"),
-            new XElement("times",new XElement("starttime","2013-08-01 0:01:02"),
-                                 new XElement("endtime","2013-08-03 2:22:22")),
-            new XElement("times", new XElement("starttime", "2013-08-04 0:01:02"),
-                                 new XElement("endtime", "2013-08-06 2:22:22"))
-                                 );
-
-        string json = @"{'root':{'Cellphone':'18817361921','Realname':'徐一唯','times':[{'starttime':'2013-08-01 0:01:02','endtime':'2013-08-03 2:22:22'},{'starttime':'2013-08-04 0:01:02','endtime':'2013-08-06 2:22:22'}]}} ";
-
+       
+       // string json = @"{'root':{'Cellphone':'18817361921','Realname':'徐一唯','times':[{'starttime':'2013-08-01 0:01:02','endtime':'2013-08-03 2:22:22'},{'starttime':'2013-08-04 0:01:02','endtime':'2013-08-06 2:22:22'}]}} ";
+        Response.AddHeader("Access-Control-Allow-Origin", "*");
         if (!IsPostBack)
         {
-           
+
             if (Page.User.Identity.IsAuthenticated)
             {
-                int eid = int.Parse(Request.QueryString["id"]);
-                if (Event.EventExists(eid))
+                try
                 {
-                    //var json = JsonConvert.SerializeXNode(Ele);
+                    string json = Request.QueryString[0];
+                    var Jobject = JObject.Parse(json);
+                    int eid = int.Parse((string)Jobject["id"]);
 
-                   var param=XElement.Parse(JsonConvert.DeserializeXmlNode(json).InnerXml);
-                   Darili_Subsciption.SubscribeEvent(eid, param);
+                    if (Event.EventExists(eid))
+                    {
+                        //var json = JsonConvert.SerializeXNode(Ele);
 
-                   Response.Write(param.ToString());
+                        Darili_Subsciption.SubscribeEvent(eid, Jobject);
+                        Response.Write(1);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Response.Write(exp);
                 }
             }
         }

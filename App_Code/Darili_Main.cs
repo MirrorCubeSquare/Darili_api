@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;
 using System.Data;
+using System.Web;
 using  Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
@@ -23,6 +24,14 @@ namespace Darili_api
         public DateTime starttime;
             public DateTime endtime;
         public Event_Time_Helper()
+        {
+        }
+    }
+    public class Speaker
+    {
+        public string Name;
+        public string Class;
+        public Speaker()
         {
         }
     }
@@ -60,6 +69,9 @@ namespace Darili_api
     public class Event
     {
         public int Id { get; set; }
+        public String[] Hosts { get; set; }
+        public bool liked { get; set; }
+        public bool subscribed{get;set;}
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public DateTime PublishTime { get; set; }
@@ -68,6 +80,8 @@ namespace Darili_api
         public JToken ExtraInfo { get; set; }
         public string Speaker { get; set; }
         public string Class { get; set; }
+        public Speaker[] C_Speaker{get;set;}
+
         public Event_Time[] MultipleTime { get; set; }
         public string series { get; set; }
         public bool ShouldSerializeMultipleTime()
@@ -94,7 +108,14 @@ namespace Darili_api
             {
                 XElement Xml = new XElement("Event", new XElement("Id", value.Id));
                 XElement MultipleTime=new XElement("MultipleTime","");
-                foreach (var time in value.MultipleTime)
+                var MultipleTimeHelper = Event.SeparateMultipleTimes(value.MultipleTime);
+                foreach (var element in MultipleTimeHelper)
+                {
+                    XElement temp = Darili_Extra.ForceArray(new XElement("MultipleTimes"), false);
+                    temp.Add(new XElement("StartTime", element.starttime), new XElement("endTime", element.endtime));
+                    Xml.Add(temp);
+                }
+                /*foreach (var time in value.MultipleTime)
                 {
                     MultipleTime.Add(new XElement("Time", new XElement("sub_id", time.sub_id),
                                              new XElement("starttime", time.StartTime),
@@ -102,14 +123,39 @@ namespace Darili_api
                                              new XElement("isroutine", Convert.ToInt32(time.IsRoutine)),
                                              new XElement("routinedetail", time.RoutineDetail)));
 
-                }
+                }*/
                 if (value.Speaker != null)
                 {
                     Xml.Add(new XElement("speaker", value.Speaker.Trim()),
                             new XElement("Class", value.Class.Trim()));
-                } 
+                }
+                if (value.C_Speaker != null)
+                {
+                    foreach (var element in value.C_Speaker)
+                    {
+                        var Speakers_root=Darili_Extra.ForceArray(new XElement("Speakers"),false);
+                        Speakers_root.Add(new XElement("Name",element.Name.Trim()),new XElement("Class",element.Class.Trim()));
+                        Xml.Add(Speakers_root);
+                    }
+                }
+                if (value.Hosts != null)
+                {
+                    foreach (var element in value.Hosts)
+                    {
+
+                        var Publishers_root = Darili_Extra.ForceArray(new XElement("Publishers"), false);
+                        Publishers_root.SetValue(element);
+                        Xml.Add(Publishers_root);
+                    }
+                    
+                    
+                }
+                Xml.Add(new XElement("pic",@"./g_Poster.aspx?id="+value.Id.ToString()));
+                Xml.Add(new XElement("liked", value.liked));
+                Xml.Add(new XElement("subscribed",value.subscribed));
                 var timeleft=Darili_Extra.TimeLeft(value);
                 Xml.Add(new XElement("Title", value.Title),
+                        new XElement("Subtitle",value.Subtitle),
                         new XElement("Location", value.Location),
                         new XElement("Subtype",value.Subtype),
                         new XElement("StartTime", value.StartTime),
@@ -149,6 +195,7 @@ namespace Darili_api
             }
             if (value.Count() == 1) Xml_Root.Add(new XElement("Event", ""));
             return Xml_Root.Elements();
+
 
         }
         public static implicit operator Event(EventMain value)
@@ -280,24 +327,33 @@ namespace Darili_api
             {
                 var quary2 = (from entry in ctx.Lecture
                               where entry.Event_Id == id
-                              select entry).First();
-                if (quary2 != null)
+                              select entry).ToArray();
+                if (quary2.Length>0)
                 {
-                    result.Speaker = quary2.Speaker;
-                    result.Class = quary2.Class;
+                    result.C_Speaker = new Speaker[quary2.Length];
+                    for(int i=0;i<quary2.Length;i++)
+                    {
+                        result.C_Speaker[i] = new Speaker
+                        {
+                            Name = quary2[i].Speaker,
+                            Class = quary2[i].Class
+                        };
+                        }
+                    result.Speaker = quary2[0].Speaker;
+                    result.Class = quary2[0].Class;
                 }
             }
             catch (Exception e)
             {
             }
-           
 
+            result.Hosts = Darili_Extra.GetHosts(id);
             result.MultipleTime = GetMultipleTime(id);
             if (result.MultipleTime != null) result.IsMultipleTime = true; else result.IsMultipleTime = false;
             return result;
         }
         
-        //获取指定发布人的发布记录
+        //获取指定发布人的发布记录(out of date)
         public static Event[] GetPublisherEntries(string people, int count)
         {
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
@@ -332,259 +388,27 @@ namespace Darili_api
         }
 
         //外部调用：显示所有公共可访问的活动
-        public static Event[] GetTimeSpan(DateTime ST, DateTime ET,bool isAll)
-        {
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = from entry in ctx.EventMain
-                        where entry.StartTime >= ST && entry.EndTime <= ET && entry.ViewFlag >= 0
-                        orderby entry.PublishTime descending
-                        select entry;
-            if (isAll == true)
-            {
-               quary = from entry in ctx.EventMain
-                            where entry.StartTime >= ST && entry.EndTime <= ET
-                            orderby entry.PublishTime descending
-                            select entry;
-            }
-            EventMain[] temp = quary.ToArray();
-            List<Event> list = new List<Event>();
-            foreach (EventMain t in temp)
-            {
-                list.Add(t);
-
-            }
-            foreach (Event t in list)
-            {
-                t.MultipleTime = GetMultipleTime(t.Id);
-                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-                try
-                {
-                    var quary2 = (from entry in ctx.Lecture
-                                  where entry.Event_Id == t.Id
-                                  select entry).First();
-                    if (quary2 != null)
-                    {
-                        t.Speaker = quary2.Speaker;
-                        t.Class = quary2.Class;
-                    }
-                }
-                catch (Exception e)
-                {
-                }
-
-            }
-            //var comp=new Darili_EventManuever.IEventStarttimeComparer();
-            //list.Sort(comp);
-            return list.ToArray();
-
-
-        }
-        public static Event[] GetTimeSpan(DateTime ST, DateTime ET, string type,string subtype,bool IsAll)
-        {
-            if (subtype == "") return GetTimeSpan(ST, ET, type, IsAll);
-
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = from entry in ctx.EventMain
-                        where entry.StartTime >= ST && entry.EndTime <= ET && entry.ViewFlag >= 0 && entry.Type == type && entry.SubType == subtype
-                        orderby entry.PublishTime descending
-                        select entry;
-            if (IsAll == true)
-            {
-                quary = from entry in ctx.EventMain
-                        where entry.StartTime >= ST && entry.EndTime <= ET &&entry.Type==type &&entry.SubType==subtype
-                        orderby entry.PublishTime descending
-                        select entry;
-            }
-            EventMain[] temp = quary.ToArray();
-            List<Event> list = new List<Event>();
-            foreach (EventMain t in temp)
-            {
-                list.Add(t);
-
-            }
-            foreach (Event t in list)
-            {
-                t.MultipleTime = GetMultipleTime(t.Id);
-                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-                try
-                {
-                    var quary2 = (from entry in ctx.Lecture
-                                  where entry.Event_Id == t.Id
-                                  select entry).First();
-                    if (quary2 != null)
-                    {
-                        t.Speaker = quary2.Speaker;
-                        t.Class = quary2.Class;
-                    }
-                }
-                catch (Exception e)
-                {
-                }
-
-            }
-           // var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            //list.Sort(comp);
-            return list.ToArray();
-
-        }
-        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, string type, bool IsAll)
-        {
-            if (type == "") return GetTimeSpan(StartTime, EndTime, IsAll);
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = from entry in ctx.EventMain
-                        where entry.StartTime >= StartTime && entry.EndTime <=EndTime && entry.ViewFlag >= 0 && entry.Type == type 
-                        orderby entry.PublishTime descending
-                        select entry;
-            if (IsAll == true)
-            {
-                quary = from entry in ctx.EventMain
-                        where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type
-                        orderby entry.PublishTime descending
-                        select entry;
-            }
-            EventMain[] temp = quary.ToArray();
-            List<Event> list = new List<Event>();
-            foreach (EventMain t in temp)
-            {
-                list.Add(t);
-
-            }
-            foreach (Event t in list)
-            {
-                t.MultipleTime = GetMultipleTime(t.Id);
-                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-                try
-                {
-                    var quary2 = (from entry in ctx.Lecture
-                                  where entry.Event_Id == t.Id
-                                  select entry).First();
-                    if (quary2 != null)
-                    {
-                        t.Speaker = quary2.Speaker;
-                        t.Class = quary2.Class;
-                    }
-                }
-                catch (Exception e)
-                {
-                }
-            }
-            //var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            //list.Sort(comp);
-            return list.ToArray();
-        }
-        public static Event[] GetTimeSpan(DateTime StartTime, TimeSpan Span,bool IsAll)
-
-        {
-            return GetTimeSpan(StartTime, StartTime.Add(Span),"","",IsAll);
-        }
+        
+       
         public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, string type, string subtype, bool IsAll, int perpage, int page)
         {
-            if (subtype == ""||subtype==null) return GetTimeSpan(StartTime, EndTime, type, IsAll,perpage,page);
-
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = (from entry in ctx.EventMain
-                        where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 && entry.Type == type && entry.SubType == subtype
-                        orderby entry.PublishTime descending
-                        select entry).Skip(perpage*(page)).Take(perpage);
-            if (IsAll == true)
+            var predicate = PredicateBuilder.True<EventMain>();
+           if(subtype!=""&&subtype!=null)
             {
-                quary = (from entry in ctx.EventMain
-                        where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type && entry.SubType == subtype
-                        orderby entry.PublishTime descending
-                        select entry).Skip(perpage*(page)).Take(perpage);
+                 predicate = predicate.And(p => p.SubType == subtype);
             }
-            EventMain[] temp = quary.ToArray();
-            List<Event> list = new List<Event>();
-            foreach (EventMain t in temp)
-            {
-                list.Add(t);
-
-            }
-            foreach (Event t in list)
-            {
-                t.MultipleTime = GetMultipleTime(t.Id);
-                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-                try
-                {
-                    var quary2 = (from entry in ctx.Lecture
-                                  where entry.Event_Id == t.Id
-                                  select entry).First();
-                    if (quary2 != null)
-                    {
-                        t.Speaker = quary2.Speaker;
-                        t.Class = quary2.Class;
-                    }
-                }
-                catch (Exception e)
-                {
-                }
-            }
-            //var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            //list.Sort(comp);
-            return list.ToArray();
-        }
-        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, string type, bool IsAll, int perpage, int page)
-        {
-            if (type == "" || type == null) return GetTimeSpan(StartTime,EndTime,IsAll,perpage,page);
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = (from entry in ctx.EventMain
-                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 && entry.Type == type 
-                         orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page)).Take(perpage);
-            if (IsAll == true)
-            {
-                quary = (from entry in ctx.EventMain
-                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.Type == type
-                         orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page)).Take(perpage);
-            }
-            EventMain[] temp = quary.ToArray();
-            List<Event> list = new List<Event>();
-            foreach (EventMain t in temp)
-            {
-                list.Add(t);
-
-            }
-            foreach (Event t in list)
-            {
-                t.MultipleTime = GetMultipleTime(t.Id);
-                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
-                try
-                {
-                    var quary2 = (from entry in ctx.Lecture
-                                  where entry.Event_Id == t.Id
-                                  select entry).First();
-                    if (quary2 != null)
-                    {
-                        t.Speaker = quary2.Speaker;
-                        t.Class = quary2.Class;
-                    }
-                }
-                catch (Exception e)
-                {
-                }
-            }
-            //var comp = new Darili_EventManuever.IEventStarttimeComparer();
-            //list.Sort(comp);
-            return list.ToArray();
-        }
-
-        public static Event[] GetTimeSpan(DateTime StartTime, DateTime EndTime, bool IsAll, int perpage, int page)
-        {
+            if(type!=""&&type!=null)
             
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = (from entry in ctx.EventMain
-                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime && entry.ViewFlag >= 0 
-                         orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page)).Take(perpage);
-            if (IsAll == true)
+                predicate=predicate.And(p=>p.Type==type);
+            if (!IsAll)
             {
-                quary = (from entry in ctx.EventMain
-                         where entry.StartTime >= StartTime && entry.EndTime <= EndTime 
-                         orderby entry.PublishTime descending
-                         select entry).Skip(perpage * (page)).Take(perpage);
+                predicate = predicate.And(p => p.ViewFlag > 0);
             }
-            EventMain[] temp = quary.ToArray();
+            predicate = predicate.And(p => p.StartTime >= StartTime).And(p => p.EndTime <= EndTime);
+            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+            var query = ctx.EventMain.Where(predicate).OrderByDescending(p=>p.PublishTime).Select(p => p).Skip(perpage * page).Take(perpage);
+            
+            EventMain[] temp = query.ToArray();
             List<Event> list = new List<Event>();
             foreach (EventMain t in temp)
             {
@@ -593,17 +417,27 @@ namespace Darili_api
             }
             foreach (Event t in list)
             {
+                t.Hosts = Darili_Extra.GetHosts(t.Id);
                 t.MultipleTime = GetMultipleTime(t.Id);
                 if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
                 try
                 {
                     var quary2 = (from entry in ctx.Lecture
                                   where entry.Event_Id == t.Id
-                                  select entry).First();
-                    if (quary2 != null)
+                                  select entry).ToArray();
+                    if (quary2.Length>0)
                     {
-                        t.Speaker = quary2.Speaker;
-                        t.Class = quary2.Class;
+                        t.C_Speaker = new Speaker[quary2.Length];
+                        for (int i = 0; i < quary2.Length; i++)
+                        {
+                            t.C_Speaker[i] = new Speaker
+                            {
+                                Name = quary2[i].Speaker,
+                                Class = quary2[i].Class
+                            };
+                            }
+                        t.Speaker = quary2[0].Speaker;
+                        t.Class = quary2[0].Class;
                     }
                 }
                 catch (Exception e)
@@ -614,6 +448,7 @@ namespace Darili_api
             //list.Sort(comp);
             return list.ToArray();
         }
+      
         public static Event_Time[] GetMultipleTime(int id)
         {
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();

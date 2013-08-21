@@ -1,30 +1,30 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="addevent.aspx.cs" Inherits="addevent" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-
-
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-	<title>event-platform-addevent</title>
+	<title>新建活动</title>
 	
-	
+	<link rel="stylesheet" type="text/css" href="css/smoothness/jquery-ui-1.10.3.custom.css"/>
 	 <link rel="stylesheet" type="text/css" href="css/reset.css" media="all" />
 	 <link rel="stylesheet" type="text/css" href="css/addevent-style.css" media="all" />
 	 <script type="text/javascript" src="js/jquery-1.9.min.js"></script>
 	
-
+	<script tyoe="text/javascript" src="js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript" src="js/addevent.js"></script>
+
 </head>
 <body>
-	
+	<div id="time-selecter-wrap">
+	</div>
 	<div id="container-wrap">
 		<div id="title">
 			<span id="title-chi">新活动</span>
 			<span id="title-eng">PUBLISH</span>
 		</div>
 		<div id="container">
-			<ul id="page1">
+			<ul id="page1" class="page">
 				<li id="add-event-attr-wrap">
 					<div class="left">
 						<p>添加</p>
@@ -47,6 +47,8 @@
 						
 					</div>
 				</li>
+				<div id="add-event-attr-alert-before">
+				</div>
 				<li id="add-event-attr-alert" class="alert">
 					<p>对所有人可见，所有人均可参与</p>
 				</li>
@@ -105,7 +107,7 @@
 								<div class="category-item">
 									<ul>
 										<li>人文</li>
-										<li>社科</li>
+										<li>社政</li>
 										<li>科技</li>
 										<li>经管</li>
 										<li>艺术</li>
@@ -182,12 +184,15 @@
 					</div>
 
 				</li>
+				<div id="add-time-content-before">
+				</div>
 				<li id="add-time-content" class="alert">
+
 					<ul id="add-time-multi">
 						<li>
 
 							<span class="hint">从</span>
-							<input type="text" class="time-input-long"/>
+							<input type="text" class="time-input-long datepicker"/>
 							
 							<div class="show add-date-show long-time-show">
 								2013-03-06
@@ -204,7 +209,7 @@
 						<li>
 
 							<span class="hint">至</span>
-							<input type="text" class="time-input-long"/>
+							<input type="text" class="time-input-long datepicker"/>
 							
 							<div class="show add-date-show long-time-show">
 								2013-03-06
@@ -238,6 +243,8 @@
 								<div class="each-day-intro">周日</div>
 							</div>
 						</li>
+						<li class="check-alert">
+						</li>
 						<li>
 							<div id="add-time-confirm-multi" class="add-time-confirm check pointer">
 							</div>
@@ -246,12 +253,14 @@
 					<ul id="add-time-single">
 						<li>
 
-							<input type="text" class="time-input-long"/>
-							
+
+							<input type="text" class="datepicker time-input-long"/>
 							<div class="show add-date-show long-time-show">
 								2013-03-06
 							</div>
+
 							<input type="text" class="time-input-short"/>
+							
 							<div class="show add-time-show1 short-time-show">
 								08:00
 							</div>
@@ -260,10 +269,12 @@
 								10:00
 							</div>
 						</li>
-						<li >
+						<li>
 							<div id="add-full-day-wrap">
 								<div class="click-box-square" id="add-fullday"></div>
 								<div>全天事件</div>
+							</div>
+							<div class="check-alert">
 							</div>
 							<div id="add-time-confirm-single" class="add-time-confirm check pointer">
 							</div>
@@ -273,6 +284,7 @@
 				<li id="event-location-wrap">
 					<div class="left">
 						<p>地点</p>
+						<p class="necessary">*</p>
 					</div>
 					<div class="right">
 						<div class="input-wrap">
@@ -301,7 +313,7 @@
 						<div class="clickbox click-box-round cl"></div>
 						<div class="event-alert-intro">当天早晨</div>
 						<div class="event-alert-right input">
-								<input type="text" class="time-input-long"/>
+								<input type="text" class="time-input-long datepicker"/>
 						
 								<div class="show event-alert-show1 long-time-show">
 									2013-03-06
@@ -314,7 +326,7 @@
 						<div class="clickbox click-box-round cl"></div>
 						<div class="event-alert-intro">前天晚上</div>
 						<div class="event-alert-right input">
-								<input type="text" class="time-input-long"/>
+								<input type="text" class="time-input-long datepicker"/>
 						
 								<div class="show event-alert-show1 long-time-show">
 									2013-03-06
@@ -327,7 +339,7 @@
 						<div class="clickbox click-box-round cl"></div>
 						<div class="event-alert-intro">指定时间</div>
 						<div class="event-alert-right input">
-								<input type="text" class="time-input-long"/>
+								<input type="text" class="time-input-long datepicker"/>
 						
 								<div class="show event-alert-show1 long-time-show">
 									2013-03-06
@@ -354,7 +366,7 @@
 			</ul>
 
 
-			<ul id="page2">
+			<ul id="page2" class="page">
 				<li id="main-raiser-wrap">
 					<div class="left">
 						<p>主办</p>
@@ -417,7 +429,7 @@
 
 
 
-			<ul id="page2-lec1">
+			<ul id="page2-lec1" class="page">
 				<li class="speaker" id="speaker-wrap">
 					<div class="left">
 						<p>主讲人</p>
@@ -479,7 +491,17 @@
 							<div class="category-button"></div>
 							<div class="category-item">
 								<ul>
-									<li>活动</li>
+									<li>无</li>
+									<li>复旦光华人文基金系列讲座</li>
+									<li>光华杰出人文学者系列讲座</li>
+									<li>复旦文史讲堂</li>
+									<li>文史研究院小型学术研究会系列</li>
+									<li>历史地理研究中心讲座</li>
+									<li>史学论坛</li>
+									<li>中国古代文学研究中心系列讲座</li>
+									<li>星空讲坛</li>
+									<li>3108讲会</li>
+									<li>图书馆培训讲座</li>
 									<li class="last">其他</li>
 								</ul>
 							</div>
@@ -504,7 +526,7 @@
 			
 			</ul>
 			
-			<ul id="page2-lec2">
+			<ul id="page2-lec2" class="page">
 				<li id="lec-raiser-wrap">
 					<div class="left">
 						<p>主办</p>
@@ -554,7 +576,7 @@
 			</ul>
 
 
-			<ul id="page3">	
+			<ul id="page3" class="page">	
 				<li>
 					<div id="enroll-time-intro">
 						<p>报名起止时间</p>
@@ -564,7 +586,7 @@
 						<div class="input-wrap">
 							<ul>
 								<li>
-									<input type="text" class="time-input-long"/>
+									<input type="text" class="time-input-long datepicker"/>
 							
 									<div class="show enroll-time-show1 long-time-show">
 										2013-03-06
@@ -575,7 +597,7 @@
 									</div>
 								</li>
 								<li>
-									<input type="text" class="time-input-long"/>
+									<input type="text" class="time-input-long datepicker"/>
 							
 									<div class="show enroll-time-show1 long-time-show">
 										2013-03-06
@@ -585,11 +607,14 @@
 										08:00
 									</div>
 								</li>
+								<li class="check-alert">
+								</li>
 							</ul>	
 						</div>
 						
 					</div>
 				</li>
+				
 				<li>
 					<div class="difleft">
 						<p>报名者提供的信息</p>
@@ -598,39 +623,50 @@
 						<div class="input-wrap">
 							<div class="inf-needed-each">
 								<div class="click-box-null"></div>
-								<div>姓名</div>
+								<div class="inf-needed-name">姓名</div>
 							</div>
 							<div class="inf-needed-each">
 								<div class="click-box-null"></div>
-								<div>学号</div>
-							</div>
-							<div class="inf-needed-each">
-								<div class="click-box-null"></div>
-								<div>手机</div>
+								<div class="inf-needed-name">学号</div>
 							</div>
 							<div class="inf-needed-each">
 								<div class="click-box-square clickboxmul"></div>
-								<div>性别</div>
+								<div class="inf-needed-name">手机</div>
 							</div>
 							<div class="inf-needed-each">
 								<div class="click-box-square clickboxmul"></div>
-								<div>年级</div>
+								<div class="inf-needed-name">邮箱</div>
 							</div>
 							<div class="inf-needed-each">
 								<div class="click-box-square clickboxmul"></div>
-								<div>专业</div>
+								<div class="inf-needed-name">年级</div>
 							</div>
 							<div class="inf-needed-each">
 								<div class="click-box-square clickboxmul"></div>
-								<div>生日</div>
+								<div class="inf-needed-name">专业</div>
 							</div>
 							<div class="inf-needed-each">
 								<div class="click-box-square clickboxmul"></div>
-								<div>寝室</div>
+								<div class="inf-needed-name">性别</div>
 							</div>
+							<div class="inf-needed-each">
+								<div class="click-box-square clickboxmul"></div>
+								<div class="inf-needed-name">寝室</div>
+							</div>
+							
+						
 						</div>
 						
 					</div>
+					
+					<li id="more-inf-needed" class="difleft">
+						<img src="../img/add-icon.png" alt="" />
+						<input type="text" class="input-long"/>
+						<div id="more-inf-confirm" class="check" >
+						</div>
+					</li>
+					<li class="check-alert">
+					</li>
 				</li>
 				<li>
 					<div class="left-sub-content" id="set-numlimit">
@@ -672,7 +708,7 @@
 				</li>
 			</ul>
 
-			<ul id="page4">
+			<ul id="page4" class="page">
 				<li id="add-pic-method-choose">
 					<div class="left">
 						<p>上传海报</p>

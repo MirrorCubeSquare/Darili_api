@@ -15,7 +15,7 @@ public partial class PickTime : System.Web.UI.Page
         DateTime Date = DateTime.Parse(Request.QueryString["d"]);
         string page = Request.QueryString["page"] != null ? Request.QueryString["page"] : "0";
         string perpage = Request.QueryString["perpage"] != null ? Request.QueryString["perpage"] : "5";
-        var events=Event.GetTimeSpan(Date.Date,Date.Date+new TimeSpan(1,0,0,0),true,int.Parse(perpage),int.Parse(page));
+        var events=Event.GetTimeSpan(Date.Date,Date.Date+new TimeSpan(1,0,0,0),"","",true,int.Parse(perpage),int.Parse(page));
         XElement[] Elements = Event.Translte_Xml(events).ToArray();
 
                 if (Elements != null&&events[0]!=null)

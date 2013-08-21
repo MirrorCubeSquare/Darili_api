@@ -20,20 +20,24 @@ public partial class Event_Data : System.Web.UI.Page
         Response.Charset = "utf-8";
         if (!IsPostBack)
         {
+            
+            int uid = Darili_User.Get_Uid_Local(Page.User.Identity.Name);
+            int[] LikeList = Darili_Subsciption.GetLikeList(uid);
+            int[] SubscribeList = Darili_Subsciption.GetSubscriptionList(uid);
             string cat = Request.QueryString["cat"]==null?"":Request.QueryString["cat"];
             string subcat = Request.QueryString["subcat"]==null?"":Request.QueryString["subcat"];
             string timeoffset = Request.QueryString["timeoffset"]==null?"0":Request.QueryString["timeoffset"];
             string page = Request.QueryString["page"]!=null?Request.QueryString["page"]:"0";
             string perpage = Request.QueryString["perpage"]!=null?Request.QueryString["perpage"]:"5";
             DateTime date = Request.QueryString["d"] != null ? DateTime.Parse(Request.QueryString["d"]) :DateTime.MinValue;
-            XElement Xml_Root = new XElement("allevents", null);
+            XElement Xml_Root = Darili_Extra.ForceArray(new XElement("allevents", null),true);
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             Event[] events=new Event[1];
             try
             {
                 if (date != DateTime.MinValue)
                 {
-                    events = Event.GetTimeSpan(date.Date, date.Date + new TimeSpan(1, 0, 0, 0), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                    events = Darili_EventManuever.SearchTime(date.Date, date.Date + new TimeSpan(1, 0, 0, 0), cat, subcat, true, int.Parse(perpage), int.Parse(page));
                 }
                 else
                 {
@@ -60,6 +64,11 @@ public partial class Event_Data : System.Web.UI.Page
                     List<Event> list = events.ToList();
 
                     events = list.ToArray();
+                }
+                foreach (var e_event in events)
+                {
+                    if (LikeList.Contains(e_event.Id)) e_event.liked = true; else e_event.liked = false;
+                    if (SubscribeList.Contains(e_event.Id)) e_event.subscribed = true; else e_event.subscribed= false;
                 }
                 XElement[] Elements = Event.Translte_Xml(events).ToArray();
 

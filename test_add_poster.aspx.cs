@@ -17,7 +17,7 @@ public partial class test_add_poster : System.Web.UI.Page
         #region 处理海报（插入后，因为要获取ID）
         try
             {
-                if (Request.Files.Count > 0 )
+                if (Request.Files.Count > 0 && Darili_User.IsAuthenticated() )
                 {
                     PosterDataContext ctx = new PosterDataContext();
                     if (Request.Files[0].ContentLength > 4194304) throw new ArgumentOutOfRangeException("图片过大:" + (Request.Files[0].ContentLength / (1024 * 1024))
@@ -31,12 +31,15 @@ public partial class test_add_poster : System.Web.UI.Page
                         var origin = System.Drawing.Image.FromStream(stream);
 
                         var alter = new Bitmap(origin, new Size(120, 180));
+ 
                         var guid_alter = Guid.NewGuid();
+
                         var guid_origin = Guid.NewGuid();
-                        alter.Save(path +guid_alter+Darili_Extra.GetFormat(Request.Files[0].ContentType));
+                        alter.Save(path + guid_alter + Darili_Extra.GetFormat(Request.Files[0].ContentType), Darili_Extra.GetExt(Request.Files[0].ContentType));
+                        
                         Request.Files[0].SaveAs(path + guid_origin + Darili_Extra.GetFormat(Request.Files[0].ContentType));
                         MemoryStream ms = new MemoryStream();
-                        alter.Save(ms,Darili_Extra.GetExt(Request.Files[0].ContentType));
+                        alter.Save(ms, Darili_Extra.GetExt(Request.Files[0].ContentType));
                         byte[] buffer = ms.ToArray();
 
                         Response.ContentType = Request.Files[0].ContentType;

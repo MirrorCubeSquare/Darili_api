@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 /// <summary>
 ///Darili_Subsciption 的摘要说明
 /// </summary>
@@ -28,11 +29,15 @@ public class Darili_Subsciption
 
 
     }
-    public static void SubscribeEvent(int eid,XElement s_detail)
+    public static void SubscribeEvent(int eid,JObject s_detail)
     {
+       
         if (Darili_User.IsAuthenticated() &&Event.EventExists(eid))
         {
+            
             int uid = Darili_User.Get_Uid_Local(HttpContext.Current.User.Identity.Name);
+            if(!Darili_Subsciption.SubscribeExists(uid,eid)){
+            //int uid = Darili_User.Get_Uid_Local(HttpContext.Current.User.Identity.Name);
             Darili_Subscription_Parameters para = new Darili_Subscription_Parameters(eid);
             try
             {
@@ -45,21 +50,36 @@ public class Darili_Subsciption
                     stime=DateTime.Now
                 };
                 //处理活动报名时间段
-                if (s_detail.Element("times") == null) throw new ArgumentNullException("报名时间段", "活动需求的参数未提供");
-                toAdd.sdetail.Add(s_detail.Elements("times"));
-
-                //处理活动报名参数
-                foreach (XElement ele in para.root.Elements("Para"))
+               
+                JObject obj = new JObject(new JProperty("Times",s_detail["Times"]));
+                foreach (var time in obj["Times"].ToList())
                 {
-                    if (s_detail.Element(ele.Value) == null)
-                    {
-                        throw new ArgumentNullException(ele.Value,"活动需求的参数未提供" );
-                    }
-                    toAdd.sdetail.Add(new XElement(ele.Value, s_detail.Element(ele.Value).Value));
+                    toAdd.sdetail.Add(new XElement("Times",new XElement("StartTime",DateTime.Parse((string)time["StartTime"])),new XElement("EndTime",DateTime.Parse((string)time["EndTime"]))));
+                }
+                //检查必填字段
+                var Parameters_Required = new Darili_Subscription_Parameters(eid);
+                if (Parameters_Required.root == null) { Parameters_Required.root=new XElement("Parameters"); }
+                Parameters_Required.AddParameter("姓名");
+                Parameters_Required.AddParameter("学号");
+                  
+               // Parameters_Required.root.Add(new XElement("Para", "姓名"), new XElement("Para", "学号"));
+                var ddd= new JObject(new JProperty("Root",new JObject(new JProperty("Parameters", s_detail["Parameters"])))).ToString();
+                //var xParameters = JsonConvert.DeserializeXmlNode(ddd).ToString();
+                XElement xParameters = XElement.Parse(JsonConvert.DeserializeXNode(ddd).ToString());
+                foreach (var Parameters in Parameters_Required.root.Elements("Para"))
+                {
+                    var query = (from entry in xParameters.Elements("Parameters")
+                                 where entry.Element("name").Value == Parameters.Value
+                                 select entry);
+                                 if (query.Count()>0)
+                                 {
+                                     toAdd.sdetail.Add(new XElement(Parameters.Value,(string)query.First().Element("value").Value));
+                                 }
                     
                 }
                 ctx.Event_Subscription.InsertOnSubmit(toAdd);
                 ctx.SubmitChanges();
+                
                 
             }
             catch (ArgumentNullException exp)
@@ -67,8 +87,29 @@ public class Darili_Subsciption
                 throw exp;
             }
         }
+        else
+        {
+                /*
+                LikeAndGoDataContext ctx = new LikeAndGoDataContext();
+                var d_query = (from entry in ctx.Event_Subscription
+                               where entry.uid == uid && entry.eid == eid
+                               select entry).First();
+                ctx.Event_Subscription.DeleteOnSubmit(d_query);
+                ctx.SubmitChanges();*/
+            throw new ArgumentException("法克");
+        }
+        }
     }
-    
+    public static int[] GetSubscriptionList(int uid)
+    {
+        LikeAndGoDataContext ctx = new LikeAndGoDataContext();
+        return ctx.Event_Subscription.Where(p => p.uid == uid).Select(p => p.eid).ToArray();
+    }
+    public static int[] GetLikeList(int uid)
+    {
+        LikeAndGoDataContext ctx = new LikeAndGoDataContext();
+        return ctx.Event_Like.Where(p => p.uid == uid).Select(p => p.eid).ToArray();
+    }
 }
 
 public class Darili_Subscription_Parameters
@@ -101,7 +142,7 @@ public class Darili_Subscription_Parameters
         {
             if (!ParameterExists(parameter))
             {
-                root.Add(new XElement("Para", parameter));
+                this.root.Add(new XElement("Para", parameter));
                 return true;
             }
             else
