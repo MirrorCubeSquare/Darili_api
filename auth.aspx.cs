@@ -10,56 +10,23 @@ public partial class auth : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        CookieContainer cookies = new CookieContainer();
-        HttpWebRequest request = WebRequest.Create("http://stu.fudan.edu.cn/user/info") as HttpWebRequest;
-        request.CookieContainer = cookies;
-      
-        HttpCookieCollection oCookies = Request.Cookies;
-        for (int j = 0; j < oCookies.Count; j++)
+       var result= Darili_User.Validate_StuCommon(Request.Cookies["webpy_session_id"]);
+        if (result.Item1 == true)
         {
-            HttpCookie oCookie = oCookies.Get(j);
-            Cookie oC = new Cookie();
-
-            // Convert between the System.Net.Cookie to a System.Web.HttpCookie...
-            oC.Domain = request.RequestUri.Host;
-            oC.Expires = oCookie.Expires;
-            oC.Name = oCookie.Name;
-            oC.Path = oCookie.Path;
-            oC.Secure = oCookie.Secure;
-            oC.Value = oCookie.Value;
-
-            request.CookieContainer.Add(oC);
-        }
-        request.UserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.4 (KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4";
-        request.Accept = "text/plain,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-        request.Timeout = 0x1388;
-        request.Method = "POST";
-        ASCIIEncoding encoding = new ASCIIEncoding();
-        byte[] byteArray = encoding.GetBytes("");
-        Stream newStream = request.GetRequestStream();
-        newStream.Write(byteArray, 0, byteArray.Length);//写入参数
-        newStream.Close();
-        HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-        if (response.StatusCode.Equals(HttpStatusCode.OK))
-        {
-            string content = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("GB2312")).ReadToEnd();
-            Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
-            String success;
-            if (values.TryGetValue("success", out success))
+            if (!Darili_User.IsInitialized(result.Item3))
             {
-                if (success.Equals("1"))
-                {
-                    String stuno;
-                    String nickname;
-                    values.TryGetValue("stuno", out stuno);
-                    values.TryGetValue("nickname", out nickname);
-                    RedictFromLoginPage(nickname, stuno);
-                }
-                else
-                {
-
-                }
+                //初始化本地用户数据库
+                int uid = Darili_User.Get_StuId(Request.Cookies["webpy_session_id"]);
+                string nickname = result.Item3;
+                if (Darili_User.Initialize(nickname, uid) != uid) throw new Exception();
             }
+            Darili_User.RecordLoginTime(result.Item3);
+            RedictFromLoginPage(result.Item3, result.Item2);
+            // RedictFromLoginPage(result.Item3, result.Item2,Request.Cookies["webpy_session_id"]);
+        }
+        else
+        {
+            Response.Redirect("main.html");
         }
     }
     private void RedictFromLoginPage(string nickname, string stuno)
@@ -69,6 +36,16 @@ public partial class auth : System.Web.UI.Page
         cookie.Value = stuno;
         Response.Cookies.Add(cookie);
         Response.Write("");
+        FormsAuthentication.RedirectFromLoginPage(nickname, false);
+    }
+    private void RedictFromLoginPage(string nickname, string stuno, HttpCookie webpy)
+    {
+        HttpCookie cookie = new HttpCookie("stuno");
+        cookie.HttpOnly = true;
+        cookie.Value = stuno;
+        Response.Cookies.Add(cookie);
+        Response.Write("");
+        Response.AppendCookie(webpy);
         FormsAuthentication.RedirectFromLoginPage(nickname, false);
     }
 }

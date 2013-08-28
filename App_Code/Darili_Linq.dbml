@@ -67,6 +67,16 @@
       <Association Name="EventMain_Event_MultipleTime" Member="Event_MultipleTime" ThisKey="Id" OtherKey="Event_Id" Type="Event_MultipleTime" />
       <Association Name="EventMain_Lecture" Member="Lecture" ThisKey="Id" OtherKey="Event_Id" Type="Lecture" />
       <Association Name="EventMain_Host" Member="Host" ThisKey="Id" OtherKey="Event_id" Type="Host" />
+      <Association Name="EventMain_Event_Album" Member="Event_Album" ThisKey="Id" OtherKey="eid" Type="Event_Album" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Event_Album" Member="Event_Album">
+    <Type Name="Event_Album">
+      <Column Name="eid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="aid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="description" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="filename" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="EventMain_Event_Album" Member="EventMain" ThisKey="eid" OtherKey="Id" Type="EventMain" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

@@ -43,12 +43,12 @@ public partial class test_addevent : System.Web.UI.Page
             #region 处理基础信息
             EventMain data = new EventMain
             {
-                Title = (string)obj["Title"],
-                Subtitle = (string)obj["SubTitle"],
-                Location = (string)obj["Location"],
-                Type = (string)obj["Type"],
-                SubType = (string)obj["Subtype"],
-                Context = (string)obj["Context"],
+                Title =( (string)obj["Title"]).Trim(),
+                Subtitle = ((string)obj["SubTitle"]).Trim(),
+                Location = ((string)obj["Location"]).Trim(),
+                Type = ((string)obj["Type"]).Trim(),
+                SubType = ((string)obj["Subtype"]).Trim(),
+                Context = ((string)obj["Context"]).Trim(),
                 PublishTime = DateTime.Now,
                 LastModified = DateTime.Now,
                 Publisher=HttpContext.Current.User.Identity.Name,
@@ -57,7 +57,7 @@ public partial class test_addevent : System.Web.UI.Page
             };
             #endregion
             #region 处理speaker,class
-            if (obj["speaker"] != null)
+            if (data.Type=="讲座")
             {
                 foreach (var element in obj["speaker"].ToList())
                 {
@@ -71,7 +71,7 @@ public partial class test_addevent : System.Web.UI.Page
                     }
                     );
                 }
-                foreach (var element in obj["Raiser"].ToList())
+                foreach (var element in obj["Publisher"].ToList())
                 {
                     data.Host.Add(new Host
                     {
@@ -213,7 +213,7 @@ public partial class test_addevent : System.Web.UI.Page
         {
             JObject obj = new JObject(new JProperty("success", 0),
                 new JProperty("err", exp.Message));
-            Response.Write(obj);
+            Response.Write(exp);
             Response.End();
         }
 

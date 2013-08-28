@@ -12,6 +12,7 @@
 	
 	<script tyoe="text/javascript" src="js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript" src="js/addevent.js"></script>
+	<script type="text/javascript" src="js/timepicker.js"></script>
 
 </head>
 <body>
@@ -34,14 +35,14 @@
 								<div class="clickbox click-box-round click" id="event-public"></div>
 								<div>公开活动</div>
 							</li>
-							<li class="click-text">
+							<!--<li class="click-text">
 								<div class="clickbox click-box-round" id="event-inside"></div>
 								<div>内部活动</div>
 							</li>
 							<li class="click-text">
 								<div class="clickbox click-box-round" id="event-personal"></div>
 								<div>个人活动</div>
-							</li>
+							</li>-->
 						</ul>
 						
 					</div>
@@ -137,9 +138,7 @@
 								<div class="category-button"></div>
 								<div class="category-item">
 									<ul>
-										<li>
-											校内
-										</li>
+										<li>校内</li>
 										<li class="last">校际</li>
 									</ul>
 								</div>
@@ -659,7 +658,7 @@
 					</div>
 					
 					<li id="more-inf-needed" class="difleft">
-						<img src="../img/add-icon.png" alt="" />
+						<img src="img/add-icon.png" alt="" />
 						<input type="text" class="input-long"/>
 						<div id="more-inf-confirm" class="check" >
 						</div>
@@ -695,7 +694,7 @@
 								</ul>
 							</li>
 							<li id="ticket-location">
-								<img src="../img/add-icon.png" alt="" />
+								<img src="img/add-icon.png" alt="" />
 								<input type="text" class="input-long"/>
 								<div id="ticket-location-confirm" class="check" >
 								</div>
@@ -708,57 +707,22 @@
 			</ul>
 
 			<ul id="page4" class="page">
-				<li id="add-pic-method-choose">
-					<div class="left">
-						<p>上传海报</p>
-					</div>
-					<div class="right">
-						<div id="add-pic-method">
-							<div class="add-pic-method-each">
-								<div class="click-box-round clickbox click"></div>
-								<div>本地上传</div>
-							</div>
-							<div class="add-pic-method-each">
-								<div class="click-box-round clickbox"></div>
-								<div>网络上传</div>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="alert" id="add-pic-local">
-					<div class="add-pic-wrap">
-						<div  class="add-pic-button pointer">
-							浏览文件
-							<form id="add-pic-local-form" enctype="multipart/form-data" method="post" action="">
-								<input id="File1" type="file" name="File1"/>
-								<input type="submit" id="pic-submit"  />
-							</form>
-						</div>
-						<input type="text" class="add-pic-url" disabled="disabled"/>
-						<div class="pic-show">
-							
-						</div>
-					</div>
 
-				</li>
-				<li class="alert" id="add-pic-net">
-					<div class="add-pic-wrap">
-						<div  class="add-pic-button pointer" id="add-pic-net-intro">
-							网址链接
-						</div>
-						<input type="text" class="add-pic-url" />
-						<div class="show" id="add-pic-show">
-							http://localhost:8090/img/picture.png
-						</div>
-						<div class="add-pic-confirm pointer check">
-						</div>
-						<div class="pic-show">
-							
-						</div>
-					</div>
-
-				</li>
-
+				<div id="album-topic">
+					上传海报
+				</div>
+				<div class="pic-show">
+					<div class='album-pic-wrap addevent-special'><div class='album-pic-delete delete-icon'></div></div>
+				</div>
+				<form id="add-pic-local-form" enctype="multipart/form-data" method="post" action="">
+				<div id="choose-pic-wrap">
+					<div id="choose-pic"></div>
+					<div id="album-alert">每张图片大小最多可以为4MB</div>
+					<input type="submit" id="pic-submit"/> 
+					<input id="File1" class="album-input" type="file" name="File1"/>
+				</div>
+				</form>
+					
 			</ul>
 		</div>
 		<div id="confirm">

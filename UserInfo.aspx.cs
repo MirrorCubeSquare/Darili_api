@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using System.Xml.Linq;
+using Darili_api;
 
 public partial class UserInfo : System.Web.UI.Page
 {
@@ -27,11 +28,7 @@ public partial class UserInfo : System.Web.UI.Page
             {
                 root.Add(new XElement("uid", Darili_User.Get_Uid_Local(Page.User.Identity.Name)));
             }
-            if (type == "detailed")
-            {
-                
-            }
-           
+            
 Response.Write(JsonConvert.SerializeXNode(root));
         }
     }

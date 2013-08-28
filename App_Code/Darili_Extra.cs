@@ -11,6 +11,7 @@ using System.IO;
 using System.Xml;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
+using System.Net;
 
 /// <summary>
 ///Darili_Extra 的摘要说明
@@ -26,6 +27,7 @@ public class Darili_Extra
 	}
     public static string success = "{\"success\":\"1\"}";
     public static string fail = "{\"success\":\"0\"}";
+    public static string[] AllowedMineType = { "image/gif", "image/jpeg", "image/png", "application/x-ms-bmp", "image/nbmp" };
     public static System.Drawing.Imaging.ImageFormat GetExt(string MIME)
     {
         switch (MIME.ToLower().Trim())
@@ -38,7 +40,6 @@ public class Darili_Extra
             default: return null;
         }
     }
-   
     public static EncoderParameters GetJpegQuality(int quality)
     {
         var myEncoderParameters = new EncoderParameters(1);
@@ -124,25 +125,6 @@ public class Darili_Extra
         return new Tuple<int, int, int>(span.Days, span.Hours, span.Minutes);
 
     }
-    public static string GetAlbum_test(int id,string FatherPath)
-    {
-        List<FileInfo> result = new List<FileInfo>();
-        string path = FatherPath+"images/" + id.ToString();
-      
-        if (Directory.Exists(path))
-        {
-            DirectoryInfo dir=new DirectoryInfo(path);
-            FileInfo[] files=dir.GetFiles();
-            if (files.Length > 0) result.AddRange(files);
-        }
-        XElement root = new XElement("root");
-        foreach (var elements in result)
-        {
-            root.Add(new XElement("Album",path+"/"+elements));
-
-        }
-        return JsonConvert.SerializeXNode(root);
-    }
     public static XElement[] GetAlbum(int id, string FatherPath)
     {
         List<FileInfo> result = new List<FileInfo>();
@@ -154,13 +136,35 @@ public class Darili_Extra
             FileInfo[] files = dir.GetFiles();
             if (files.Length > 0) result.AddRange(files);
         }
-        XElement root = new XElement("root");
+        XElement root = Darili_Extra.ForceArray(new XElement("root"),true);
         foreach (var elements in result)
         {
-            root.Add(new XElement("Album","http://"+HttpContext.Current.Request.Url.Host+":"+HttpContext.Current.Request.Url.Port+ "/img/album/" +id.ToString()+ "/"+elements.ToString()));
+            root.Add(Darili_Extra.ForceArray(new XElement("Album","http://"+HttpContext.Current.Request.Url.Host+":"+HttpContext.Current.Request.Url.Port+ "/img/album/" +id.ToString()+ "/"+elements.ToString()),false));
 
         }
         return root.Elements().ToArray();
+    }
+    public static XElement GetAlbum_new(int id)
+    {
+        if (Directory.Exists(HttpContext.Current.Server.MapPath("./img/album/"+id.ToString()+"/")))
+        {
+            DirectoryInfo dir = new DirectoryInfo(HttpContext.Current.Server.MapPath("./img/album/" + id.ToString() + "/"));
+
+
+            var root = Darili_Extra.ForceArray(new XElement("root"), true);
+            var ctx = new Darili_LinqDataContext();
+            var result = ctx.Event_Album.Where(p => p.eid == id).Select(p => p);
+            foreach (var element in result.ToList())
+            {
+                FileInfo[] files = dir.GetFiles(element.filename.ToString()+@".*");
+                if (files.Length > 0)
+                {
+                    root.Add(new XElement("Album",new XElement("src", "/img/album/" + id.ToString() + "/" + files[0].ToString()), new XElement("description", element.description)));
+                }
+            }
+            return root;
+        }
+        return null;
     }
     public static String[] GetHosts(int id)
     {

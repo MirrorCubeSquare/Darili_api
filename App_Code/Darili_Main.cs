@@ -234,7 +234,11 @@ namespace Darili_api
                         select entry).Count();
             return quary>0;
         }
-
+        public static int GetPublishCount(string nickname)
+        {
+            var ctx = new Darili_LinqDataContext();
+            return ctx.EventMain.Where(p=>p.Publisher==nickname).Count();
+        }
         public Tuple<string,string> loadExtra(int id) {
             try
             {
@@ -354,13 +358,13 @@ namespace Darili_api
         }
         
         //获取指定发布人的发布记录(out of date)
-        public static Event[] GetPublisherEntries(string people, int count)
+        public static Event[] GetPublisherEntries(string people,int perpage,int page)
         {
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             var quary = (from entry in ctx.EventMain
                          where entry.Publisher == people
                          orderby entry.PublishTime descending
-                         select entry).Take(count);
+                         select entry);
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
             foreach (EventMain t in temp)
@@ -368,25 +372,38 @@ namespace Darili_api
                 list.Add(t);
 
             }
-            return list.ToArray();
-        }
-        public static Event[] GetPublisherEntries(string people)
-        {
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = from entry in ctx.EventMain
-                        where entry.Publisher == people
-                        orderby entry.PublishTime descending
-                        select entry;
-            EventMain[] temp = quary.ToArray();
-            List<Event> list = new List<Event>();
-            foreach (EventMain t in temp)
+            foreach (Event t in list)
             {
-                list.Add(t);
-
+                t.Hosts = Darili_Extra.GetHosts(t.Id);
+                t.MultipleTime = GetMultipleTime(t.Id);
+                if (t.MultipleTime != null) t.IsMultipleTime = true; else t.IsMultipleTime = false;
+                try
+                {
+                    var quary2 = (from entry in ctx.Lecture
+                                  where entry.Event_Id == t.Id
+                                  select entry).ToArray();
+                    if (quary2.Length > 0)
+                    {
+                        t.C_Speaker = new Speaker[quary2.Length];
+                        for (int i = 0; i < quary2.Length; i++)
+                        {
+                            t.C_Speaker[i] = new Speaker
+                            {
+                                Name = quary2[i].Speaker,
+                                Class = quary2[i].Class
+                            };
+                        }
+                        t.Speaker = quary2[0].Speaker;
+                        t.Class = quary2[0].Class;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
             }
             return list.ToArray();
         }
-
+        
         //外部调用：显示所有公共可访问的活动
         
        

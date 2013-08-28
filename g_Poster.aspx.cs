@@ -22,7 +22,7 @@ public partial class g_Poster : System.Web.UI.Page
         }
         else
         {
-            var nopic = System.Drawing.Image.FromFile(Server.MapPath("./") + "/img/picture.png");
+            var nopic = System.Drawing.Image.FromFile(Server.MapPath("./") + "/img/pic-bigger.png");
             var str = new System.IO.MemoryStream();
             nopic.Save(str, nopic.RawFormat);
             Response.BinaryWrite(str.ToArray());

@@ -21,12 +21,11 @@ public partial class Comment_Make : System.Web.UI.Page
                 string Event_id = Request.QueryString["eid"];
                 string Content = String.IsNullOrWhiteSpace(Request.QueryString["content"]) ? null : Request.QueryString["content"];
                 //测试用代码
-                string User_id = Request.QueryString["uid"] == null ? "999" : Request.QueryString["uid"];
-                if (Darili_api.Event.EventExists(int.Parse(Event_id)) ==true && (Content != null || Content != ""))
+                if (Darili_api.Event.EventExists(int.Parse(Event_id)) ==true && (Content != null || Content != "")&&Darili_User.IsAuthenticated())
                 {
-                    //测试期间，固定用户昵称为TEST,ID为999
-                    //测试期间，不对用户是否登录进行验证（重要）
-                    int cid=Darili_Comments.MakeComment(int.Parse(User_id), int.Parse(Event_id), Content);
+                    int uid = Darili_User.Get_Uid_Local(Page.User.Identity.Name);
+                    
+                    int cid=Darili_Comments.MakeComment(uid, int.Parse(Event_id), Content);
                     XElement Result = new XElement("MakeComment",new XElement("success", 1),new XElement("cid",cid));
                     Response.Write( JsonConvert.SerializeXNode(Result));
                 }

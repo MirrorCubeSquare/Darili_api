@@ -83,7 +83,15 @@ public partial class Event_Detail : System.Web.UI.Page
                
             }
             result_root.Add(new XElement("share-num",Darili_Extra.GetShareNum(id)));
-            result_root.Add(Darili_Extra.GetAlbum(id,Server.MapPath("./")));
+            var xml_album = Darili_Extra.GetAlbum_new(id);
+            if (xml_album != null)
+            {
+                if (xml_album.Elements().Count() > 0)
+                {
+
+                    result_root.Add(Darili_Extra.GetAlbum_new(id).Elements());
+                }
+                }
             result_root.Add(new XElement("success", "1"));
             result_root.Add(new XElement("love-num", Darili_Extra.GetLikeNum(id)));
             result_root.Add(new XElement("liked",Darili_Extra.LikeExists(Darili_User.Get_Uid_Local(Page.User.Identity.Name),id)));

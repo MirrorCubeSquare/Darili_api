@@ -103,12 +103,65 @@ public class Darili_Subsciption
     public static int[] GetSubscriptionList(int uid)
     {
         LikeAndGoDataContext ctx = new LikeAndGoDataContext();
-        return ctx.Event_Subscription.Where(p => p.uid == uid).Select(p => p.eid).ToArray();
+        return ctx.Event_Subscription.Where(p => p.uid == uid).OrderByDescending(p => p.eid).Select(p => p.eid).ToArray();
     }
     public static int[] GetLikeList(int uid)
     {
         LikeAndGoDataContext ctx = new LikeAndGoDataContext();
-        return ctx.Event_Like.Where(p => p.uid == uid).Select(p => p.eid).ToArray();
+        return ctx.Event_Like.Where(p => p.uid == uid).OrderByDescending(p=>p.eid).Select(p => p.eid).ToArray();
+    }
+    public static int GetLikeCount(int uid)
+    {
+        var ctx = new LikeAndGoDataContext();
+        return ctx.Event_Like.Where(p => p.uid == uid).Count();
+ 
+  }
+    public static int[] GetLikeList(int uid, int perpage, int page)
+    {
+        LikeAndGoDataContext ctx = new LikeAndGoDataContext();
+        return ctx.Event_Like.Where(p => p.uid == uid).OrderByDescending(p => p.eid).Skip(perpage*page).Take(perpage).Select(p => p.eid).ToArray();
+    }
+    public static int[] GetSubscriptionList(int uid, int perpage, int page)
+    {
+        LikeAndGoDataContext ctx = new LikeAndGoDataContext();
+        return ctx.Event_Subscription.Where(p => p.uid == uid).OrderByDescending(p => p.eid).Skip(perpage * page).Take(perpage).Select(p => p.eid).ToArray();
+    }
+    public static int GetSubscribeCount(int uid)
+    {
+        var ctx = new LikeAndGoDataContext();
+        return ctx.Event_Subscription.Where(p => p.uid == uid).Count();
+    }
+    public static Event[] GetSubscribedEvents(int uid,int perpage,int page)
+    {
+        int[] list = GetSubscriptionList(uid, perpage, page);
+        List<Event> result=new List<Event>();
+
+        if (list != null)
+        {
+            foreach (var element in list)
+            {
+               result.Add(Event.GetEventById(element));
+
+            }
+            return result.ToArray();
+        }
+        else return null;
+    }
+    public static Event[] GetLikedEvents(int uid,int perpage ,int page)
+    {
+        int[] list = GetLikeList(uid, perpage, page);
+        List<Event> result = new List<Event>();
+
+        if (list != null)
+        {
+            foreach (var element in list)
+            {
+                result.Add(Event.GetEventById(element));
+
+            }
+            return result.ToArray();
+        }
+        else return null;
     }
 }
 
