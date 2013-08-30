@@ -11,6 +11,11 @@ using System.Web.UI.WebControls;
 
 public partial class test_addevent : System.Web.UI.Page
 {
+    public static string TrimIfExists(string toTrim)
+    {
+        if (string.IsNullOrEmpty(toTrim))return null;
+        else return toTrim.Trim();
+    }
     protected void Page_Load(object sender, EventArgs e)
     {
         if(Darili_User.IsAuthenticated())
@@ -43,12 +48,12 @@ public partial class test_addevent : System.Web.UI.Page
             #region 处理基础信息
             EventMain data = new EventMain
             {
-                Title =( (string)obj["Title"]).Trim(),
-                Subtitle = ((string)obj["SubTitle"]).Trim(),
-                Location = ((string)obj["Location"]).Trim(),
-                Type = ((string)obj["Type"]).Trim(),
-                SubType = ((string)obj["Subtype"]).Trim(),
-                Context = ((string)obj["Context"]).Trim(),
+                Title =TrimIfExists((string)obj["Title"]),
+                Subtitle = TrimIfExists((string)obj["SubTitle"]),
+                Location = TrimIfExists((string)obj["Location"]),
+                Type = TrimIfExists((string)obj["Type"]),
+                SubType = TrimIfExists((string)obj["Subtype"]),
+                Context = TrimIfExists((string)obj["Context"]),
                 PublishTime = DateTime.Now,
                 LastModified = DateTime.Now,
                 Publisher=HttpContext.Current.User.Identity.Name,
