@@ -17,12 +17,13 @@ public partial class test_add_poster : System.Web.UI.Page
         #region 处理海报（插入后，因为要获取ID）
         try
             {
+			string id = Session["post_id"] != null ? Session["post_id"].ToString() : "1";
                 if (Request.Files.Count > 0 && Darili_User.IsAuthenticated() )
                 {
                     PosterDataContext ctx = new PosterDataContext();
                     if (Request.Files[0].ContentLength > 4194304) throw new ArgumentOutOfRangeException("图片过大:" + (Request.Files[0].ContentLength / (1024 * 1024))
                         .ToString() + "M");
-                    string id = Session["post_id"] != null ? Session["post_id"].ToString() : "1";
+                    
                     string path = Server.MapPath("~/Poster/");
                     var length = Request.Files[0].ContentLength;
                     if (length > 0 && Darili_Extra.GetExt(Request.Files[0].ContentType) != null)
@@ -82,6 +83,10 @@ public partial class test_add_poster : System.Web.UI.Page
                     }
 
                 }
+				else
+				{
+				Response.Redirect("main.html?"+id);
+				}
               
             }
             catch (Exception exp)
