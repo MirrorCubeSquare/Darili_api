@@ -42,7 +42,8 @@ public partial class Check_Datetime : System.Web.UI.Page
             }
             else
             {
-                success = -4;
+                
+                    success = -4;
             }
             if (flag != "0")
             {
@@ -53,6 +54,19 @@ public partial class Check_Datetime : System.Web.UI.Page
             }
             if (result1 == DateTime.MinValue || result2 == DateTime.MinValue&&flag!="0") success = -1;
             if (result3 == DateTime.MinValue || result4 == DateTime.MinValue) success = -3;
+            if (flag == "3")
+            {
+                result1 = result1 + result3.TimeOfDay;
+                result2 = result2 + result4.TimeOfDay;
+                if (result1 > result2)
+                {
+                    success = -4;
+                }
+                else
+                {
+                    success = 0;
+                }
+            }
             Response.Write(success);
 
         }

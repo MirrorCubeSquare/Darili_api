@@ -159,7 +159,7 @@ public class Darili_Extra
                 FileInfo[] files = dir.GetFiles(element.filename.ToString()+@".*");
                 if (files.Length > 0)
                 {
-                    root.Add(new XElement("Album",new XElement("src", "/img/album/" + id.ToString() + "/" + files[0].ToString()), new XElement("description", element.description)));
+                    root.Add(new XElement("Album",new XElement("src", "img/album/" + id.ToString() + "/" + files[0].ToString()), new XElement("description", element.description)));
                 }
             }
             return root;

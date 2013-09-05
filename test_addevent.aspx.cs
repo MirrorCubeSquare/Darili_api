@@ -18,210 +18,220 @@ public partial class test_addevent : System.Web.UI.Page
     }
     protected void Page_Load(object sender, EventArgs e)
     {
-        if(Darili_User.IsAuthenticated())
+        if (Darili_User.IsAuthenticated())
         {
-        try
-        {
-            //以下为测试用代码
-            string Publisher = Page.User.Identity.Name;
-            Response.AddHeader("Access-Control-Allow-Origin", "*");
-            //以上为测试用代码
-            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            string input = "";
-            //试验中，改变方式为POST
-            if (Request.HttpMethod == "POST")
+            try
             {
-                var inputStream = Request.InputStream;
-                var strLen = Convert.ToInt32(inputStream.Length);
-                var strArr = new byte[strLen];
-                inputStream.Read(strArr, 0, strLen);
-                input = System.Text.Encoding.UTF8.GetString(strArr);
-                inputStream.Flush();
-                inputStream.Close();
-                
-            }
-            else
-            {
-                input = Request.QueryString[0];
-            }
-            JObject obj = JObject.Parse(input);
-            #region 处理基础信息
-            EventMain data = new EventMain
-            {
-                Title =TrimIfExists((string)obj["Title"]),
-                Subtitle = TrimIfExists((string)obj["SubTitle"]),
-                Location = TrimIfExists((string)obj["Location"]),
-                Type = TrimIfExists((string)obj["Type"]),
-                SubType = TrimIfExists((string)obj["Subtype"]),
-                Context = TrimIfExists((string)obj["Context"]),
-                PublishTime = DateTime.Now,
-                LastModified = DateTime.Now,
-                Publisher=HttpContext.Current.User.Identity.Name,
-                ViewFlag = (string)obj["EventType"] == "0" ? (short)1 : (short)-1,
-                Series = (string)obj["series"]
-            };
-            #endregion
-            #region 处理speaker,class
-            if (data.Type=="讲座")
-            {
-                foreach (var element in obj["speaker"].ToList())
+                //以下为测试用代码
+                string Publisher = Page.User.Identity.Name;
+                Response.AddHeader("Access-Control-Allow-Origin", "*");
+                //以上为测试用代码
+                Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+                string input = "";
+                //试验中，改变方式为POST
+                if (Request.HttpMethod == "POST")
                 {
-                    string raw = element.ToString();
-                    raw = System.Text.RegularExpressions.Regex.Replace(raw, @"\s{4}", "|");
-                    string[] speaker = raw.Split('|');
-                    data.Lecture.Add(new Lecture
-                    {
-                        Speaker = speaker[0],
-                        Class = speaker[1]
-                    }
-                    );
-                }
-                foreach (var element in obj["Publisher"].ToList())
-                {
-                    data.Host.Add(new Host
-                    {
-                        Name = element.ToString()
-
-                    });
+                    var inputStream = Request.InputStream;
+                    var strLen = Convert.ToInt32(inputStream.Length);
+                    var strArr = new byte[strLen];
+                    inputStream.Read(strArr, 0, strLen);
+                    input = System.Text.Encoding.UTF8.GetString(strArr);
+                    inputStream.Flush();
+                    inputStream.Close();
 
                 }
-            }
-            else
-            {
-                foreach (var element in obj["Publisher"].ToList())
+                else
                 {
-                    data.Host.Add(new Host
-                    {
-                        Name=element.ToString()
-                    });
+                    input = Request.QueryString[0];
                 }
-            }
-         
-            #endregion
-            #region 处理多时段
-            foreach (var element in obj["multipletime"].ToList())
-            {
-                Event_MultipleTime multi = new Event_MultipleTime
+                JObject obj = JObject.Parse(input);
+                #region 处理基础信息
+                EventMain data = new EventMain
                 {
-                    IsRoutine = element["isroutine"].ToString() == "1" ? true : false
+                    Title = TrimIfExists((string)obj["Title"]),
+                    Subtitle = TrimIfExists((string)obj["SubTitle"]),
+                    Location = TrimIfExists((string)obj["Location"]),
+                    Type = TrimIfExists((string)obj["Type"]),
+                    SubType = TrimIfExists((string)obj["Subtype"]),
+                    Context = TrimIfExists((string)obj["Context"]),
+                    PublishTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    Publisher = HttpContext.Current.User.Identity.Name,
+                    ViewFlag = (string)obj["EventType"] == "0" ? (short)1 : (short)-1,
+                    Series = (string)obj["series"]
                 };
-                if (multi.IsRoutine == false)
+                #endregion
+                #region 处理speaker,class
+                if (data.Type == "讲座")
                 {
-                    string[] st = element["StartTime"].ToString().Split('/');
-                    if (st.Length == 3)
+                    foreach (var element in obj["speaker"].ToList())
                     {
-                        multi.StartDate = DateTime.Parse(st[0]) + TimeSpan.Parse(st[1]);
-                        multi.EndDate = DateTime.Parse(st[0]) + TimeSpan.Parse(st[2]);
-                        data.Event_MultipleTime.Add(multi);
+                        string raw = element.ToString();
+                        raw = System.Text.RegularExpressions.Regex.Replace(raw, @"\s{4}", "|");
+                        string[] speaker = raw.Split('|');
+                        data.Lecture.Add(new Lecture
+                        {
+                            Speaker = speaker[0],
+                            Class = speaker[1]
+                        }
+                        );
                     }
-
-                    else
+                    foreach (var element in obj["Publisher"].ToList())
                     {
+                        data.Host.Add(new Host
+                        {
+                            Name = element.ToString()
+
+                        });
 
                     }
                 }
                 else
                 {
-                    string[] t = element["StartTime"].ToString().Split('/');
-                    if (t.Length == 3)
+                    foreach (var element in obj["Publisher"].ToList())
                     {
-                        multi.StartDate = DateTime.Parse(t[0]) + TimeSpan.Parse(t[1]);
-                        multi.EndDate = DateTime.Parse(element["EndTime"].ToString()) + TimeSpan.Parse(t[2]);
-                        multi.routine = element["routine"].ToString();
-                        data.Event_MultipleTime.Add(multi);
+                        data.Host.Add(new Host
+                        {
+                            Name = element.ToString()
+                        });
                     }
                 }
 
-
-
-
-            }
-            #endregion
-            #region 处理讲座信息
-            if (data.Type == "讲座")
-            {
-                data.Event_LectureEx = new Event_LectureEx
+                #endregion
+                #region 处理多时段
+                foreach (var element in obj["multipletime"].ToList())
                 {
-                    Brand = obj["brand"].ToString(),
-                    speakerinf = obj["speakerinf"].ToString()
-                };
-            } 
-            
-            #endregion
-
-            #region 处理报名时间
-            if (obj["PublishTime"] != null)
-            {
-                var event_bm = new Event_BM();
-
-                string time_s = obj["PublishTime"]["StartTime"].ToString().Replace('/', ' ');
-                string time_r = obj["PublishTime"]["EndTime"].ToString().Replace('/', ' ');
-                event_bm.StartTime = DateTime.Parse(time_s);
-                event_bm.EndTime = DateTime.Parse(time_r);
-                event_bm.numlimit = int.Parse(obj["numlimit"].ToString());
-            }
-            #endregion
-            #region 计算总时间范围
-            data.StartTime = (from entry in data.Event_MultipleTime
-                              orderby entry.StartDate ascending
-                              select entry.StartDate).First();
-            data.EndTime = (from entry in data.Event_MultipleTime
-                            orderby entry.EndDate descending
-                            select entry.EndDate).First();
-            #endregion
-            #region 插入记录，返回
-            if (data.Publisher == null || data.Publisher.Trim() == "")
-            {
-                data.Publisher = "佚名";
-            }
-            ctx.EventMain.InsertOnSubmit(data);
-            ctx.SubmitChanges();
-            #region 处理报名参数
-            var paractx = new LikeAndGoDataContext();
-            Event_Subscription_Parameters para = new Event_Subscription_Parameters
-            {
-                eid = data.Id,
-                parameters = new System.Xml.Linq.XElement("root")
-            };
-            if (obj["parameters"] != null)
-            {
-                try
-                {
-                    int count = obj["parameters"].Count();
-                    if (count > 0)
+                    Event_MultipleTime multi = new Event_MultipleTime
                     {
-                        foreach (var element in obj["parameters"].ToList())
+                        IsRoutine = element["isroutine"].ToString() == "1" ? true : false
+                    };
+                    if (multi.IsRoutine == false)
+                    {
+                        string[] st = element["StartTime"].ToString().Split('/');
+                        if (st.Length == 3)
                         {
-                            para.parameters.Add(new XElement("Para", (string)element));
+                            multi.StartDate = DateTime.Parse(st[0]) + TimeSpan.Parse(st[1]);
+                            multi.EndDate = DateTime.Parse(st[0]) + TimeSpan.Parse(st[2]);
+                            data.Event_MultipleTime.Add(multi);
                         }
 
-                        paractx.Event_Subscription_Parameters.InsertOnSubmit(para);
-                        paractx.SubmitChanges();
+                        else
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        string[] t = element["StartTime"].ToString().Split('/');
+                        if (t.Length == 3)
+                        {
+                            multi.StartDate = DateTime.Parse(t[0]) + TimeSpan.Parse(t[1]);
+                            multi.EndDate = DateTime.Parse(element["EndTime"].ToString()) + TimeSpan.Parse(t[2]);
+                            multi.routine = element["routine"].ToString();
+                            data.Event_MultipleTime.Add(multi);
+                        }
+                    }
+
+
+
+
+                }
+                #endregion
+                #region 处理讲座信息
+                if (data.Type == "讲座")
+                {
+                    data.Event_LectureEx = new Event_LectureEx
+                    {
+                        Brand = obj["brand"].ToString(),
+                        speakerinf = obj["speakerinf"].ToString()
+                    };
+                }
+
+                #endregion
+
+                #region 处理报名时间
+                if (obj["PublishTime"] != null)
+                {
+                    var event_bm = new Event_BM();
+
+                    string time_s = obj["PublishTime"]["StartTime"].ToString().Replace('/', ' ');
+                    string time_r = obj["PublishTime"]["EndTime"].ToString().Replace('/', ' ');
+                    event_bm.StartTime = DateTime.Parse(time_s);
+                    event_bm.EndTime = DateTime.Parse(time_r);
+                    event_bm.numlimit = int.Parse(obj["numlimit"].ToString());
+                }
+                #endregion
+                #region 计算总时间范围
+                data.StartTime = (from entry in data.Event_MultipleTime
+                                  orderby entry.StartDate ascending
+                                  select entry.StartDate).First();
+                data.EndTime = (from entry in data.Event_MultipleTime
+                                orderby entry.EndDate descending
+                                select entry.EndDate).First();
+                #endregion
+                #region 处理线上
+                if (data.Type == "线上")
+                {
+                    data.Location = " ";
+                }
+                #endregion
+                #region 插入记录，返回
+                if (data.Publisher == null || data.Publisher.Trim() == "")
+                {
+                    data.Publisher = "佚名";
+                }
+                ctx.EventMain.InsertOnSubmit(data);
+                ctx.SubmitChanges();
+                #region 处理报名参数
+                var paractx = new LikeAndGoDataContext();
+                Event_Subscription_Parameters para = new Event_Subscription_Parameters
+                {
+                    eid = data.Id,
+                    parameters = new System.Xml.Linq.XElement("root")
+                };
+                if (obj["parameters"] != null)
+                {
+                    try
+                    {
+                        int count = obj["parameters"].Count();
+                        if (count > 0)
+                        {
+                            foreach (var element in obj["parameters"].ToList())
+                            {
+                                para.parameters.Add(new XElement("Para", (string)element));
+                            }
+
+                            paractx.Event_Subscription_Parameters.InsertOnSubmit(para);
+                            paractx.SubmitChanges();
+                        }
+                    }
+                    catch (Exception exp)
+                    {
+                        ctx.EventMain.DeleteOnSubmit(data);
+                        ctx.SubmitChanges();
+                        Response.End();
                     }
                 }
-                catch (Exception exp)
-                {
-                    ctx.EventMain.DeleteOnSubmit(data);
-                    ctx.SubmitChanges();
-                    Response.End();
-                }
-            }
-            #endregion
-            Session["post_id"] = data.Id;
-            JObject response = new JObject(new JProperty("success", 1),
-                new JProperty("id", data.Id));
-           
-            Response.Write(response.ToString()); 
-            #endregion
-        }
-        catch (Exception exp)
-        {
-            JObject obj = new JObject(new JProperty("success", 0),
-                new JProperty("err", exp.Message));
-            Response.Write(exp);
-            Response.End();
-        }
+                #endregion
+                Session["post_id"] = data.Id;
+                JObject response = new JObject(new JProperty("success", 1),
+                    new JProperty("id", data.Id));
 
+                Response.Write(response.ToString());
+                #endregion
+            }
+            catch (Exception exp)
+            {
+                JObject obj = new JObject(new JProperty("success", 0),
+                    new JProperty("err", exp.Message));
+                Response.Write(exp);
+                Response.End();
+            }
+
+        }
+        else
+        {
+            Response.Redirect("http://stu.fudan.edu.cn/user/login?returnurl=http://stu.fudan.edu.cn/event/auth.aspx");
         }
         
     }

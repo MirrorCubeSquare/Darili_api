@@ -42,7 +42,7 @@ public partial class Event_Data : System.Web.UI.Page
                 else
                 {
                     if (timeoffset == "0" || timeoffset == "1")
-                        events = Event.GetTimeSpan(DateTime.Now.Date, DateTime.Now.Date + new TimeSpan(Int32.Parse(timeoffset) + 1, 0, 0, 0), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                        events = Event.GetTimeSpan(DateTime.Now.Date+new TimeSpan(int.Parse(timeoffset),0,0,0), DateTime.Now.Date + new TimeSpan(Int32.Parse(timeoffset) + 1, 0, 0, 0), cat, subcat, true, int.Parse(perpage), int.Parse(page));
                     if (timeoffset == "2")
                     {
                         int offset1 = int.Parse(Darili_EventManuever.Convert_DayOfWeek(DateTime.Now.DayOfWeek));
@@ -56,7 +56,7 @@ public partial class Event_Data : System.Web.UI.Page
                     }
                     if (timeoffset != "0" && timeoffset != "1" && timeoffset != "2" && timeoffset != "3")
                     {
-                        events = Event.GetTimeSpan(DateTime.Parse("1990/1/1"), DateTime.Parse("2013/9/1"), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                        events = Event.GetTimeSpan(DateTime.Parse("1990/1/1"), DateTime.Parse("2099/12/31"), cat, subcat, true, int.Parse(perpage), int.Parse(page));
                     }
                 }
                 if (events.Count() == 1)

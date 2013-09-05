@@ -421,9 +421,20 @@ namespace Darili_api
             {
                 predicate = predicate.And(p => p.ViewFlag > 0);
             }
-            predicate = predicate.And(p => p.StartTime >= StartTime).And(p => p.EndTime <= EndTime);
+           // predicate = predicate.And(p => p.StartTime >= StartTime);
+            var PredicateStartTime = PredicateBuilder.True<EventMain>();
+            PredicateStartTime = PredicateStartTime.And(p => p.StartTime >= StartTime).And(p => p.StartTime <= EndTime);
+            var PredicateEndTime = PredicateBuilder.True<EventMain>();
+            PredicateEndTime = predicate.And(p => p.EndTime >= StartTime).And(p => p.EndTime <= EndTime);
+            var PredicateInside = PredicateBuilder.True<EventMain>();
+            PredicateInside = PredicateInside.And(p => p.StartTime >= StartTime).And(p => p.EndTime <= EndTime);
+            var predicate2 = PredicateBuilder.False<EventMain>();
+            predicate2 = predicate2.Or(PredicateStartTime
+                ).Or(PredicateEndTime).Or(PredicateInside);
+            predicate2 = predicate.And(predicate2);
+
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var query = ctx.EventMain.Where(predicate).OrderByDescending(p=>p.PublishTime).Select(p => p).Skip(perpage * page).Take(perpage);
+            var query = ctx.EventMain.Where(predicate2).OrderByDescending(p=>p.PublishTime).Select(p => p).Skip(perpage * page).Take(perpage);
             
             EventMain[] temp = query.ToArray();
             List<Event> list = new List<Event>();
@@ -526,7 +537,7 @@ namespace Darili_api
                     if (r_detail[i] == true)
                     {
                         DateTime flag = time.StartTime.Date + new TimeSpan(Darili_Extra.CalculateTimeSpan((int)time.StartTime.DayOfWeek, i), 0, 0, 0);
-                        while (flag < time.EndTime.Date)
+                        while (flag < time.EndTime)
                         {
                             result.Add(new Event_Time_Helper
                             {

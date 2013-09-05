@@ -48,9 +48,17 @@ public class Darili_EventManuever
         {
             predicate = predicate.And(p => p.ViewFlag > 0);
         }
-        predicate = predicate.And(p => StartTime > p.StartTime);
-        predicate = predicate.And(p => p.EndTime > EndTime);
-        var result = ctx.EventMain.Where(predicate).Skip(perpage * page).Take(perpage);
+       var PredicateStartTime = PredicateBuilder.True<EventMain>();
+        PredicateStartTime = PredicateStartTime.And(p => p.StartTime >= StartTime).And(p => p.StartTime <= EndTime);
+        var PredicateEndTime = PredicateBuilder.True<EventMain>();
+        PredicateEndTime = predicate.And(p => p.EndTime >= StartTime).And(p => p.EndTime <= EndTime);
+        var PredicateInside = PredicateBuilder.True<EventMain>();
+        PredicateInside = PredicateInside.And(p => p.StartTime <= StartTime).And(p => p.EndTime >= EndTime);
+        var predicate2 = PredicateBuilder.False<EventMain>();
+        predicate2 = predicate2.Or(PredicateStartTime
+            ).Or(PredicateEndTime).Or(PredicateInside);
+        predicate2 = predicate.And(predicate2);
+        var result = ctx.EventMain.Where(predicate2).Skip(perpage * page).Take(perpage);
         EventMain[] temp = result.ToArray();
 
         foreach (EventMain t in temp)

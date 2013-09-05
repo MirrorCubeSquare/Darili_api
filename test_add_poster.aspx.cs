@@ -20,6 +20,7 @@ public partial class test_add_poster : System.Web.UI.Page
 			string id = Session["post_id"] != null ? Session["post_id"].ToString() : "1";
                 if (Request.Files.Count > 0 && Darili_User.IsAuthenticated() )
                 {
+			
                     PosterDataContext ctx = new PosterDataContext();
                     if (Request.Files[0].ContentLength > 4194304) throw new ArgumentOutOfRangeException("图片过大:" + (Request.Files[0].ContentLength / (1024 * 1024))
                         .ToString() + "M");
@@ -44,7 +45,7 @@ public partial class test_add_poster : System.Web.UI.Page
                         byte[] buffer = ms.ToArray();
 
                         Response.ContentType = Request.Files[0].ContentType;
-                            Response.BinaryWrite(buffer);
+                            
                         stream.Close();
                         alter.Dispose();
                         origin.Dispose();
@@ -85,8 +86,9 @@ public partial class test_add_poster : System.Web.UI.Page
                 }
 				else
 				{
-				Response.Redirect("main.html?"+id);
+				
 				}
+				Response.Redirect("main.html?"+id);
               
             }
             catch (Exception exp)

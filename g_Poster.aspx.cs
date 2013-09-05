@@ -5,14 +5,19 @@ using System.Web;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Web.UI;
+using System.IO;
 using System.Web.UI.WebControls;
 
 public partial class g_Poster : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        
         Response.ContentType = "image/jpeg";
-        int eid = Request.QueryString["id"] != "" ? int.Parse(Request.QueryString["id"]) : 0;
+        int eid = Request.QueryString["id"] != null ? int.Parse(Request.QueryString["id"]) : 0;
+        DirectoryInfo dir = new DirectoryInfo(HttpContext.Current.Server.MapPath("./Poster/" ));
+        string IsThumb=Request.QueryString["IsThumb"]!=""?Request.QueryString["IsThumb"]:"1";
+      
         var ctx = new PosterDataContext();
         var quary = ctx.Event_Poster.Where(p => p.Event_id == eid).Select(p=>p.thumb_stream);
         if (quary.Count() > 0)
