@@ -17,6 +17,8 @@ using System.Net;
 ///Darili_Extra 的摘要说明
 ///一些细小的功能的储藏地
 /// </summary>
+namespace Darili_api
+{
 public class Darili_Extra
 {
 	public Darili_Extra()
@@ -159,7 +161,11 @@ public class Darili_Extra
                 FileInfo[] files = dir.GetFiles(element.filename.ToString()+@".*");
                 if (files.Length > 0)
                 {
-                    root.Add(new XElement("Album",new XElement("src", "img/album/" + id.ToString() + "/" + files[0].ToString()), new XElement("description", element.description)));
+                    XElement ToAdd = Darili_Extra.ForceArray(new XElement("Album"),false);
+                    ToAdd.Add(new XElement("src", "img/album/" + id.ToString() + "/" + files[0].ToString()), new XElement("description", element.description));
+                    
+                    
+                  root.Add(ToAdd);
                 }
             }
             return root;
@@ -221,3 +227,4 @@ public class Extra_Lecture
     }
     
 }
+    }

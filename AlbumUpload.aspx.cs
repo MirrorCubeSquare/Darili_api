@@ -15,12 +15,7 @@ public partial class AlbumUpload : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        string jsontest = @"{'Root':{
-'Album':[
-{'FileName':'829b5df4-fb68-4825-acbd-bbe9ad1c8ca7','Description':'testalbumupload1'},
-{'FileName':'ff18c6cb-8448-47fc-929b-5d7d76a50c67','Description':'testalbumupload2'}
-]
-}}";
+        string jsontest = @"{'root':{'Album':[{'FileName':'07dda466-ec55-4338-88f8-5ba79bb497fb','Description':'test_1'},{'FileName':'76ffa915-f807-4d18-8a3b-6b2b4b28a969','Description':'test_2'}]}}";
         if (!IsPostBack)
         {
             //用户已登录
@@ -29,8 +24,10 @@ public partial class AlbumUpload : System.Web.UI.Page
                 List<Guid> list = new List<Guid>();
                 
                 int eid = 27;//测试数据
-                string id = Session["u_eid"] != null ? Session["u_eid"].ToString() : "";
-                if (id != "") eid = int.Parse(id); 
+               
+                string id = Session["u_eid"] != null ? (string)Session["u_eid"] : "";
+                if (id != "") eid = int.Parse(id);
+               
                  string path = Server.MapPath("~/img/album/") + eid.ToString() + "/";
                 //上传内容格式正确
                 if (Request.ContentType.Contains("multipart/form-data"))
@@ -81,6 +78,7 @@ public partial class AlbumUpload : System.Web.UI.Page
                         
                          }
                         ctx.SubmitChanges();
+                        root.Add(new XElement("u_eid", (string)Session["u_eid"]));
                         Response.Write(Newtonsoft.Json.JsonConvert.SerializeXNode(root));
                         
 

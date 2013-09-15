@@ -28,6 +28,27 @@ public class Darili_EventManuever
         else return true;
 
     }
+    public static void CloseEvent(int eid)
+    {
+        if(Event_RoleControl.OwnerOrAdmin(eid))
+        {
+        Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+        var toDel = ctx.EventMain.Where(p => p.Id == eid).First();
+        toDel.ViewFlag = (short)Event_ViewControl.ViewLevel.Closed;
+        ctx.SubmitChanges();
+        }
+        
+    }
+    public static void OpenEvent(int eid)
+    {
+        if (Event_RoleControl.IsAdmin(HttpContext.Current.User.Identity.Name))
+        {
+            Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+            var toDel = ctx.EventMain.Where(p => p.Id == eid).First();
+            toDel.ViewFlag = (short)Event_ViewControl.ViewLevel.PublicViewable;
+            ctx.SubmitChanges();
+        }
+    }
     public static Event[] SearchTime(DateTime StartTime, DateTime EndTime, string type, string subtype, bool IsAll, int perpage, int page)
     {
         List<Event> list = new List<Event>();

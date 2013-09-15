@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using Darili_api;
 
 public partial class Album : System.Web.UI.Page
 {

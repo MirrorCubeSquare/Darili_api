@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 /// <summary>
 ///Darili_Subsciption 的摘要说明
+///注意：不要更新该版本
 /// </summary>
 namespace Darili_api
 {
@@ -18,6 +19,11 @@ public class Darili_Subsciption
 		//TODO: 在此处添加构造函数逻辑
 		//
 	}
+    public static bool NeedSubscribe(int eid)
+    {
+        Darili_LinqDataContext ctx = new Darili_LinqDataContext();
+        return (ctx.Event_BM.Where(p => p.id == eid).Select(p => p).Count()) > 0;
+    }
     public static bool SubscribeExists(int eid,int uid)
     {
        LikeAndGoDataContext ctx=new LikeAndGoDataContext();
@@ -50,37 +56,54 @@ public class Darili_Subsciption
                     stime=DateTime.Now
                 };
                 //处理活动报名时间段
-               
-                JObject obj = new JObject(new JProperty("Times",s_detail["Times"]));
-                foreach (var time in obj["Times"].ToList())
+                if (s_detail != null)
                 {
-                    toAdd.sdetail.Add(new XElement("Times",new XElement("StartTime",DateTime.Parse((string)time["StartTime"])),new XElement("EndTime",DateTime.Parse((string)time["EndTime"]))));
+                    JObject obj = new JObject(new JProperty("Times", s_detail["Times"]));
+                    foreach (var time in obj["Times"].ToList())
+                    {
+                        toAdd.sdetail.Add(new XElement("Times", new XElement("StartTime", DateTime.Parse((string)time["StartTime"])), new XElement("EndTime", DateTime.Parse((string)time["EndTime"]))));
+                    }
+                    //检查必填字段
+                    var Parameters_Required = new Darili_Subscription_Parameters(eid);
+                    if (Parameters_Required.root == null) { Parameters_Required.root = new XElement("Parameters"); }
+                    Parameters_Required.AddParameter("姓名");
+                    Parameters_Required.AddParameter("学号");
+
+                    // Parameters_Required.root.Add(new XElement("Para", "姓名"), new XElement("Para", "学号"));
+                    var ddd = new JObject(new JProperty("Root", new JObject(new JProperty("Parameters", s_detail["Parameters"])))).ToString();
+                    //var xParameters = JsonConvert.DeserializeXmlNode(ddd).ToString();
+                    XElement xParameters = XElement.Parse(JsonConvert.DeserializeXNode(ddd).ToString());
+                    foreach (var Parameters in Parameters_Required.root.Elements("Para"))
+                    {
+                        var query = (from entry in xParameters.Elements("Parameters")
+                                     where entry.Element("name").Value == Parameters.Value
+                                     select entry);
+                        if (query.Count() > 0)
+                        {
+                            XElement e_toadd = new XElement("Para", (string)query.First().Element("value").Value);
+                            e_toadd.Add(new XAttribute("Name", Parameters.Value));
+                            toAdd.sdetail.Add(e_toadd);
+                        }
+
+                    }
+                    ctx.Event_Subscription.InsertOnSubmit(toAdd);
+                    ctx.SubmitChanges();
+
                 }
-                //检查必填字段
-                var Parameters_Required = new Darili_Subscription_Parameters(eid);
-                if (Parameters_Required.root == null) { Parameters_Required.root=new XElement("Parameters"); }
-                Parameters_Required.AddParameter("姓名");
-                Parameters_Required.AddParameter("学号");
-                  
-               // Parameters_Required.root.Add(new XElement("Para", "姓名"), new XElement("Para", "学号"));
-                var ddd= new JObject(new JProperty("Root",new JObject(new JProperty("Parameters", s_detail["Parameters"])))).ToString();
-                //var xParameters = JsonConvert.DeserializeXmlNode(ddd).ToString();
-                XElement xParameters = XElement.Parse(JsonConvert.DeserializeXNode(ddd).ToString());
-                foreach (var Parameters in Parameters_Required.root.Elements("Para"))
+                else
                 {
-                    var query = (from entry in xParameters.Elements("Parameters")
-                                 where entry.Element("name").Value == Parameters.Value
-                                 select entry);
-                                 if (query.Count()>0)
-                                 {
-                                     toAdd.sdetail.Add(new XElement(Parameters.Value,(string)query.First().Element("value").Value));
-                                 }
-                    
+                   
+                    Event_Subscription toAdd2 = new Event_Subscription
+                    {
+                        eid = eid,
+                        uid = uid,
+                        sdetail = new XElement("Params"),
+                        stime = DateTime.Now
+                    };
+                    ctx.Event_Subscription.InsertOnSubmit(toAdd2);
+                    ctx.SubmitChanges();
+
                 }
-                ctx.Event_Subscription.InsertOnSubmit(toAdd);
-                ctx.SubmitChanges();
-                
-                
             }
             catch (ArgumentNullException exp)
             {

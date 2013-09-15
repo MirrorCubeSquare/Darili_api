@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Web.UI.WebControls;
+using Darili_api;
 
 public partial class test_add_poster : System.Web.UI.Page
 {
@@ -44,7 +45,7 @@ public partial class test_add_poster : System.Web.UI.Page
                         alter.Save(ms, Darili_Extra.GetExt(Request.Files[0].ContentType));
                         byte[] buffer = ms.ToArray();
 
-                        Response.ContentType = Request.Files[0].ContentType;
+                        
                             
                         stream.Close();
                         alter.Dispose();
@@ -88,7 +89,10 @@ public partial class test_add_poster : System.Web.UI.Page
 				{
 				
 				}
-				Response.Redirect("main.html?"+id);
+                JObject response = new JObject(new JProperty("success", 1),
+                        new JProperty("id", int.Parse(id)));
+                Response.Write(response);
+                
               
             }
             catch (Exception exp)

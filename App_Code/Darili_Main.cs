@@ -96,6 +96,7 @@ namespace Darili_api
         public string Title { get; set; }
         public string Location { get; set; }
         public string Context { get; set; }
+        public bool NeedSubscribe { get; set; }
         public static XElement Exception(string value)
         {
             return new XElement("Exception", value.ToString());
@@ -150,7 +151,7 @@ namespace Darili_api
                     
                     
                 }
-                Xml.Add(new XElement("pic",@"./g_Poster.aspx?id="+value.Id.ToString()));
+                Xml.Add(new XElement("pic",@"./g_Poster.aspx?Thumb=1&id="+value.Id.ToString()));
                 Xml.Add(new XElement("liked", value.liked));
                 Xml.Add(new XElement("subscribed",value.subscribed));
                 var timeleft=Darili_Extra.TimeLeft(value);
@@ -170,6 +171,7 @@ namespace Darili_api
                         new XElement("love-num",Darili_Extra.GetLikeNum(value.Id)),
                         new XElement("pin-num",Darili_Extra.GetSubscriptionNum(value.Id)),
                         new XElement("share-num",Darili_Extra.GetShareNum(value.Id)),
+                        new XElement("NeedSubscribe",value.NeedSubscribe),
                         new XElement("timeleft",new XElement("day",timeleft.Item1),new XElement("hour",timeleft.Item2),new XElement("min",timeleft.Item3)),
                         new XElement("Type", value.Type));
                 Xml.Add(MultipleTime);

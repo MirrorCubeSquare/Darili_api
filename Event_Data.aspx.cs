@@ -69,6 +69,8 @@ public partial class Event_Data : System.Web.UI.Page
                 {
                     if (LikeList.Contains(e_event.Id)) e_event.liked = true; else e_event.liked = false;
                     if (SubscribeList.Contains(e_event.Id)) e_event.subscribed = true; else e_event.subscribed= false;
+                    e_event.NeedSubscribe = Darili_Subsciption.NeedSubscribe(e_event.Id);
+
                 }
                 XElement[] Elements = Event.Translte_Xml(events).ToArray();
 

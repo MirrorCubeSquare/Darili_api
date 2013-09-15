@@ -37,12 +37,24 @@ public partial class Search : System.Web.UI.Page
 
             List<Event> events = new List<Event>();
             result.AddRange(quary2.ToList());
+            
             foreach (var eid in result.Skip (int.Parse(perpage) * int.Parse(page)).Take(int.Parse(perpage)))
             {
                 events.Add(Event.GetEventById(eid));
 
             }
-            
+            LikeAndGoDataContext ctx2 = new LikeAndGoDataContext();
+            int uid = Darili_User.Get_Uid_Local(Page.User.Identity.Name);
+            var likedquery = ctx2.Event_Like.Where(p => p.uid == uid).Select(p => p.eid).ToList();
+            foreach (var element in events)
+            {
+                element.liked = likedquery.Exists(p => p == element.Id);
+            }
+            var subscribedquery = ctx2.Event_Subscription.Where(p => p.uid == uid).Select(p => p.eid).ToList();
+            foreach (var element in events)
+            {
+                element.subscribed = subscribedquery.Exists(p => p == element.Id);
+            }
             XElement Xml_Root = new XElement("allevents", null);
             var Events = events.ToArray();
             XElement[] Elements = Event.Translte_Xml(Events).ToArray();

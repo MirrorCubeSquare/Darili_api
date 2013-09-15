@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.Web.UI;
 using System.Drawing;
 using System.Xml.Linq;
+using Darili_api;
 using System.Web.UI.WebControls;
 
 public partial class test_addevent : System.Web.UI.Page
@@ -18,6 +19,13 @@ public partial class test_addevent : System.Web.UI.Page
     }
     protected void Page_Load(object sender, EventArgs e)
     {
+        //以下为测试用代码
+        if (!Page.User.IsInRole("Admin"))
+        {
+            Response.StatusCode = 403;
+            Response.End();
+        }
+        //以上为测试用代码
         if (Darili_User.IsAuthenticated())
         {
             try
@@ -61,6 +69,10 @@ public partial class test_addevent : System.Web.UI.Page
                     Series = (string)obj["series"]
                 };
                 #endregion
+                #region 处理ViewFlag
+                data.ViewFlag = (short)Event_RoleControl.Viewlevel();
+                #endregion
+
                 #region 处理speaker,class
                 if (data.Type == "讲座")
                 {
@@ -159,6 +171,7 @@ public partial class test_addevent : System.Web.UI.Page
                     event_bm.StartTime = DateTime.Parse(time_s);
                     event_bm.EndTime = DateTime.Parse(time_r);
                     event_bm.numlimit = int.Parse(obj["numlimit"].ToString());
+                    data.Event_BM = event_bm;
                 }
                 #endregion
                 #region 计算总时间范围

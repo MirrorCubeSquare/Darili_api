@@ -56,15 +56,22 @@ public partial class Check_Datetime : System.Web.UI.Page
             if (result3 == DateTime.MinValue || result4 == DateTime.MinValue) success = -3;
             if (flag == "3")
             {
-                result1 = result1 + result3.TimeOfDay;
-                result2 = result2 + result4.TimeOfDay;
-                if (result1 > result2)
+                if (result1 != DateTime.MinValue && result2 != DateTime.MinValue && result3 != DateTime.MinValue && result4 != DateTime.MinValue)
                 {
-                    success = -4;
+                    result1 = result1 + result3.TimeOfDay;
+                    result2 = result2 + result4.TimeOfDay;
+                    if (result1 > result2)
+                    {
+                        success = -4;
+                    }
+                    else
+                    {
+                        success = 0;
+                    }
                 }
                 else
                 {
-                    success = 0;
+                    success=-3;
                 }
             }
             Response.Write(success);

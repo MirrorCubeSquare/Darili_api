@@ -11,7 +11,7 @@ public partial class Parameters : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Request.QueryString["id"] != "")
+        if (!String.IsNullOrEmpty(Request.QueryString["id"]))
         {
             var sub=new Darili_Subscription_Parameters(int.Parse(Request.QueryString["id"]));
             XElement root = Darili_Extra.ForceArray(new XElement("Root"), true);

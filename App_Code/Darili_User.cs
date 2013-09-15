@@ -30,6 +30,19 @@ public class Darili_UserDetail
         this.grade=grade;
         this.gender=gender;
     }
+    public XElement Translate_Xml()
+    {
+        return new XElement("root",
+            new XElement("weibo", this.weibo),
+            new XElement("major", this.major),
+            new XElement("name", this.name),
+            new XElement("dormitory", this.dormitory),
+            new XElement("phone", this.phone),
+            new XElement("birthday", this.birthday),
+            new XElement("grade", this.grade),
+            new XElement("gender", this.gender));
+
+    }
     
 }
 public class Darili_User
@@ -286,6 +299,19 @@ public class Darili_User
         return status;
 
     }
+    public static void InitializeIfNotInitialized()
+    {
+        if (!IsInitialized())
+        {
+            var uid = Get_StuId(HttpContext.Current.Request.Cookies["webpy_session_id"]);
+            var nickname = HttpContext.Current.User.Identity.Name;
+            if((uid!=-1)&&(!String.IsNullOrEmpty(nickname)))
+            {
+                Initialize(nickname,uid);
+            }
+        }
+
+    }
     //记录登陆时间
     public static void RecordLoginTime(string NickName)
     {
@@ -487,7 +513,17 @@ public class Darili_User
             var quary = (from entry in ctx.Event_Users
                          where entry.User_NickName == nickname
                          select entry.User_Id).First();
-            if (quary == null ) return -1;
+            if (quary == null)
+            {
+                try
+                {
+                    return Get_StuId(HttpContext.Current.Request.Cookies["webpy_session_id"]);
+                }
+                catch
+                {
+                    return -1;
+                }
+            }
             else return quary;
         }
         catch { return -1; }

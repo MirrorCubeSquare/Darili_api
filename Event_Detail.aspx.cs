@@ -29,7 +29,7 @@ public partial class Event_Detail : System.Web.UI.Page
             result_root.Add(new XElement("EndTime", result.EndTime));
             result_root.Add(new XElement("Context",result.Context));
          result_root.Add(new XElement("Type",result.Type));
-         result_root.Add(new XElement("pic", @"./g_Poster.aspx?id=" + result.Id.ToString()));
+         result_root.Add(new XElement("pic", @"./g_Poster.aspx?&Thumb=1&id=" + result.Id.ToString()));
             result_root.Add(new XElement("Subtype",result.Subtype));
             result_root.Add(new XElement("Title",result.Title));
             var query_Host = (from entry in ctx.Host
@@ -97,7 +97,8 @@ public partial class Event_Detail : System.Web.UI.Page
             result_root.Add(new XElement("liked",Darili_Extra.LikeExists(Darili_User.Get_Uid_Local(Page.User.Identity.Name),id)));
             result_root.Add(new XElement("subscribed", Darili_Extra.SubscribeExists(Darili_User.Get_Uid_Local(Page.User.Identity.Name), id)));
             result_root.Add(new XElement("pin-num", Darili_Extra.GetSubscriptionNum(id)));
-
+            result_root.Add(new XElement("NeedSubscribe", Darili_Subsciption.NeedSubscribe(id)));
+            result_root.Add(new XElement("ViewFlag", result.ViewFlag));
             Response.Write(JsonConvert.SerializeXNode(result_root));
            // Response.Write(result_root);
 

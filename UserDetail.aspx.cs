@@ -25,6 +25,10 @@ public partial class UserDetail : System.Web.UI.Page
 
                 //写入喜欢的活动
                 Event[] Liked_Events = Darili_Subsciption.GetLikedEvents(Darili_User.Get_Uid_Local(Page.User.Identity.Name), perpage, page);
+                foreach (var element in Liked_Events)
+                {
+                    element.NeedSubscribe = Darili_Subsciption.NeedSubscribe(element.Id);
+                }
                 //写入本人添加的活动
                 int like_count = Darili_Subsciption.GetLikeCount(uid);
                 root.Add(new XElement("LikedEvents",
@@ -40,6 +44,10 @@ public partial class UserDetail : System.Web.UI.Page
             {
                 int subscribe_count = Darili_Subsciption.GetSubscribeCount(uid);
                 Event[] Subscibed_Events = Darili_Subsciption.GetSubscribedEvents(Darili_User.Get_Uid_Local(Page.User.Identity.Name), perpage, page);
+                foreach (var element in Subscibed_Events)
+                {
+                    element.NeedSubscribe = Darili_Subsciption.NeedSubscribe(element.Id);
+                }
                 root.Add(new XElement("SubscribedEvents",
                     new XElement("count", subscribe_count),
                     Event.Translte_Xml(Subscibed_Events)));
@@ -48,6 +56,10 @@ public partial class UserDetail : System.Web.UI.Page
             {
                 int publishcount = Event.GetPublishCount(Page.User.Identity.Name);
                 Event[] Published_Events = Event.GetPublisherEntries(Page.User.Identity.Name, perpage, page);
+                foreach (var element in Published_Events)
+                {
+                    element.NeedSubscribe = Darili_Subsciption.NeedSubscribe(element.Id);
+                }
                 root.Add(new XElement("PublishedEvents",new XElement("count",publishcount), Event.Translte_Xml(Published_Events)));
             }
             Response.Write(Newtonsoft.Json.JsonConvert.SerializeXNode(root));
