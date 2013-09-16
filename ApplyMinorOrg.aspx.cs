@@ -10,25 +10,22 @@ public partial class ApplyMinorOrg : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        string nickname = Page.User.Identity.Name;
+        string nickname = String.IsNullOrEmpty(Request.QueryString["NickName"])?null:Request.QueryString["NickName"];
         string OrgName = Request.QueryString["OrgName"];
         Event_orgDataContext ctx = new Event_orgDataContext();
         var predicate = PredicateBuilder.True<Event_Org>();
         predicate = predicate.And(p => p.NickName == nickname).And(p => p.Org_Name == OrgName).And(p=>p.IsProved==true);
-        var count = ctx.Event_Org.Where(predicate).Select(p => p.id).Count();
-        if (count > 0)
+        var count = ctx.Event_Org.Where(predicate).Select(p => p);
+        if (count.Count() > 0)
         {
             if (Darili_User.IsInitialized(nickname))
             {
-                ctx.Event_Org.InsertOnSubmit(new Event_Org
+                Event_MinorOrg toAdd = new Event_MinorOrg
                 {
                     NickName = nickname,
                     Org_Name = OrgName
-                });
+                };
 
-                ctx.SubmitChanges();
-                Roles.AddUserToRole(nickname, OrgName);
-                Response.Write(1);
             }
             else
             {

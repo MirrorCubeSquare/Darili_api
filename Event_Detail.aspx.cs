@@ -28,7 +28,6 @@ public partial class Event_Detail : System.Web.UI.Page
             result_root.Add(new XElement("StartTime", result.StartTime));
             result_root.Add(new XElement("EndTime", result.EndTime));
             result_root.Add(new XElement("Context",result.Context));
-            result_root.Add(new XElement("Type", result.Type));
             result_root.Add(new XElement("SubType", result.Subtype));
          result_root.Add(new XElement("Type",result.Type));
          result_root.Add(new XElement("pic", @"./g_Poster.aspx?&Thumb=1&id=" + result.Id.ToString()));
@@ -62,12 +61,37 @@ public partial class Event_Detail : System.Web.UI.Page
                     result_root.Add(Speakers_root);
                 }
             }
+            /*
             var MultipleTimeHelper=Event.SeparateMultipleTimes(Event.GetMultipleTime(id));
             foreach (var element in MultipleTimeHelper)
             {
                 XElement temp = Darili_Extra.ForceArray(new XElement("MultipleTimes"), false);
                 temp.Add(new XElement("StartTime", element.starttime), new XElement("endTime", element.endtime));
                 result_root.Add(temp);
+            }*/
+            var MultipleTimes = Event.GetMultipleTime(id);
+            foreach (var element in MultipleTimes)
+            {
+                if (element.IsRoutine)
+                {
+                    //重复时间
+                    var toAdd = Darili_Extra.ForceArray(new XElement("multipletime"), false);
+                    toAdd.Add(new XElement("IsRoutine", "1"), new XElement("routine", element.RoutineDetail));
+                    
+                    string starttime = element.StartTime.Year.ToString() + "-" + element.StartTime.Month.ToString() + "-" + element.StartTime.Day.ToString()+"/"+element.StartTime.ToShortTimeString()+"/"+element.EndTime.ToShortTimeString(); 
+                    string endtime = element.EndTime.Year.ToString() +"-" + element.EndTime.Month.ToString() + "-" + element.EndTime.Day.ToString();
+                    toAdd.Add(new XElement("StartTime", starttime),
+                        new XElement("EndTime", endtime));
+                    result_root.Add(toAdd);
+                }
+                else
+                {
+                    //非重复时间
+                    var toAdd = Darili_Extra.ForceArray(new XElement("multipletime"), false);
+                    toAdd.Add(new XElement("IsRoutine", "0"));
+                    toAdd.Add(new XElement("StartTime",element.StartTime.Year.ToString()+"-"+element.StartTime.Month.ToString()+"-"+element.StartTime.Day.ToString()+"/"+element.StartTime.ToShortTimeString()+"/"+element.EndTime.ToShortTimeString()));
+                    result_root.Add(toAdd);
+                }
             }
             if (comments != null)
             {
@@ -101,6 +125,28 @@ public partial class Event_Detail : System.Web.UI.Page
             result_root.Add(new XElement("pin-num", Darili_Extra.GetSubscriptionNum(id)));
             result_root.Add(new XElement("NeedSubscribe", Darili_Subsciption.NeedSubscribe(id)));
             result_root.Add(new XElement("ViewFlag", result.ViewFlag));
+            #region Parameters
+            LikeAndGoDataContext ctx2 = new LikeAndGoDataContext();
+            var parameters = ctx2.Event_Subscription_Parameters.Where(p => p.eid == id).Select(p => p.parameters).First();
+            if (parameters != null)
+            {
+                XElement ele = new XElement("Parameters");
+                foreach (var element in parameters.Elements())
+                {
+                   ele.Add(Darili_Extra.ForceArray(element,false));
+
+                }
+                result_root.Add(ele);
+
+            }
+            #endregion
+            #region Event_BM
+            var Event_BM=ctx.Event_BM.Where(p => p.id == id).Select(p => p).First();
+            var Event_Bm_Toadd = new XElement("PublishTime",
+                new XElement("StartTime", Event_BM.StartTime),
+                new XElement("EndTime", Event_BM.EndTime));
+            result_root.Add(new XElement("numlimit", Event_BM.numlimit));
+            #endregion
             Response.Write(JsonConvert.SerializeXNode(result_root));
            // Response.Write(result_root);
 

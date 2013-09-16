@@ -4,14 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Darili_api;
 
-public partial class addevent : System.Web.UI.Page
+public partial class MinorOrg : System.Web.UI.Page
 {
-   
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!Page.User.Identity.IsAuthenticated)
-            Response.Redirect("main.html");
+        string NickName = Page.User.Identity.Name;
+        
     }
 }
