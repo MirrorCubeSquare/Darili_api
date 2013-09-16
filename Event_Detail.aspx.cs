@@ -28,6 +28,8 @@ public partial class Event_Detail : System.Web.UI.Page
             result_root.Add(new XElement("StartTime", result.StartTime));
             result_root.Add(new XElement("EndTime", result.EndTime));
             result_root.Add(new XElement("Context",result.Context));
+            result_root.Add(new XElement("Type", result.Type));
+            result_root.Add(new XElement("SubType", result.Subtype));
          result_root.Add(new XElement("Type",result.Type));
          result_root.Add(new XElement("pic", @"./g_Poster.aspx?&Thumb=1&id=" + result.Id.ToString()));
             result_root.Add(new XElement("Subtype",result.Subtype));
