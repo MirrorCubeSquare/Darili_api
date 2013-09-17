@@ -27,6 +27,7 @@ public partial class Search : System.Web.UI.Page
             predicate = predicate.Or(p => p.Series.Contains(q));
             var quary = ctx.EventMain.Where(predicate).Select(p => p.Id);
            
+            
             var result = quary.ToList();
             Response.Write(JsonConvert.SerializeObject(result));
             //Brand
@@ -34,10 +35,11 @@ public partial class Search : System.Web.UI.Page
             var quary2 = from entry in ctx.Event_LectureEx
                          where entry.Brand.Contains(q)
                          select entry.event_id;
-
-            List<Event> events = new List<Event>();
+            //Host
+            var quary3 = ctx.Host.Where(p => p.Name.Contains(q)).Select(p => p.Event_id);
+                List<Event> events = new List<Event>();
             result.AddRange(quary2.ToList());
-            
+            result.AddRange(quary3.ToList());
             foreach (var eid in result.Skip (int.Parse(perpage) * int.Parse(page)).Take(int.Parse(perpage)))
             {
                 events.Add(Event.GetEventById(eid));

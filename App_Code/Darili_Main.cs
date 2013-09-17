@@ -172,8 +172,12 @@ namespace Darili_api
                         new XElement("pin-num",Darili_Extra.GetSubscriptionNum(value.Id)),
                         new XElement("share-num",Darili_Extra.GetShareNum(value.Id)),
                         new XElement("NeedSubscribe",value.NeedSubscribe),
-                        new XElement("timeleft",new XElement("day",timeleft.Item1),new XElement("hour",timeleft.Item2),new XElement("min",timeleft.Item3)),
+                        
                         new XElement("Type", value.Type));
+                if (value.NeedSubscribe == true)
+                {
+                    Xml.Add(new XElement("timeleft", new XElement("day", timeleft.Item1), new XElement("hour", timeleft.Item2), new XElement("min", timeleft.Item3)));
+                }
                 Xml.Add(MultipleTime);
 
                 return Xml;

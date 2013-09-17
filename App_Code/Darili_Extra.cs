@@ -123,9 +123,24 @@ public class Darili_Extra
     }
     public static Tuple<int, int, int> TimeLeft(Event eve)
     {
-        TimeSpan span = eve.StartTime - DateTime.Now;
-        return new Tuple<int, int, int>(span.Days, span.Hours, span.Minutes);
-
+        var ctx = new Darili_LinqDataContext();
+        var query = ctx.Event_BM.Where(p => p.id == eve.Id).Select(p => p.EndTime);
+        if (query.Count() > 0)
+        {
+            TimeSpan span = query.First() - DateTime.Now;
+            return new Tuple<int, int, int>(span.Days, span.Hours, span.Minutes);
+        }
+        else
+        {
+            return null;
+        }
+        /*
+        else
+        {
+            TimeSpan span = eve.StartTime - DateTime.Now;
+            return new Tuple<int, int, int>(span.Days, span.Hours, span.Minutes);
+        }
+        */
     }
     public static XElement[] GetAlbum(int id, string FatherPath)
     {

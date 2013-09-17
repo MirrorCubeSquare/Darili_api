@@ -95,6 +95,12 @@ namespace Darili_api
                 return Event_ViewControl.ViewLevel.Internal;
             }
         }
+       
+    }
+    public class Event_MinorOrg
+    {
+        public string NickName;
+        public string OrgName;
     }
     public class Event_ViewControl
     {

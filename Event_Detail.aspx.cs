@@ -127,11 +127,11 @@ public partial class Event_Detail : System.Web.UI.Page
             result_root.Add(new XElement("ViewFlag", result.ViewFlag));
             #region Parameters
             LikeAndGoDataContext ctx2 = new LikeAndGoDataContext();
-            var parameters = ctx2.Event_Subscription_Parameters.Where(p => p.eid == id).Select(p => p.parameters).First();
-            if (parameters != null)
+            var parameters = ctx2.Event_Subscription_Parameters.Where(p => p.eid == id).Select(p => p.parameters);
+            if (parameters.Count()>0)
             {
                 XElement ele = new XElement("Parameters");
-                foreach (var element in parameters.Elements())
+                foreach (var element in parameters.ToList().Elements())
                 {
                    ele.Add(Darili_Extra.ForceArray(element,false));
 
@@ -141,11 +141,15 @@ public partial class Event_Detail : System.Web.UI.Page
             }
             #endregion
             #region Event_BM
-            var Event_BM=ctx.Event_BM.Where(p => p.id == id).Select(p => p).First();
-            var Event_Bm_Toadd = new XElement("PublishTime",
-                new XElement("StartTime", Event_BM.StartTime),
-                new XElement("EndTime", Event_BM.EndTime));
-            result_root.Add(new XElement("numlimit", Event_BM.numlimit));
+            var Event_BM=ctx.Event_BM.Where(p => p.id == id).Select(p => p);
+            if (Event_BM.Count() > 0)
+            {
+                var Event_Bm_Toadd = new XElement("PublishTime",
+                    new XElement("StartTime", Event_BM.First().StartTime),
+                    new XElement("EndTime", Event_BM.First().EndTime));
+                result_root.Add(Event_Bm_Toadd);
+                result_root.Add(new XElement("numlimit", Event_BM.First().numlimit));
+            }
             #endregion
             Response.Write(JsonConvert.SerializeXNode(result_root));
            // Response.Write(result_root);
