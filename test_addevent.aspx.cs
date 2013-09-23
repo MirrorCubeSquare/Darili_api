@@ -20,7 +20,7 @@ public partial class test_addevent : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //以下为测试用代码
-        if (!Page.User.IsInRole("Admin"))
+        if (!Event_RoleControl.AllowAccess(Event_RoleControl.RoleControlLevel.NeedOrganization))
         {
             Response.StatusCode = 403;
             Response.End();
@@ -69,8 +69,41 @@ public partial class test_addevent : System.Web.UI.Page
                     Series = (string)obj["series"]
                 };
                 #endregion
+                if (!String.IsNullOrEmpty((String)Session["OrgName"]) && Event_RoleControl.IsOrgManager((string)Session["OrgName"], Page.User.Identity.Name))
+                {
+                    data.Publisher = (string)Session["OrgName"];
+                }
+                else
+                {
+                    if(!String.IsNullOrEmpty((String)Session["OrgName"]))
+                    {
+                        Session.Remove("OrgName");
+                        Session.Remove("IsMinorOrg");
+                    }
+                }
                 #region 处理ViewFlag
-                data.ViewFlag = (short)Event_RoleControl.Viewlevel();
+                string eventtype = (string)obj["EventType"];
+                string OrgName = TrimIfExists((string)Session["OrgName"]);
+                if (eventtype == "1")
+                {
+                    data.ViewFlag = (short)-1;
+                }
+                else
+                {
+                    //公开活动
+                    if (Event_RoleControl.IsAdmin(Page.User.Identity.Name) || Event_RoleControl.IsOrg(OrgName, Page.User.Identity.Name))
+                    {
+                        data.ViewFlag = (short)1;
+                    }
+                    else
+                    {
+                        data.ViewFlag = (short)-1;
+                    }
+                }
+                if (Event_RoleControl.IsOrg(OrgName, Page.User.Identity.Name))
+                {
+                    data.Publisher = OrgName;
+                }
                 #endregion
 
                 #region 处理speaker,class
@@ -189,10 +222,7 @@ public partial class test_addevent : System.Web.UI.Page
                 }
                 #endregion
                 #region 插入记录，返回
-                if (data.Publisher == null || data.Publisher.Trim() == "")
-                {
-                    data.Publisher = "佚名";
-                }
+               
                 ctx.EventMain.InsertOnSubmit(data);
                 ctx.SubmitChanges();
                 #region 处理报名参数
@@ -228,7 +258,7 @@ public partial class test_addevent : System.Web.UI.Page
                 #endregion
                 Session["post_id"] = data.Id;
                 JObject response = new JObject(new JProperty("success", 1),
-                    new JProperty("id", data.Id));
+                    new JProperty("id", data.Id),new JProperty("ViewFlag",data.ViewFlag));
 
                 Response.Write(response.ToString());
                 #endregion

@@ -18,8 +18,10 @@ namespace Darili_api
             string NickName = HttpContext.Current.User.Identity.Name;
             var Publisher = ctx.EventMain.Where(P => P.Id == eid).Select(p => p.Publisher).First();
             var ctx2 = new Event_orgDataContext();
-            string OrgName = ctx2.Event_Org.Where(p => p.NickName == NickName).Select(p => p.Org_Name).First();
-            return (Publisher == NickName || Publisher == OrgName);
+           
+            var OrgNamequery = ctx2.Event_Org.Where(p => p.NickName == NickName).Select(p => p.Org_Name);
+            var orgname = OrgNamequery.ToList();
+            return (Publisher == NickName || orgname.Contains(NickName));
 
         }
         public Event_RoleControl()
@@ -49,6 +51,7 @@ namespace Darili_api
                     Type=type
                 };
                 ctx.Event_Org.InsertOnSubmit(orga);
+                
                 ctx.SubmitChanges();
 
             }
@@ -64,14 +67,34 @@ namespace Darili_api
             NeedOrganization = 1,
             AdminOnly = 2
         }
-        public bool AllowAccess(RoleControlLevel PermissionLevel)
+        public static bool IsOrg(string OrgName, string NickName)
+        {
+            Event_orgDataContext ctx = new Event_orgDataContext();
+            var query = from entry in ctx.Event_Org
+                        where entry.Org_Name == OrgName && entry.NickName == NickName&&entry.IsProved==true
+                        select entry.id;
+            return query.Count() > 0;
+        }
+        public static bool IsMonorOrg(string OrgName, string NickName)
+        {
+            Event_orgDataContext ctx = new Event_orgDataContext();
+            var query = from entry in ctx.Event_MinorOrg
+                        where entry.Org_Name == OrgName && entry.NickName == NickName
+                        select entry.id;
+            return query.Count() > 0;
+        }
+        public static bool IsOrgManager(string OrgName, string NickName)
+        {
+            return IsMonorOrg(OrgName, NickName) || IsOrg(OrgName, NickName);
+        }
+        public static bool AllowAccess(RoleControlLevel PermissionLevel)
         {
             switch (PermissionLevel)
             {
                 case RoleControlLevel.AdminOnly:
                     return HttpContext.Current.User.IsInRole("Admin");
                 case RoleControlLevel.NeedOrganization:
-                    return HttpContext.Current.User.IsInRole("Admin") || HttpContext.Current.User.IsInRole("Organization");
+                    return HttpContext.Current.User.IsInRole("Admin") || HttpContext.Current.User.IsInRole("Organization")||HttpContext.Current.User.IsInRole("MinorOrg");
                 case RoleControlLevel.AllAcceptable:
                     return true;
                 default:

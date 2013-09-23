@@ -20,7 +20,6 @@ public partial class Event_Data : System.Web.UI.Page
         Response.Charset = "utf-8";
         if (!IsPostBack)
         {
-            
             int uid = Darili_User.Get_Uid_Local(Page.User.Identity.Name);
             int[] LikeList = Darili_Subsciption.GetLikeList(uid);
             int[] SubscribeList = Darili_Subsciption.GetSubscriptionList(uid);
@@ -37,26 +36,26 @@ public partial class Event_Data : System.Web.UI.Page
             {
                 if (date != DateTime.MinValue)
                 {
-                    events = Darili_EventManuever.SearchTime(date.Date, date.Date + new TimeSpan(1, 0, 0, 0), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                    events = Darili_EventManuever.SearchTime(date.Date, date.Date + new TimeSpan(1, 0, 0, 0), cat, subcat,false, int.Parse(perpage), int.Parse(page));
                 }
                 else
                 {
                     if (timeoffset == "0" || timeoffset == "1")
-                        events = Event.GetTimeSpan(DateTime.Now.Date+new TimeSpan(int.Parse(timeoffset),0,0,0), DateTime.Now.Date + new TimeSpan(Int32.Parse(timeoffset) + 1, 0, 0, 0), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                        events = Event.GetTimeSpan(DateTime.Now.Date+new TimeSpan(int.Parse(timeoffset),0,0,0), DateTime.Now.Date + new TimeSpan(Int32.Parse(timeoffset) + 1, 0, 0, 0), cat, subcat, false, int.Parse(perpage), int.Parse(page));
                     if (timeoffset == "2")
                     {
                         int offset1 = int.Parse(Darili_EventManuever.Convert_DayOfWeek(DateTime.Now.DayOfWeek));
-                        events = Event.GetTimeSpan(DateTime.Now.Date + new TimeSpan(-offset1, 0, 0, 0), DateTime.Now.Date + new TimeSpan(-offset1 + 7, 0, 0, 0), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                        events = Event.GetTimeSpan(DateTime.Now.Date + new TimeSpan(-offset1, 0, 0, 0), DateTime.Now.Date + new TimeSpan(-offset1 + 7, 0, 0, 0), cat, subcat, false, int.Parse(perpage), int.Parse(page));
                     }
                     if (timeoffset == "3")
                     {
                         int offset1 = int.Parse(Darili_EventManuever.Convert_DayOfWeek(DateTime.Now.DayOfWeek));
-                        events = Event.GetTimeSpan(DateTime.Now.Date + new TimeSpan(-offset1 + 7, 0, 0, 0), DateTime.Now.Date + new TimeSpan(-offset1 + 14, 0, 0, 0), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                        events = Event.GetTimeSpan(DateTime.Now.Date + new TimeSpan(-offset1 + 7, 0, 0, 0), DateTime.Now.Date + new TimeSpan(-offset1 + 14, 0, 0, 0), cat, subcat, false, int.Parse(perpage), int.Parse(page));
 
                     }
                     if (timeoffset != "0" && timeoffset != "1" && timeoffset != "2" && timeoffset != "3")
                     {
-                        events = Event.GetTimeSpan(DateTime.Parse("1990/1/1"), DateTime.Parse("2099/12/31"), cat, subcat, true, int.Parse(perpage), int.Parse(page));
+                        events = Event.GetTimeSpan(DateTime.Parse("1990/1/1"), DateTime.Parse("2099/12/31"), cat, subcat, false, int.Parse(perpage), int.Parse(page));
                     }
                 }
                 if (events.Count() == 1)

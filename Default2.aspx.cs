@@ -11,8 +11,6 @@ public partial class Default2 : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        int eid = 17;
-        var multipletime = Event.SeparateMultipleTimes(Event.GetMultipleTime(eid));
-        Response.Write(multipletime);
+        Response.Write(Session["OrgName"]);
      }
 }

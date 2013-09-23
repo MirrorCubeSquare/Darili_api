@@ -25,6 +25,7 @@ public partial class Search : System.Web.UI.Page
             predicate = predicate.Or(p => p.Subtitle.Contains(q));
             predicate = predicate.Or(p => p.Location.Contains(q));
             predicate = predicate.Or(p => p.Series.Contains(q));
+            
             var quary = ctx.EventMain.Where(predicate).Select(p => p.Id);
            
             

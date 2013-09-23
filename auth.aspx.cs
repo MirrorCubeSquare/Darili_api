@@ -22,6 +22,8 @@ public partial class auth : System.Web.UI.Page
             }
             Darili_User.RecordLoginTime(result.Item3);
             RedictFromLoginPage(result.Item3, result.Item2);
+            Session.Remove("OrgName");
+            Session.Remove("IsMinorOrg");
             // RedictFromLoginPage(result.Item3, result.Item2,Request.Cookies["webpy_session_id"]);
         }
         else

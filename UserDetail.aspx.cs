@@ -54,8 +54,10 @@ public partial class UserDetail : System.Web.UI.Page
             }
             if (type == "Published")
             {
+                //写入Publisher为自己的活动
                 int publishcount = Event.GetPublishCount(Page.User.Identity.Name);
                 Event[] Published_Events = Event.GetPublisherEntries(Page.User.Identity.Name, perpage, page);
+                //写入自己的Org所属的活动
                 foreach (var element in Published_Events)
                 {
                     element.NeedSubscribe = Darili_Subsciption.NeedSubscribe(element.Id);

@@ -39,7 +39,9 @@
     <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
         ConnectionString="<%$ ConnectionStrings:416ConnectionString %>" 
         
-        SelectCommand="SELECT [id], [NickName], [Org_Name], [Type], [IsProved] FROM [Event_Org]"></asp:SqlDataSource>
+        
+        SelectCommand="SELECT [id], [NickName], [Org_Name], [Type], [IsProved] FROM [Event_Org]" 
+        onselecting="SqlDataSource1_Selecting"></asp:SqlDataSource>
     <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
     </form>
 </body>

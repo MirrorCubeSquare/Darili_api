@@ -74,10 +74,13 @@ public partial class ModifyEvent : System.Web.UI.Page
                 #region 处理speaker,class
                     if (toModify.Type == "讲座")
                 {
+                    ctx.Lecture.DeleteAllOnSubmit(toModify.Lecture.ToList());
+                        
                     foreach (var element in obj["speaker"].ToList())
                     {
                         string raw = element.ToString();
                         raw = System.Text.RegularExpressions.Regex.Replace(raw, @"\s{4}", "|");
+                        ctx.Lecture.DeleteAllOnSubmit(toModify.Lecture.ToList());
                         string[] speaker = raw.Split('|');
                         toModify.Lecture.Add(new Lecture
                         {
@@ -86,8 +89,10 @@ public partial class ModifyEvent : System.Web.UI.Page
                         }
                         );
                     }
+                    ctx.Host.DeleteAllOnSubmit(toModify.Host.ToList());
                     foreach (var element in obj["Publisher"].ToList())
                     {
+                        
                         toModify.Host.Add(new Host
                         {
                             Name = element.ToString()
@@ -98,8 +103,10 @@ public partial class ModifyEvent : System.Web.UI.Page
                 }
                 else
                 {
+                    ctx.Host.DeleteAllOnSubmit(toModify.Host.ToList());
                     foreach (var element in obj["Publisher"].ToList())
                     {
+                        
                         toModify.Host.Add(new Host
                         {
                             Name = element.ToString()
@@ -109,6 +116,7 @@ public partial class ModifyEvent : System.Web.UI.Page
 
                 #endregion
                 #region 处理多时段
+                    ctx.Event_MultipleTime.DeleteAllOnSubmit(toModify.Event_MultipleTime.ToList());
                 foreach (var element in obj["multipletime"].ToList())
                 {
                     Event_MultipleTime multi = new Event_MultipleTime
@@ -148,8 +156,10 @@ public partial class ModifyEvent : System.Web.UI.Page
                 }
                 #endregion
                 #region 处理讲座信息
+                
                 if (toModify.Type == "讲座")
                 {
+                    ctx.Event_LectureEx.DeleteOnSubmit(toModify.Event_LectureEx);
                     toModify.Event_LectureEx = new Event_LectureEx
                     {
                         Brand = obj["brand"].ToString(),
@@ -160,6 +170,7 @@ public partial class ModifyEvent : System.Web.UI.Page
                 #endregion
 
                 #region 处理报名时间
+                ctx.Event_BM.DeleteOnSubmit(toModify.Event_BM);
                 if (obj["PublishTime"] != null)
                 {
                     var event_bm = new Event_BM();
@@ -193,7 +204,9 @@ public partial class ModifyEvent : System.Web.UI.Page
                 }
                ctx.SubmitChanges();
                 #region 处理报名参数
+
                 var paractx = new LikeAndGoDataContext();
+                paractx.Event_Subscription_Parameters.DeleteAllOnSubmit(paractx.Event_Subscription_Parameters.Where(p => p.eid == toModify.Id).Select(p => p).ToList());
                 Event_Subscription_Parameters para = new Event_Subscription_Parameters
                 {
                     eid = toModify.Id,

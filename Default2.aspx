@@ -10,7 +10,7 @@
 <body>
     <form id="form1" runat="server">
     <div>
-    
+    <%# (String)Session["OrgName"] %>
     </div>
     </form>
 </body>

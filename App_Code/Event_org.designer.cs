@@ -29,12 +29,12 @@ public partial class Event_orgDataContext : System.Data.Linq.DataContext
 	
   #region 可扩展性方法定义
   partial void OnCreated();
-  partial void InsertEvent_MinorOrg(Event_MinorOrg instance);
-  partial void UpdateEvent_MinorOrg(Event_MinorOrg instance);
-  partial void DeleteEvent_MinorOrg(Event_MinorOrg instance);
   partial void InsertEvent_Org(Event_Org instance);
   partial void UpdateEvent_Org(Event_Org instance);
   partial void DeleteEvent_Org(Event_Org instance);
+  partial void InsertEvent_MinorOrg(Event_MinorOrg instance);
+  partial void UpdateEvent_MinorOrg(Event_MinorOrg instance);
+  partial void DeleteEvent_MinorOrg(Event_MinorOrg instance);
   #endregion
 	
 	public Event_orgDataContext() : 
@@ -67,14 +67,6 @@ public partial class Event_orgDataContext : System.Data.Linq.DataContext
 		OnCreated();
 	}
 	
-	public System.Data.Linq.Table<Event_MinorOrg> Event_MinorOrg
-	{
-		get
-		{
-			return this.GetTable<Event_MinorOrg>();
-		}
-	}
-	
 	public System.Data.Linq.Table<Event_Org> Event_Org
 	{
 		get
@@ -82,155 +74,12 @@ public partial class Event_orgDataContext : System.Data.Linq.DataContext
 			return this.GetTable<Event_Org>();
 		}
 	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_MinorOrg")]
-public partial class Event_MinorOrg : INotifyPropertyChanging, INotifyPropertyChanged
-{
 	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private int _id;
-	
-	private string _Org_Name;
-	
-	private string _NickName;
-	
-	private EntityRef<Event_Org> _Event_Org;
-	
-    #region 可扩展性方法定义
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void OnOrg_NameChanging(string value);
-    partial void OnOrg_NameChanged();
-    partial void OnNickNameChanging(string value);
-    partial void OnNickNameChanged();
-    #endregion
-	
-	public Event_MinorOrg()
-	{
-		this._Event_Org = default(EntityRef<Event_Org>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-	public int id
+	public System.Data.Linq.Table<Event_MinorOrg> Event_MinorOrg
 	{
 		get
 		{
-			return this._id;
-		}
-		set
-		{
-			if ((this._id != value))
-			{
-				this.OnidChanging(value);
-				this.SendPropertyChanging();
-				this._id = value;
-				this.SendPropertyChanged("id");
-				this.OnidChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Org_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-	public string Org_Name
-	{
-		get
-		{
-			return this._Org_Name;
-		}
-		set
-		{
-			if ((this._Org_Name != value))
-			{
-				if (this._Event_Org.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnOrg_NameChanging(value);
-				this.SendPropertyChanging();
-				this._Org_Name = value;
-				this.SendPropertyChanged("Org_Name");
-				this.OnOrg_NameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NickName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-	public string NickName
-	{
-		get
-		{
-			return this._NickName;
-		}
-		set
-		{
-			if ((this._NickName != value))
-			{
-				this.OnNickNameChanging(value);
-				this.SendPropertyChanging();
-				this._NickName = value;
-				this.SendPropertyChanged("NickName");
-				this.OnNickNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Event_Org_Event_MinorOrg", Storage="_Event_Org", ThisKey="Org_Name", OtherKey="Org_Name", IsForeignKey=true)]
-	public Event_Org Event_Org
-	{
-		get
-		{
-			return this._Event_Org.Entity;
-		}
-		set
-		{
-			Event_Org previousValue = this._Event_Org.Entity;
-			if (((previousValue != value) 
-						|| (this._Event_Org.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Event_Org.Entity = null;
-					previousValue.Event_MinorOrg.Remove(this);
-				}
-				this._Event_Org.Entity = value;
-				if ((value != null))
-				{
-					value.Event_MinorOrg.Add(this);
-					this._Org_Name = value.Org_Name;
-				}
-				else
-				{
-					this._Org_Name = default(string);
-				}
-				this.SendPropertyChanged("Event_Org");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			return this.GetTable<Event_MinorOrg>();
 		}
 	}
 }
@@ -418,6 +267,157 @@ public partial class Event_Org : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.Event_Org = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_MinorOrg")]
+public partial class Event_MinorOrg : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _id;
+	
+	private string _Org_Name;
+	
+	private string _NickName;
+	
+	private EntityRef<Event_Org> _Event_Org;
+	
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnOrg_NameChanging(string value);
+    partial void OnOrg_NameChanged();
+    partial void OnNickNameChanging(string value);
+    partial void OnNickNameChanged();
+    #endregion
+	
+	public Event_MinorOrg()
+	{
+		this._Event_Org = default(EntityRef<Event_Org>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int id
+	{
+		get
+		{
+			return this._id;
+		}
+		set
+		{
+			if ((this._id != value))
+			{
+				this.OnidChanging(value);
+				this.SendPropertyChanging();
+				this._id = value;
+				this.SendPropertyChanged("id");
+				this.OnidChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Org_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+	public string Org_Name
+	{
+		get
+		{
+			return this._Org_Name;
+		}
+		set
+		{
+			if ((this._Org_Name != value))
+			{
+				if (this._Event_Org.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrg_NameChanging(value);
+				this.SendPropertyChanging();
+				this._Org_Name = value;
+				this.SendPropertyChanged("Org_Name");
+				this.OnOrg_NameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NickName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+	public string NickName
+	{
+		get
+		{
+			return this._NickName;
+		}
+		set
+		{
+			if ((this._NickName != value))
+			{
+				this.OnNickNameChanging(value);
+				this.SendPropertyChanging();
+				this._NickName = value;
+				this.SendPropertyChanged("NickName");
+				this.OnNickNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Event_Org_Event_MinorOrg", Storage="_Event_Org", ThisKey="Org_Name", OtherKey="Org_Name", IsForeignKey=true)]
+	public Event_Org Event_Org
+	{
+		get
+		{
+			return this._Event_Org.Entity;
+		}
+		set
+		{
+			Event_Org previousValue = this._Event_Org.Entity;
+			if (((previousValue != value) 
+						|| (this._Event_Org.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Event_Org.Entity = null;
+					previousValue.Event_MinorOrg.Remove(this);
+				}
+				this._Event_Org.Entity = value;
+				if ((value != null))
+				{
+					value.Event_MinorOrg.Add(this);
+					this._Org_Name = value.Org_Name;
+				}
+				else
+				{
+					this._Org_Name = default(string);
+				}
+				this.SendPropertyChanged("Event_Org");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
 #pragma warning restore 1591

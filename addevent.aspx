@@ -9,7 +9,7 @@
 	 <link rel="stylesheet" type="text/css" href="css/reset.css" media="all" />
 	 <link rel="stylesheet" type="text/css" href="css/addevent-style.css" media="all" />
 	 <script type="text/javascript" src="js/jquery-1.9.min.js"></script>
-	
+	<script type="text/javascript" src="js/jquery.form.js"></script>
 	<script tyoe="text/javascript" src="js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript" src="js/addevent.js"></script>
 	<script type="text/javascript" src="js/timepicker.js"></script>
@@ -35,11 +35,11 @@
 								<div class="clickbox click-box-round click" id="event-public"></div>
 								<div>公开活动</div>
 							</li>
-							<!--<li class="click-text">
+							<li class="click-text">
 								<div class="clickbox click-box-round" id="event-inside"></div>
 								<div>内部活动</div>
 							</li>
-							<li class="click-text">
+							<!--<li class="click-text">
 								<div class="clickbox click-box-round" id="event-personal"></div>
 								<div>个人活动</div>
 							</li>-->
@@ -436,7 +436,7 @@
 					<div class="right">
 						<div class="input-wrap">
 							<input type="text" class="speaker-name-input"/>
-							<div class="choosebox category-each" id="speaker-cat-input">
+							<div class="choosebox category-each speaker-cat-input">
 								<div class="category-show">
 									<p>请选择</p>
 								</div>

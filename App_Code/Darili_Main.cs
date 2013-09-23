@@ -366,11 +366,23 @@ namespace Darili_api
         //获取指定发布人的发布记录(out of date)
         public static Event[] GetPublisherEntries(string people,int perpage,int page)
         {
+            Event_orgDataContext orgctx = new Event_orgDataContext();
+            List<string>list2 =new List<string>();
+            list2.Add(people);
+            list2.AddRange(orgctx.Event_MinorOrg.Where(p => p.NickName == people).Select(p => p.Org_Name).ToList());
+            list2.AddRange(orgctx.Event_Org.Where(p => p.NickName == people).Select(p => p.Org_Name).ToList());
+            List<int> list3 = new List<int>();
+            var predicate =PredicateBuilder.False<EventMain>();
+            for (int i = 0; i < list2.Count(); i++)
+            {
+                list3.Add(i);
+                predicate=predicate.Or(p=>p.Publisher==list2[list3[i]]);
+            }
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var quary = (from entry in ctx.EventMain
-                         where entry.Publisher == people
-                         orderby entry.PublishTime descending
-                         select entry);
+            var quary = from entry in ctx.EventMain
+                        where list2.Contains(entry.Publisher)
+                        select entry;
+            
             EventMain[] temp = quary.ToArray();
             List<Event> list = new List<Event>();
             foreach (EventMain t in temp)

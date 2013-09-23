@@ -24,6 +24,7 @@ public partial class Check_Datetime : System.Web.UI.Page
             var d2 = Request.QueryString["d2"];
             var t1 = Request.QueryString["t1"];
             var t2 = Request.QueryString["t2"];
+            var routine = Request.QueryString["routine"];
             var flag = Request.QueryString["flag"];
             DateTime result1 = DateTime.Now;
             DateTime result2 = DateTime.Now;
@@ -33,6 +34,7 @@ public partial class Check_Datetime : System.Web.UI.Page
             DateTime.TryParse(d2, out result2);
             DateTime.TryParse(t1, out result3);
             DateTime.TryParse(t2, out result4);
+          
             int SpanCompare = TimeSpan.Compare(result3.TimeOfDay, result4.TimeOfDay);
             int success;
             int DateCompare = DateTime.Compare(result1.Date, result2.Date);

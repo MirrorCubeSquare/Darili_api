@@ -89,6 +89,8 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private System.Nullable<System.DateTime> _User_LastLoginTime;
 	
+	private string _User_Stuno;
+	
     #region 可扩展性方法定义
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -103,6 +105,8 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
     partial void OnUser_RealnameChanged();
     partial void OnUser_LastLoginTimeChanging(System.Nullable<System.DateTime> value);
     partial void OnUser_LastLoginTimeChanged();
+    partial void OnUser_StunoChanging(string value);
+    partial void OnUser_StunoChanged();
     #endregion
 	
 	public Event_Users()
@@ -130,7 +134,7 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_NickName", DbType="NChar(50) NOT NULL", CanBeNull=false)]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_NickName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
 	public string User_NickName
 	{
 		get
@@ -206,6 +210,26 @@ public partial class Event_Users : INotifyPropertyChanging, INotifyPropertyChang
 				this._User_LastLoginTime = value;
 				this.SendPropertyChanged("User_LastLoginTime");
 				this.OnUser_LastLoginTimeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_User_Stuno", DbType="NChar(11)")]
+	public string User_Stuno
+	{
+		get
+		{
+			return this._User_Stuno;
+		}
+		set
+		{
+			if ((this._User_Stuno != value))
+			{
+				this.OnUser_StunoChanging(value);
+				this.SendPropertyChanging();
+				this._User_Stuno = value;
+				this.SendPropertyChanged("User_Stuno");
+				this.OnUser_StunoChanged();
 			}
 		}
 	}

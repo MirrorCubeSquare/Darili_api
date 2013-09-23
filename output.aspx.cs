@@ -1,4 +1,4 @@
-锘縰sing System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,16 +12,16 @@ public partial class output : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         string type = Request.QueryString["type"];
-        int eid=int.Parse(Request.QueryString["id"]);
+        int eid = int.Parse(Request.QueryString["id"]);
         LikeAndGoDataContext ctx = new LikeAndGoDataContext();
         var query = ctx.Event_Subscription.Where(p => p.eid == eid).Select(p => p);
-        List<Event_Subscription> list=new List<Event_Subscription>();
-            if (query.Count() > 0)
-            {
-              list = query.ToList();
-            }
-            string result = "";
-        if (type == "xml"|| type=="json")
+        List<Event_Subscription> list = new List<Event_Subscription>();
+        if (query.Count() > 0)
+        {
+            list = query.ToList();
+        }
+        string result = "";
+        if (type == "xml" || type == "json")
         {
             XElement root = new XElement("root");
             foreach (var element in list)
@@ -31,8 +31,12 @@ public partial class output : System.Web.UI.Page
             }
             if (type == "xml")
             {
-                Response.ContentType = "text/xml";
-                result = root.ToString();
+                Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+                Response.ContentType = "application/octet-stream;charset=GB2312"; result = root.ToString();
+                var encoding = System.Text.Encoding.GetEncoding("gb2312");
+                var result_bin = encoding.GetBytes(result);
+                Response.BinaryWrite(result_bin);
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + "Subscription_" + eid.ToString() + ".xml");
             }
             else
             {
@@ -45,24 +49,41 @@ public partial class output : System.Web.UI.Page
             Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
             Response.ContentType = "application/octet-stream;charset=GB2312";
             var xroot = list.Select(p => p.sdetail).ToList();
-            List<String>Params=new List<String>();
-          
-                foreach (var element in xroot)
+            List<String> Params = new List<String>();
+
+            foreach (var element in xroot)
+            {
+                foreach (var ele_element in element.Elements())
                 {
-                    foreach(var ele_element in element.Elements())
+                    if (ele_element.Attribute("Name") != null)
                     {
-                        if (ele_element.Attribute("Name")!=null)
+                        if (!Params.Exists(p => p == ele_element.Attribute("Name").Value))
                         {
-                            if (!Params.Exists(p => p == ele_element.Attribute("Name").Value))
-                            {
-                                Params.Add(ele_element.Attribute("Name").Value);
-                            }
+                            Params.Add(ele_element.Attribute("Name").Value);
                         }
                     }
                 }
+            }
+            for (int i = 0; i < Params.Count; i++)
+            {
+                result += Params[i];
+                if (!(i == Params.Count - 1))
+                {
+                    result += ",";
+                }
+                else
+                {
+                    result += System.Environment.NewLine;
+                }
+            }
+            foreach (var element in xroot)
+            {
                 for (int i = 0; i < Params.Count; i++)
                 {
-                    result += Params[i];
+                    var ele = element.Elements().ToList();
+                    var notnull = ele.Where(p => p.Attribute("Name") != null).Select(p => p).ToList();
+                    string value = notnull.Where(p => p.Attribute("Name").Value == Params[i]).First().Value;
+                    result += value;
                     if (!(i == Params.Count - 1))
                     {
                         result += ",";
@@ -72,39 +93,22 @@ public partial class output : System.Web.UI.Page
                         result += System.Environment.NewLine;
                     }
                 }
-                foreach (var element in xroot)
-                {
-                    for (int i = 0; i < Params.Count; i++)
-                    {
-                        var ele = element.Elements().ToList();
-                        var notnull = ele.Where(p => p.Attribute("Name")!=null).Select(p => p).ToList();
-                        string value = notnull.Where(p => p.Attribute("Name").Value == Params[i]).First().Value;
-                        result += value;
-                        if (!(i == Params.Count - 1))
-                        {
-                            result += ",";
-                        }
-                        else
-                        {
-                            result += System.Environment.NewLine;
-                        }
-                    }
-                }
-                result=result.Replace("鎵嬫満", "MobileNo");
-                result=result.Replace("Cellphone", "MobileNo");
-                result = result.Replace("濮撳悕", "Name");
-                result = result.Replace("鏄电О", "Nickname");
-              var encoding=  System.Text.Encoding.GetEncoding("gb2312");
-             var result_bin= encoding.GetBytes(result);
-             Response.BinaryWrite(result_bin);
-             Response.AddHeader("Content-Disposition", "attachment; filename=" + "Subscription_"+eid.ToString()+ ".csv");
-            
-        
+            }
+            result = result.Replace("手机", "MobileNo");
+            result = result.Replace("Cellphone", "MobileNo");
+            result = result.Replace("姓名", "Name");
+            result = result.Replace("昵称", "Nickname");
+            var encoding = System.Text.Encoding.GetEncoding("gb2312");
+            var result_bin = encoding.GetBytes(result);
+            Response.BinaryWrite(result_bin);
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + "Subscription_" + eid.ToString() + ".csv");
+
+
         }
-        if (!(type == "csv"))
+        if (type == "json")
         {
             Response.Write(result);
         }
-       
+
     }
 }
