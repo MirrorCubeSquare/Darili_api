@@ -30,27 +30,30 @@ public partial class Darili_LinqDataContext : System.Data.Linq.DataContext
 	
   #region 可扩展性方法定义
   partial void OnCreated();
+  partial void InsertEvent_Album(Event_Album instance);
+  partial void UpdateEvent_Album(Event_Album instance);
+  partial void DeleteEvent_Album(Event_Album instance);
+  partial void InsertEvent_Album1(Event_Album1 instance);
+  partial void UpdateEvent_Album1(Event_Album1 instance);
+  partial void DeleteEvent_Album1(Event_Album1 instance);
   partial void InsertEvent_BM(Event_BM instance);
   partial void UpdateEvent_BM(Event_BM instance);
   partial void DeleteEvent_BM(Event_BM instance);
-  partial void InsertEvent_MultipleTime(Event_MultipleTime instance);
-  partial void UpdateEvent_MultipleTime(Event_MultipleTime instance);
-  partial void DeleteEvent_MultipleTime(Event_MultipleTime instance);
+  partial void InsertEvent_LectureEx(Event_LectureEx instance);
+  partial void UpdateEvent_LectureEx(Event_LectureEx instance);
+  partial void DeleteEvent_LectureEx(Event_LectureEx instance);
+  partial void InsertEventMain(EventMain instance);
+  partial void UpdateEventMain(EventMain instance);
+  partial void DeleteEventMain(EventMain instance);
   partial void InsertLecture(Lecture instance);
   partial void UpdateLecture(Lecture instance);
   partial void DeleteLecture(Lecture instance);
   partial void InsertHost(Host instance);
   partial void UpdateHost(Host instance);
   partial void DeleteHost(Host instance);
-  partial void InsertEvent_Album(Event_Album instance);
-  partial void UpdateEvent_Album(Event_Album instance);
-  partial void DeleteEvent_Album(Event_Album instance);
-  partial void InsertEventMain(EventMain instance);
-  partial void UpdateEventMain(EventMain instance);
-  partial void DeleteEventMain(EventMain instance);
-  partial void InsertEvent_LectureEx(Event_LectureEx instance);
-  partial void UpdateEvent_LectureEx(Event_LectureEx instance);
-  partial void DeleteEvent_LectureEx(Event_LectureEx instance);
+  partial void InsertEvent_MultipleTime(Event_MultipleTime instance);
+  partial void UpdateEvent_MultipleTime(Event_MultipleTime instance);
+  partial void DeleteEvent_MultipleTime(Event_MultipleTime instance);
   #endregion
 	
 	public Darili_LinqDataContext() : 
@@ -83,6 +86,22 @@ public partial class Darili_LinqDataContext : System.Data.Linq.DataContext
 		OnCreated();
 	}
 	
+	public System.Data.Linq.Table<Event_Album> Event_Album
+	{
+		get
+		{
+			return this.GetTable<Event_Album>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Event_Album1> Event_Album1
+	{
+		get
+		{
+			return this.GetTable<Event_Album1>();
+		}
+	}
+	
 	public System.Data.Linq.Table<Event_BM> Event_BM
 	{
 		get
@@ -91,11 +110,19 @@ public partial class Darili_LinqDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<Event_MultipleTime> Event_MultipleTime
+	public System.Data.Linq.Table<Event_LectureEx> Event_LectureEx
 	{
 		get
 		{
-			return this.GetTable<Event_MultipleTime>();
+			return this.GetTable<Event_LectureEx>();
+		}
+	}
+	
+	public System.Data.Linq.Table<EventMain> EventMain
+	{
+		get
+		{
+			return this.GetTable<EventMain>();
 		}
 	}
 	
@@ -115,28 +142,396 @@ public partial class Darili_LinqDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<Event_Album> Event_Album
+	public System.Data.Linq.Table<Event_MultipleTime> Event_MultipleTime
 	{
 		get
 		{
-			return this.GetTable<Event_Album>();
+			return this.GetTable<Event_MultipleTime>();
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_Album")]
+[global::System.Runtime.Serialization.DataContractAttribute()]
+public partial class Event_Album : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _eid;
+	
+	private int _aid;
+	
+	private string _description;
+	
+	private System.Guid _filename;
+	
+	private EntityRef<EventMain> _EventMain;
+	
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OneidChanging(int value);
+    partial void OneidChanged();
+    partial void OnaidChanging(int value);
+    partial void OnaidChanged();
+    partial void OndescriptionChanging(string value);
+    partial void OndescriptionChanged();
+    partial void OnfilenameChanging(System.Guid value);
+    partial void OnfilenameChanged();
+    #endregion
+	
+	public Event_Album()
+	{
+		this.Initialize();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_eid", DbType="Int NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+	public int eid
+	{
+		get
+		{
+			return this._eid;
+		}
+		set
+		{
+			if ((this._eid != value))
+			{
+				if (this._EventMain.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OneidChanging(value);
+				this.SendPropertyChanging();
+				this._eid = value;
+				this.SendPropertyChanged("eid");
+				this.OneidChanged();
+			}
 		}
 	}
 	
-	public System.Data.Linq.Table<EventMain> EventMain
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_aid", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+	public int aid
 	{
 		get
 		{
-			return this.GetTable<EventMain>();
+			return this._aid;
+		}
+		set
+		{
+			if ((this._aid != value))
+			{
+				this.OnaidChanging(value);
+				this.SendPropertyChanging();
+				this._aid = value;
+				this.SendPropertyChanged("aid");
+				this.OnaidChanged();
+			}
 		}
 	}
 	
-	public System.Data.Linq.Table<Event_LectureEx> Event_LectureEx
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_description", DbType="NVarChar(30)")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+	public string description
 	{
 		get
 		{
-			return this.GetTable<Event_LectureEx>();
+			return this._description;
 		}
+		set
+		{
+			if ((this._description != value))
+			{
+				this.OndescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._description = value;
+				this.SendPropertyChanged("description");
+				this.OndescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_filename", DbType="UniqueIdentifier NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+	public System.Guid filename
+	{
+		get
+		{
+			return this._filename;
+		}
+		set
+		{
+			if ((this._filename != value))
+			{
+				this.OnfilenameChanging(value);
+				this.SendPropertyChanging();
+				this._filename = value;
+				this.SendPropertyChanged("filename");
+				this.OnfilenameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_Album", Storage="_EventMain", ThisKey="eid", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+	public EventMain EventMain
+	{
+		get
+		{
+			return this._EventMain.Entity;
+		}
+		set
+		{
+			EventMain previousValue = this._EventMain.Entity;
+			if (((previousValue != value) 
+						|| (this._EventMain.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._EventMain.Entity = null;
+					previousValue.Event_Album.Remove(this);
+				}
+				this._EventMain.Entity = value;
+				if ((value != null))
+				{
+					value.Event_Album.Add(this);
+					this._eid = value.Id;
+				}
+				else
+				{
+					this._eid = default(int);
+				}
+				this.SendPropertyChanged("EventMain");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void Initialize()
+	{
+		this._EventMain = default(EntityRef<EventMain>);
+		OnCreated();
+	}
+	
+	[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+	public void OnDeserializing(StreamingContext context)
+	{
+		this.Initialize();
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_Album")]
+[global::System.Runtime.Serialization.DataContractAttribute()]
+public partial class Event_Album1 : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _eid;
+	
+	private int _aid;
+	
+	private string _description;
+	
+	private System.Guid _filename;
+	
+	private EntityRef<EventMain> _EventMain;
+	
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OneidChanging(int value);
+    partial void OneidChanged();
+    partial void OnaidChanging(int value);
+    partial void OnaidChanged();
+    partial void OndescriptionChanging(string value);
+    partial void OndescriptionChanged();
+    partial void OnfilenameChanging(System.Guid value);
+    partial void OnfilenameChanged();
+    #endregion
+	
+	public Event_Album1()
+	{
+		this.Initialize();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_eid", DbType="Int NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+	public int eid
+	{
+		get
+		{
+			return this._eid;
+		}
+		set
+		{
+			if ((this._eid != value))
+			{
+				if (this._EventMain.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OneidChanging(value);
+				this.SendPropertyChanging();
+				this._eid = value;
+				this.SendPropertyChanged("eid");
+				this.OneidChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_aid", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+	public int aid
+	{
+		get
+		{
+			return this._aid;
+		}
+		set
+		{
+			if ((this._aid != value))
+			{
+				this.OnaidChanging(value);
+				this.SendPropertyChanging();
+				this._aid = value;
+				this.SendPropertyChanged("aid");
+				this.OnaidChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_description", DbType="NVarChar(30)")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+	public string description
+	{
+		get
+		{
+			return this._description;
+		}
+		set
+		{
+			if ((this._description != value))
+			{
+				this.OndescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._description = value;
+				this.SendPropertyChanged("description");
+				this.OndescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_filename", DbType="UniqueIdentifier NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+	public System.Guid filename
+	{
+		get
+		{
+			return this._filename;
+		}
+		set
+		{
+			if ((this._filename != value))
+			{
+				this.OnfilenameChanging(value);
+				this.SendPropertyChanging();
+				this._filename = value;
+				this.SendPropertyChanged("filename");
+				this.OnfilenameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_Album1", Storage="_EventMain", ThisKey="eid", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+	public EventMain EventMain
+	{
+		get
+		{
+			return this._EventMain.Entity;
+		}
+		set
+		{
+			EventMain previousValue = this._EventMain.Entity;
+			if (((previousValue != value) 
+						|| (this._EventMain.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._EventMain.Entity = null;
+					previousValue.Event_Album1.Remove(this);
+				}
+				this._EventMain.Entity = value;
+				if ((value != null))
+				{
+					value.Event_Album1.Add(this);
+					this._eid = value.Id;
+				}
+				else
+				{
+					this._eid = default(int);
+				}
+				this.SendPropertyChanged("EventMain");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void Initialize()
+	{
+		this._EventMain = default(EntityRef<EventMain>);
+		OnCreated();
+	}
+	
+	[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+	public void OnDeserializing(StreamingContext context)
+	{
+		this.Initialize();
 	}
 }
 
@@ -247,7 +642,7 @@ public partial class Event_BM : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_detail", DbType="Xml", UpdateCheck=UpdateCheck.Never)]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_detail", DbType="Xml", CanBeNull=true, UpdateCheck=UpdateCheck.Never)]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
 	public System.Xml.Linq.XElement detail
 	{
@@ -357,24 +752,18 @@ public partial class Event_BM : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_MultipleTime")]
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_LectureEx")]
 [global::System.Runtime.Serialization.DataContractAttribute()]
-public partial class Event_MultipleTime : INotifyPropertyChanging, INotifyPropertyChanged
+public partial class Event_LectureEx : INotifyPropertyChanging, INotifyPropertyChanged
 {
 	
 	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 	
-	private int _Event_Id;
+	private int _event_id;
 	
-	private System.DateTime _StartDate;
+	private string _Brand;
 	
-	private bool _IsRoutine;
-	
-	private System.DateTime _EndDate;
-	
-	private int _SubTime_Id;
-	
-	private string _routine;
+	private string _speakerinf;
 	
 	private EntityRef<EventMain> _EventMain;
 	
@@ -382,156 +771,87 @@ public partial class Event_MultipleTime : INotifyPropertyChanging, INotifyProper
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnEvent_IdChanging(int value);
-    partial void OnEvent_IdChanged();
-    partial void OnStartDateChanging(System.DateTime value);
-    partial void OnStartDateChanged();
-    partial void OnIsRoutineChanging(bool value);
-    partial void OnIsRoutineChanged();
-    partial void OnEndDateChanging(System.DateTime value);
-    partial void OnEndDateChanged();
-    partial void OnSubTime_IdChanging(int value);
-    partial void OnSubTime_IdChanged();
-    partial void OnroutineChanging(string value);
-    partial void OnroutineChanged();
+    partial void Onevent_idChanging(int value);
+    partial void Onevent_idChanged();
+    partial void OnBrandChanging(string value);
+    partial void OnBrandChanged();
+    partial void OnspeakerinfChanging(string value);
+    partial void OnspeakerinfChanged();
     #endregion
 	
-	public Event_MultipleTime()
+	public Event_LectureEx()
 	{
 		this.Initialize();
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Event_Id", DbType="Int NOT NULL")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_event_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-	public int Event_Id
+	public int event_id
 	{
 		get
 		{
-			return this._Event_Id;
+			return this._event_id;
 		}
 		set
 		{
-			if ((this._Event_Id != value))
+			if ((this._event_id != value))
 			{
 				if (this._EventMain.HasLoadedOrAssignedValue)
 				{
 					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 				}
-				this.OnEvent_IdChanging(value);
+				this.Onevent_idChanging(value);
 				this.SendPropertyChanging();
-				this._Event_Id = value;
-				this.SendPropertyChanged("Event_Id");
-				this.OnEvent_IdChanged();
+				this._event_id = value;
+				this.SendPropertyChanged("event_id");
+				this.Onevent_idChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StartDate", DbType="DateTime NOT NULL")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Brand", DbType="NVarChar(20)")]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-	public System.DateTime StartDate
+	public string Brand
 	{
 		get
 		{
-			return this._StartDate;
+			return this._Brand;
 		}
 		set
 		{
-			if ((this._StartDate != value))
+			if ((this._Brand != value))
 			{
-				this.OnStartDateChanging(value);
+				this.OnBrandChanging(value);
 				this.SendPropertyChanging();
-				this._StartDate = value;
-				this.SendPropertyChanged("StartDate");
-				this.OnStartDateChanged();
+				this._Brand = value;
+				this.SendPropertyChanged("Brand");
+				this.OnBrandChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRoutine", DbType="Bit NOT NULL")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_speakerinf", DbType="Text", UpdateCheck=UpdateCheck.Never)]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-	public bool IsRoutine
+	public string speakerinf
 	{
 		get
 		{
-			return this._IsRoutine;
+			return this._speakerinf;
 		}
 		set
 		{
-			if ((this._IsRoutine != value))
+			if ((this._speakerinf != value))
 			{
-				this.OnIsRoutineChanging(value);
+				this.OnspeakerinfChanging(value);
 				this.SendPropertyChanging();
-				this._IsRoutine = value;
-				this.SendPropertyChanged("IsRoutine");
-				this.OnIsRoutineChanged();
+				this._speakerinf = value;
+				this.SendPropertyChanged("speakerinf");
+				this.OnspeakerinfChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EndDate", DbType="DateTime NOT NULL")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
-	public System.DateTime EndDate
-	{
-		get
-		{
-			return this._EndDate;
-		}
-		set
-		{
-			if ((this._EndDate != value))
-			{
-				this.OnEndDateChanging(value);
-				this.SendPropertyChanging();
-				this._EndDate = value;
-				this.SendPropertyChanged("EndDate");
-				this.OnEndDateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SubTime_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
-	public int SubTime_Id
-	{
-		get
-		{
-			return this._SubTime_Id;
-		}
-		set
-		{
-			if ((this._SubTime_Id != value))
-			{
-				this.OnSubTime_IdChanging(value);
-				this.SendPropertyChanging();
-				this._SubTime_Id = value;
-				this.SendPropertyChanged("SubTime_Id");
-				this.OnSubTime_IdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_routine", DbType="NChar(10)")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
-	public string routine
-	{
-		get
-		{
-			return this._routine;
-		}
-		set
-		{
-			if ((this._routine != value))
-			{
-				this.OnroutineChanging(value);
-				this.SendPropertyChanging();
-				this._routine = value;
-				this.SendPropertyChanged("routine");
-				this.OnroutineChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_MultipleTime", Storage="_EventMain", ThisKey="Event_Id", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_LectureEx", Storage="_EventMain", ThisKey="event_id", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
 	public EventMain EventMain
 	{
 		get
@@ -548,17 +868,17 @@ public partial class Event_MultipleTime : INotifyPropertyChanging, INotifyProper
 				if ((previousValue != null))
 				{
 					this._EventMain.Entity = null;
-					previousValue.Event_MultipleTime.Remove(this);
+					previousValue.Event_LectureEx = null;
 				}
 				this._EventMain.Entity = value;
 				if ((value != null))
 				{
-					value.Event_MultipleTime.Add(this);
-					this._Event_Id = value.Id;
+					value.Event_LectureEx = this;
+					this._event_id = value.Id;
 				}
 				else
 				{
-					this._Event_Id = default(int);
+					this._event_id = default(int);
 				}
 				this.SendPropertyChanged("EventMain");
 			}
@@ -596,6 +916,669 @@ public partial class Event_MultipleTime : INotifyPropertyChanging, INotifyProper
 	public void OnDeserializing(StreamingContext context)
 	{
 		this.Initialize();
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EventMain")]
+[global::System.Runtime.Serialization.DataContractAttribute()]
+public partial class EventMain : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _Id;
+	
+	private System.DateTime _StartTime;
+	
+	private System.DateTime _EndTime;
+	
+	private System.DateTime _PublishTime;
+	
+	private System.DateTime _LastModified;
+	
+	private string _Publisher;
+	
+	private short _ViewFlag;
+	
+	private string _Type;
+	
+	private string _Title;
+	
+	private string _Location;
+	
+	private string _Context;
+	
+	private string _Subtitle;
+	
+	private string _SubType;
+	
+	private string _Series;
+	
+	private EntitySet<Event_Album> _Event_Album;
+	
+	private EntitySet<Event_Album1> _Event_Album1;
+	
+	private EntityRef<Event_BM> _Event_BM;
+	
+	private EntityRef<Event_LectureEx> _Event_LectureEx;
+	
+	private EntitySet<Lecture> _Lecture;
+	
+	private EntitySet<Host> _Host;
+	
+	private EntitySet<Event_MultipleTime> _Event_MultipleTime;
+	
+	private bool serializing;
+	
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnStartTimeChanging(System.DateTime value);
+    partial void OnStartTimeChanged();
+    partial void OnEndTimeChanging(System.DateTime value);
+    partial void OnEndTimeChanged();
+    partial void OnPublishTimeChanging(System.DateTime value);
+    partial void OnPublishTimeChanged();
+    partial void OnLastModifiedChanging(System.DateTime value);
+    partial void OnLastModifiedChanged();
+    partial void OnPublisherChanging(string value);
+    partial void OnPublisherChanged();
+    partial void OnViewFlagChanging(short value);
+    partial void OnViewFlagChanged();
+    partial void OnTypeChanging(string value);
+    partial void OnTypeChanged();
+    partial void OnTitleChanging(string value);
+    partial void OnTitleChanged();
+    partial void OnLocationChanging(string value);
+    partial void OnLocationChanged();
+    partial void OnContextChanging(string value);
+    partial void OnContextChanged();
+    partial void OnSubtitleChanging(string value);
+    partial void OnSubtitleChanged();
+    partial void OnSubTypeChanging(string value);
+    partial void OnSubTypeChanged();
+    partial void OnSeriesChanging(string value);
+    partial void OnSeriesChanged();
+    #endregion
+	
+	public EventMain()
+	{
+		this.Initialize();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+	public int Id
+	{
+		get
+		{
+			return this._Id;
+		}
+		set
+		{
+			if ((this._Id != value))
+			{
+				this.OnIdChanging(value);
+				this.SendPropertyChanging();
+				this._Id = value;
+				this.SendPropertyChanged("Id");
+				this.OnIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StartTime", DbType="DateTime NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+	public System.DateTime StartTime
+	{
+		get
+		{
+			return this._StartTime;
+		}
+		set
+		{
+			if ((this._StartTime != value))
+			{
+				this.OnStartTimeChanging(value);
+				this.SendPropertyChanging();
+				this._StartTime = value;
+				this.SendPropertyChanged("StartTime");
+				this.OnStartTimeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EndTime", DbType="DateTime NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+	public System.DateTime EndTime
+	{
+		get
+		{
+			return this._EndTime;
+		}
+		set
+		{
+			if ((this._EndTime != value))
+			{
+				this.OnEndTimeChanging(value);
+				this.SendPropertyChanging();
+				this._EndTime = value;
+				this.SendPropertyChanged("EndTime");
+				this.OnEndTimeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PublishTime", DbType="DateTime NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+	public System.DateTime PublishTime
+	{
+		get
+		{
+			return this._PublishTime;
+		}
+		set
+		{
+			if ((this._PublishTime != value))
+			{
+				this.OnPublishTimeChanging(value);
+				this.SendPropertyChanging();
+				this._PublishTime = value;
+				this.SendPropertyChanged("PublishTime");
+				this.OnPublishTimeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModified", DbType="DateTime NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+	public System.DateTime LastModified
+	{
+		get
+		{
+			return this._LastModified;
+		}
+		set
+		{
+			if ((this._LastModified != value))
+			{
+				this.OnLastModifiedChanging(value);
+				this.SendPropertyChanging();
+				this._LastModified = value;
+				this.SendPropertyChanged("LastModified");
+				this.OnLastModifiedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Publisher", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+	public string Publisher
+	{
+		get
+		{
+			return this._Publisher;
+		}
+		set
+		{
+			if ((this._Publisher != value))
+			{
+				this.OnPublisherChanging(value);
+				this.SendPropertyChanging();
+				this._Publisher = value;
+				this.SendPropertyChanged("Publisher");
+				this.OnPublisherChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ViewFlag", DbType="SmallInt NOT NULL")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+	public short ViewFlag
+	{
+		get
+		{
+			return this._ViewFlag;
+		}
+		set
+		{
+			if ((this._ViewFlag != value))
+			{
+				this.OnViewFlagChanging(value);
+				this.SendPropertyChanging();
+				this._ViewFlag = value;
+				this.SendPropertyChanged("ViewFlag");
+				this.OnViewFlagChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="NVarChar(10) NOT NULL", CanBeNull=false)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+	public string Type
+	{
+		get
+		{
+			return this._Type;
+		}
+		set
+		{
+			if ((this._Type != value))
+			{
+				this.OnTypeChanging(value);
+				this.SendPropertyChanging();
+				this._Type = value;
+				this.SendPropertyChanged("Type");
+				this.OnTypeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=9)]
+	public string Title
+	{
+		get
+		{
+			return this._Title;
+		}
+		set
+		{
+			if ((this._Title != value))
+			{
+				this.OnTitleChanging(value);
+				this.SendPropertyChanging();
+				this._Title = value;
+				this.SendPropertyChanged("Title");
+				this.OnTitleChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Location", DbType="NVarChar(30) NOT NULL", CanBeNull=false)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=10)]
+	public string Location
+	{
+		get
+		{
+			return this._Location;
+		}
+		set
+		{
+			if ((this._Location != value))
+			{
+				this.OnLocationChanging(value);
+				this.SendPropertyChanging();
+				this._Location = value;
+				this.SendPropertyChanged("Location");
+				this.OnLocationChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Context", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=11)]
+	public string Context
+	{
+		get
+		{
+			return this._Context;
+		}
+		set
+		{
+			if ((this._Context != value))
+			{
+				this.OnContextChanging(value);
+				this.SendPropertyChanging();
+				this._Context = value;
+				this.SendPropertyChanged("Context");
+				this.OnContextChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Subtitle", DbType="NVarChar(100)")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=12)]
+	public string Subtitle
+	{
+		get
+		{
+			return this._Subtitle;
+		}
+		set
+		{
+			if ((this._Subtitle != value))
+			{
+				this.OnSubtitleChanging(value);
+				this.SendPropertyChanging();
+				this._Subtitle = value;
+				this.SendPropertyChanged("Subtitle");
+				this.OnSubtitleChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SubType", DbType="NVarChar(10)")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=13)]
+	public string SubType
+	{
+		get
+		{
+			return this._SubType;
+		}
+		set
+		{
+			if ((this._SubType != value))
+			{
+				this.OnSubTypeChanging(value);
+				this.SendPropertyChanging();
+				this._SubType = value;
+				this.SendPropertyChanged("SubType");
+				this.OnSubTypeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Series", DbType="NVarChar(30)")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=14)]
+	public string Series
+	{
+		get
+		{
+			return this._Series;
+		}
+		set
+		{
+			if ((this._Series != value))
+			{
+				this.OnSeriesChanging(value);
+				this.SendPropertyChanging();
+				this._Series = value;
+				this.SendPropertyChanged("Series");
+				this.OnSeriesChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_Album", Storage="_Event_Album", ThisKey="Id", OtherKey="eid")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=15, EmitDefaultValue=false)]
+	public EntitySet<Event_Album> Event_Album
+	{
+		get
+		{
+			if ((this.serializing 
+						&& (this._Event_Album.HasLoadedOrAssignedValues == false)))
+			{
+				return null;
+			}
+			return this._Event_Album;
+		}
+		set
+		{
+			this._Event_Album.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_Album1", Storage="_Event_Album1", ThisKey="Id", OtherKey="eid")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=16, EmitDefaultValue=false)]
+	public EntitySet<Event_Album1> Event_Album1
+	{
+		get
+		{
+			if ((this.serializing 
+						&& (this._Event_Album1.HasLoadedOrAssignedValues == false)))
+			{
+				return null;
+			}
+			return this._Event_Album1;
+		}
+		set
+		{
+			this._Event_Album1.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_BM", Storage="_Event_BM", ThisKey="Id", OtherKey="id", IsUnique=true, IsForeignKey=false)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=17, EmitDefaultValue=false)]
+	public Event_BM Event_BM
+	{
+		get
+		{
+			if ((this.serializing 
+						&& (this._Event_BM.HasLoadedOrAssignedValue == false)))
+			{
+				return null;
+			}
+			return this._Event_BM.Entity;
+		}
+		set
+		{
+			Event_BM previousValue = this._Event_BM.Entity;
+			if (((previousValue != value) 
+						|| (this._Event_BM.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Event_BM.Entity = null;
+					previousValue.EventMain = null;
+				}
+				this._Event_BM.Entity = value;
+				if ((value != null))
+				{
+					value.EventMain = this;
+				}
+				this.SendPropertyChanged("Event_BM");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_LectureEx", Storage="_Event_LectureEx", ThisKey="Id", OtherKey="event_id", IsUnique=true, IsForeignKey=false)]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=18, EmitDefaultValue=false)]
+	public Event_LectureEx Event_LectureEx
+	{
+		get
+		{
+			if ((this.serializing 
+						&& (this._Event_LectureEx.HasLoadedOrAssignedValue == false)))
+			{
+				return null;
+			}
+			return this._Event_LectureEx.Entity;
+		}
+		set
+		{
+			Event_LectureEx previousValue = this._Event_LectureEx.Entity;
+			if (((previousValue != value) 
+						|| (this._Event_LectureEx.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Event_LectureEx.Entity = null;
+					previousValue.EventMain = null;
+				}
+				this._Event_LectureEx.Entity = value;
+				if ((value != null))
+				{
+					value.EventMain = this;
+				}
+				this.SendPropertyChanged("Event_LectureEx");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Lecture", Storage="_Lecture", ThisKey="Id", OtherKey="Event_Id")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=19, EmitDefaultValue=false)]
+	public EntitySet<Lecture> Lecture
+	{
+		get
+		{
+			if ((this.serializing 
+						&& (this._Lecture.HasLoadedOrAssignedValues == false)))
+			{
+				return null;
+			}
+			return this._Lecture;
+		}
+		set
+		{
+			this._Lecture.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Host", Storage="_Host", ThisKey="Id", OtherKey="Event_id")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=20, EmitDefaultValue=false)]
+	public EntitySet<Host> Host
+	{
+		get
+		{
+			if ((this.serializing 
+						&& (this._Host.HasLoadedOrAssignedValues == false)))
+			{
+				return null;
+			}
+			return this._Host;
+		}
+		set
+		{
+			this._Host.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_MultipleTime", Storage="_Event_MultipleTime", ThisKey="Id", OtherKey="Event_Id")]
+	[global::System.Runtime.Serialization.DataMemberAttribute(Order=21, EmitDefaultValue=false)]
+	public EntitySet<Event_MultipleTime> Event_MultipleTime
+	{
+		get
+		{
+			if ((this.serializing 
+						&& (this._Event_MultipleTime.HasLoadedOrAssignedValues == false)))
+			{
+				return null;
+			}
+			return this._Event_MultipleTime;
+		}
+		set
+		{
+			this._Event_MultipleTime.Assign(value);
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_Event_Album(Event_Album entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = this;
+	}
+	
+	private void detach_Event_Album(Event_Album entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = null;
+	}
+	
+	private void attach_Event_Album1(Event_Album1 entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = this;
+	}
+	
+	private void detach_Event_Album1(Event_Album1 entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = null;
+	}
+	
+	private void attach_Lecture(Lecture entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = this;
+	}
+	
+	private void detach_Lecture(Lecture entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = null;
+	}
+	
+	private void attach_Host(Host entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = this;
+	}
+	
+	private void detach_Host(Host entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = null;
+	}
+	
+	private void attach_Event_MultipleTime(Event_MultipleTime entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = this;
+	}
+	
+	private void detach_Event_MultipleTime(Event_MultipleTime entity)
+	{
+		this.SendPropertyChanging();
+		entity.EventMain = null;
+	}
+	
+	private void Initialize()
+	{
+		this._Event_Album = new EntitySet<Event_Album>(new Action<Event_Album>(this.attach_Event_Album), new Action<Event_Album>(this.detach_Event_Album));
+		this._Event_Album1 = new EntitySet<Event_Album1>(new Action<Event_Album1>(this.attach_Event_Album1), new Action<Event_Album1>(this.detach_Event_Album1));
+		this._Event_BM = default(EntityRef<Event_BM>);
+		this._Event_LectureEx = default(EntityRef<Event_LectureEx>);
+		this._Lecture = new EntitySet<Lecture>(new Action<Lecture>(this.attach_Lecture), new Action<Lecture>(this.detach_Lecture));
+		this._Host = new EntitySet<Host>(new Action<Host>(this.attach_Host), new Action<Host>(this.detach_Host));
+		this._Event_MultipleTime = new EntitySet<Event_MultipleTime>(new Action<Event_MultipleTime>(this.attach_Event_MultipleTime), new Action<Event_MultipleTime>(this.detach_Event_MultipleTime));
+		OnCreated();
+	}
+	
+	[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+	public void OnDeserializing(StreamingContext context)
+	{
+		this.Initialize();
+	}
+	
+	[global::System.Runtime.Serialization.OnSerializingAttribute()]
+	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+	public void OnSerializing(StreamingContext context)
+	{
+		this.serializing = true;
+	}
+	
+	[global::System.Runtime.Serialization.OnSerializedAttribute()]
+	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+	public void OnSerialized(StreamingContext context)
+	{
+		this.serializing = false;
 	}
 }
 
@@ -958,20 +1941,24 @@ public partial class Host : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_Album")]
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_MultipleTime")]
 [global::System.Runtime.Serialization.DataContractAttribute()]
-public partial class Event_Album : INotifyPropertyChanging, INotifyPropertyChanged
+public partial class Event_MultipleTime : INotifyPropertyChanging, INotifyPropertyChanged
 {
 	
 	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 	
-	private int _eid;
+	private int _Event_Id;
 	
-	private int _aid;
+	private System.DateTime _StartDate;
 	
-	private string _description;
+	private bool _IsRoutine;
 	
-	private System.Guid _filename;
+	private System.DateTime _EndDate;
+	
+	private int _SubTime_Id;
+	
+	private string _routine;
 	
 	private EntityRef<EventMain> _EventMain;
 	
@@ -979,906 +1966,156 @@ public partial class Event_Album : INotifyPropertyChanging, INotifyPropertyChang
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OneidChanging(int value);
-    partial void OneidChanged();
-    partial void OnaidChanging(int value);
-    partial void OnaidChanged();
-    partial void OndescriptionChanging(string value);
-    partial void OndescriptionChanged();
-    partial void OnfilenameChanging(System.Guid value);
-    partial void OnfilenameChanged();
+    partial void OnEvent_IdChanging(int value);
+    partial void OnEvent_IdChanged();
+    partial void OnStartDateChanging(System.DateTime value);
+    partial void OnStartDateChanged();
+    partial void OnIsRoutineChanging(bool value);
+    partial void OnIsRoutineChanged();
+    partial void OnEndDateChanging(System.DateTime value);
+    partial void OnEndDateChanged();
+    partial void OnSubTime_IdChanging(int value);
+    partial void OnSubTime_IdChanged();
+    partial void OnroutineChanging(string value);
+    partial void OnroutineChanged();
     #endregion
 	
-	public Event_Album()
+	public Event_MultipleTime()
 	{
 		this.Initialize();
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_eid", DbType="Int NOT NULL")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Event_Id", DbType="Int NOT NULL")]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-	public int eid
+	public int Event_Id
 	{
 		get
 		{
-			return this._eid;
+			return this._Event_Id;
 		}
 		set
 		{
-			if ((this._eid != value))
+			if ((this._Event_Id != value))
 			{
 				if (this._EventMain.HasLoadedOrAssignedValue)
 				{
 					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 				}
-				this.OneidChanging(value);
+				this.OnEvent_IdChanging(value);
 				this.SendPropertyChanging();
-				this._eid = value;
-				this.SendPropertyChanged("eid");
-				this.OneidChanged();
+				this._Event_Id = value;
+				this.SendPropertyChanged("Event_Id");
+				this.OnEvent_IdChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_aid", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StartDate", DbType="DateTime NOT NULL")]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-	public int aid
+	public System.DateTime StartDate
 	{
 		get
 		{
-			return this._aid;
+			return this._StartDate;
 		}
 		set
 		{
-			if ((this._aid != value))
+			if ((this._StartDate != value))
 			{
-				this.OnaidChanging(value);
+				this.OnStartDateChanging(value);
 				this.SendPropertyChanging();
-				this._aid = value;
-				this.SendPropertyChanged("aid");
-				this.OnaidChanged();
+				this._StartDate = value;
+				this.SendPropertyChanged("StartDate");
+				this.OnStartDateChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_description", DbType="NVarChar(30)")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRoutine", DbType="Bit NOT NULL")]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-	public string description
+	public bool IsRoutine
 	{
 		get
 		{
-			return this._description;
+			return this._IsRoutine;
 		}
 		set
 		{
-			if ((this._description != value))
+			if ((this._IsRoutine != value))
 			{
-				this.OndescriptionChanging(value);
+				this.OnIsRoutineChanging(value);
 				this.SendPropertyChanging();
-				this._description = value;
-				this.SendPropertyChanged("description");
-				this.OndescriptionChanged();
+				this._IsRoutine = value;
+				this.SendPropertyChanged("IsRoutine");
+				this.OnIsRoutineChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_filename", DbType="UniqueIdentifier NOT NULL")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EndDate", DbType="DateTime NOT NULL")]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
-	public System.Guid filename
+	public System.DateTime EndDate
 	{
 		get
 		{
-			return this._filename;
+			return this._EndDate;
 		}
 		set
 		{
-			if ((this._filename != value))
+			if ((this._EndDate != value))
 			{
-				this.OnfilenameChanging(value);
+				this.OnEndDateChanging(value);
 				this.SendPropertyChanging();
-				this._filename = value;
-				this.SendPropertyChanged("filename");
-				this.OnfilenameChanged();
+				this._EndDate = value;
+				this.SendPropertyChanged("EndDate");
+				this.OnEndDateChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_Album", Storage="_EventMain", ThisKey="eid", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-	public EventMain EventMain
-	{
-		get
-		{
-			return this._EventMain.Entity;
-		}
-		set
-		{
-			EventMain previousValue = this._EventMain.Entity;
-			if (((previousValue != value) 
-						|| (this._EventMain.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._EventMain.Entity = null;
-					previousValue.Event_Album.Remove(this);
-				}
-				this._EventMain.Entity = value;
-				if ((value != null))
-				{
-					value.Event_Album.Add(this);
-					this._eid = value.Id;
-				}
-				else
-				{
-					this._eid = default(int);
-				}
-				this.SendPropertyChanged("EventMain");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void Initialize()
-	{
-		this._EventMain = default(EntityRef<EventMain>);
-		OnCreated();
-	}
-	
-	[global::System.Runtime.Serialization.OnDeserializingAttribute()]
-	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
-	public void OnDeserializing(StreamingContext context)
-	{
-		this.Initialize();
-	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EventMain")]
-[global::System.Runtime.Serialization.DataContractAttribute()]
-public partial class EventMain : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private int _Id;
-	
-	private System.DateTime _StartTime;
-	
-	private System.DateTime _EndTime;
-	
-	private System.DateTime _PublishTime;
-	
-	private System.DateTime _LastModified;
-	
-	private string _Publisher;
-	
-	private short _ViewFlag;
-	
-	private string _Type;
-	
-	private string _Title;
-	
-	private string _Location;
-	
-	private string _Context;
-	
-	private string _Subtitle;
-	
-	private string _SubType;
-	
-	private string _Series;
-	
-	private EntityRef<Event_BM> _Event_BM;
-	
-	private EntitySet<Event_MultipleTime> _Event_MultipleTime;
-	
-	private EntitySet<Lecture> _Lecture;
-	
-	private EntitySet<Host> _Host;
-	
-	private EntitySet<Event_Album> _Event_Album;
-	
-	private EntityRef<Event_LectureEx> _Event_LectureEx;
-	
-	private bool serializing;
-	
-    #region 可扩展性方法定义
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnStartTimeChanging(System.DateTime value);
-    partial void OnStartTimeChanged();
-    partial void OnEndTimeChanging(System.DateTime value);
-    partial void OnEndTimeChanged();
-    partial void OnPublishTimeChanging(System.DateTime value);
-    partial void OnPublishTimeChanged();
-    partial void OnLastModifiedChanging(System.DateTime value);
-    partial void OnLastModifiedChanged();
-    partial void OnPublisherChanging(string value);
-    partial void OnPublisherChanged();
-    partial void OnViewFlagChanging(short value);
-    partial void OnViewFlagChanged();
-    partial void OnTypeChanging(string value);
-    partial void OnTypeChanged();
-    partial void OnTitleChanging(string value);
-    partial void OnTitleChanged();
-    partial void OnLocationChanging(string value);
-    partial void OnLocationChanged();
-    partial void OnContextChanging(string value);
-    partial void OnContextChanged();
-    partial void OnSubtitleChanging(string value);
-    partial void OnSubtitleChanged();
-    partial void OnSubTypeChanging(string value);
-    partial void OnSubTypeChanged();
-    partial void OnSeriesChanging(string value);
-    partial void OnSeriesChanged();
-    #endregion
-	
-	public EventMain()
-	{
-		this.Initialize();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-	public int Id
-	{
-		get
-		{
-			return this._Id;
-		}
-		set
-		{
-			if ((this._Id != value))
-			{
-				this.OnIdChanging(value);
-				this.SendPropertyChanging();
-				this._Id = value;
-				this.SendPropertyChanged("Id");
-				this.OnIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StartTime", DbType="DateTime NOT NULL")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-	public System.DateTime StartTime
-	{
-		get
-		{
-			return this._StartTime;
-		}
-		set
-		{
-			if ((this._StartTime != value))
-			{
-				this.OnStartTimeChanging(value);
-				this.SendPropertyChanging();
-				this._StartTime = value;
-				this.SendPropertyChanged("StartTime");
-				this.OnStartTimeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EndTime", DbType="DateTime NOT NULL")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-	public System.DateTime EndTime
-	{
-		get
-		{
-			return this._EndTime;
-		}
-		set
-		{
-			if ((this._EndTime != value))
-			{
-				this.OnEndTimeChanging(value);
-				this.SendPropertyChanging();
-				this._EndTime = value;
-				this.SendPropertyChanged("EndTime");
-				this.OnEndTimeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PublishTime", DbType="DateTime NOT NULL")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
-	public System.DateTime PublishTime
-	{
-		get
-		{
-			return this._PublishTime;
-		}
-		set
-		{
-			if ((this._PublishTime != value))
-			{
-				this.OnPublishTimeChanging(value);
-				this.SendPropertyChanging();
-				this._PublishTime = value;
-				this.SendPropertyChanged("PublishTime");
-				this.OnPublishTimeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModified", DbType="DateTime NOT NULL")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SubTime_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
-	public System.DateTime LastModified
+	public int SubTime_Id
 	{
 		get
 		{
-			return this._LastModified;
+			return this._SubTime_Id;
 		}
 		set
 		{
-			if ((this._LastModified != value))
+			if ((this._SubTime_Id != value))
 			{
-				this.OnLastModifiedChanging(value);
+				this.OnSubTime_IdChanging(value);
 				this.SendPropertyChanging();
-				this._LastModified = value;
-				this.SendPropertyChanged("LastModified");
-				this.OnLastModifiedChanged();
+				this._SubTime_Id = value;
+				this.SendPropertyChanged("SubTime_Id");
+				this.OnSubTime_IdChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Publisher", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_routine", DbType="NChar(10)")]
 	[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
-	public string Publisher
+	public string routine
 	{
 		get
 		{
-			return this._Publisher;
+			return this._routine;
 		}
 		set
 		{
-			if ((this._Publisher != value))
+			if ((this._routine != value))
 			{
-				this.OnPublisherChanging(value);
+				this.OnroutineChanging(value);
 				this.SendPropertyChanging();
-				this._Publisher = value;
-				this.SendPropertyChanged("Publisher");
-				this.OnPublisherChanged();
+				this._routine = value;
+				this.SendPropertyChanged("routine");
+				this.OnroutineChanged();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ViewFlag", DbType="SmallInt NOT NULL")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
-	public short ViewFlag
-	{
-		get
-		{
-			return this._ViewFlag;
-		}
-		set
-		{
-			if ((this._ViewFlag != value))
-			{
-				this.OnViewFlagChanging(value);
-				this.SendPropertyChanging();
-				this._ViewFlag = value;
-				this.SendPropertyChanged("ViewFlag");
-				this.OnViewFlagChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="NVarChar(10) NOT NULL", CanBeNull=false)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
-	public string Type
-	{
-		get
-		{
-			return this._Type;
-		}
-		set
-		{
-			if ((this._Type != value))
-			{
-				this.OnTypeChanging(value);
-				this.SendPropertyChanging();
-				this._Type = value;
-				this.SendPropertyChanged("Type");
-				this.OnTypeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=9)]
-	public string Title
-	{
-		get
-		{
-			return this._Title;
-		}
-		set
-		{
-			if ((this._Title != value))
-			{
-				this.OnTitleChanging(value);
-				this.SendPropertyChanging();
-				this._Title = value;
-				this.SendPropertyChanged("Title");
-				this.OnTitleChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Location", DbType="NVarChar(30) NOT NULL", CanBeNull=false)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=10)]
-	public string Location
-	{
-		get
-		{
-			return this._Location;
-		}
-		set
-		{
-			if ((this._Location != value))
-			{
-				this.OnLocationChanging(value);
-				this.SendPropertyChanging();
-				this._Location = value;
-				this.SendPropertyChanged("Location");
-				this.OnLocationChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Context", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=11)]
-	public string Context
-	{
-		get
-		{
-			return this._Context;
-		}
-		set
-		{
-			if ((this._Context != value))
-			{
-				this.OnContextChanging(value);
-				this.SendPropertyChanging();
-				this._Context = value;
-				this.SendPropertyChanged("Context");
-				this.OnContextChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Subtitle", DbType="NVarChar(100)")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=12)]
-	public string Subtitle
-	{
-		get
-		{
-			return this._Subtitle;
-		}
-		set
-		{
-			if ((this._Subtitle != value))
-			{
-				this.OnSubtitleChanging(value);
-				this.SendPropertyChanging();
-				this._Subtitle = value;
-				this.SendPropertyChanged("Subtitle");
-				this.OnSubtitleChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SubType", DbType="NVarChar(10)")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=13)]
-	public string SubType
-	{
-		get
-		{
-			return this._SubType;
-		}
-		set
-		{
-			if ((this._SubType != value))
-			{
-				this.OnSubTypeChanging(value);
-				this.SendPropertyChanging();
-				this._SubType = value;
-				this.SendPropertyChanged("SubType");
-				this.OnSubTypeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Series", DbType="NVarChar(30)")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=14)]
-	public string Series
-	{
-		get
-		{
-			return this._Series;
-		}
-		set
-		{
-			if ((this._Series != value))
-			{
-				this.OnSeriesChanging(value);
-				this.SendPropertyChanging();
-				this._Series = value;
-				this.SendPropertyChanged("Series");
-				this.OnSeriesChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_BM", Storage="_Event_BM", ThisKey="Id", OtherKey="id", IsUnique=true, IsForeignKey=false)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=15, EmitDefaultValue=false)]
-	public Event_BM Event_BM
-	{
-		get
-		{
-			if ((this.serializing 
-						&& (this._Event_BM.HasLoadedOrAssignedValue == false)))
-			{
-				return null;
-			}
-			return this._Event_BM.Entity;
-		}
-		set
-		{
-			Event_BM previousValue = this._Event_BM.Entity;
-			if (((previousValue != value) 
-						|| (this._Event_BM.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Event_BM.Entity = null;
-					previousValue.EventMain = null;
-				}
-				this._Event_BM.Entity = value;
-				if ((value != null))
-				{
-					value.EventMain = this;
-				}
-				this.SendPropertyChanged("Event_BM");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_MultipleTime", Storage="_Event_MultipleTime", ThisKey="Id", OtherKey="Event_Id")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=16, EmitDefaultValue=false)]
-	public EntitySet<Event_MultipleTime> Event_MultipleTime
-	{
-		get
-		{
-			if ((this.serializing 
-						&& (this._Event_MultipleTime.HasLoadedOrAssignedValues == false)))
-			{
-				return null;
-			}
-			return this._Event_MultipleTime;
-		}
-		set
-		{
-			this._Event_MultipleTime.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Lecture", Storage="_Lecture", ThisKey="Id", OtherKey="Event_Id")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=17, EmitDefaultValue=false)]
-	public EntitySet<Lecture> Lecture
-	{
-		get
-		{
-			if ((this.serializing 
-						&& (this._Lecture.HasLoadedOrAssignedValues == false)))
-			{
-				return null;
-			}
-			return this._Lecture;
-		}
-		set
-		{
-			this._Lecture.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Host", Storage="_Host", ThisKey="Id", OtherKey="Event_id")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=18, EmitDefaultValue=false)]
-	public EntitySet<Host> Host
-	{
-		get
-		{
-			if ((this.serializing 
-						&& (this._Host.HasLoadedOrAssignedValues == false)))
-			{
-				return null;
-			}
-			return this._Host;
-		}
-		set
-		{
-			this._Host.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_Album", Storage="_Event_Album", ThisKey="Id", OtherKey="eid")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=19, EmitDefaultValue=false)]
-	public EntitySet<Event_Album> Event_Album
-	{
-		get
-		{
-			if ((this.serializing 
-						&& (this._Event_Album.HasLoadedOrAssignedValues == false)))
-			{
-				return null;
-			}
-			return this._Event_Album;
-		}
-		set
-		{
-			this._Event_Album.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_LectureEx", Storage="_Event_LectureEx", ThisKey="Id", OtherKey="event_id", IsUnique=true, IsForeignKey=false)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=20, EmitDefaultValue=false)]
-	public Event_LectureEx Event_LectureEx
-	{
-		get
-		{
-			if ((this.serializing 
-						&& (this._Event_LectureEx.HasLoadedOrAssignedValue == false)))
-			{
-				return null;
-			}
-			return this._Event_LectureEx.Entity;
-		}
-		set
-		{
-			Event_LectureEx previousValue = this._Event_LectureEx.Entity;
-			if (((previousValue != value) 
-						|| (this._Event_LectureEx.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Event_LectureEx.Entity = null;
-					previousValue.EventMain = null;
-				}
-				this._Event_LectureEx.Entity = value;
-				if ((value != null))
-				{
-					value.EventMain = this;
-				}
-				this.SendPropertyChanged("Event_LectureEx");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_Event_MultipleTime(Event_MultipleTime entity)
-	{
-		this.SendPropertyChanging();
-		entity.EventMain = this;
-	}
-	
-	private void detach_Event_MultipleTime(Event_MultipleTime entity)
-	{
-		this.SendPropertyChanging();
-		entity.EventMain = null;
-	}
-	
-	private void attach_Lecture(Lecture entity)
-	{
-		this.SendPropertyChanging();
-		entity.EventMain = this;
-	}
-	
-	private void detach_Lecture(Lecture entity)
-	{
-		this.SendPropertyChanging();
-		entity.EventMain = null;
-	}
-	
-	private void attach_Host(Host entity)
-	{
-		this.SendPropertyChanging();
-		entity.EventMain = this;
-	}
-	
-	private void detach_Host(Host entity)
-	{
-		this.SendPropertyChanging();
-		entity.EventMain = null;
-	}
-	
-	private void attach_Event_Album(Event_Album entity)
-	{
-		this.SendPropertyChanging();
-		entity.EventMain = this;
-	}
-	
-	private void detach_Event_Album(Event_Album entity)
-	{
-		this.SendPropertyChanging();
-		entity.EventMain = null;
-	}
-	
-	private void Initialize()
-	{
-		this._Event_BM = default(EntityRef<Event_BM>);
-		this._Event_MultipleTime = new EntitySet<Event_MultipleTime>(new Action<Event_MultipleTime>(this.attach_Event_MultipleTime), new Action<Event_MultipleTime>(this.detach_Event_MultipleTime));
-		this._Lecture = new EntitySet<Lecture>(new Action<Lecture>(this.attach_Lecture), new Action<Lecture>(this.detach_Lecture));
-		this._Host = new EntitySet<Host>(new Action<Host>(this.attach_Host), new Action<Host>(this.detach_Host));
-		this._Event_Album = new EntitySet<Event_Album>(new Action<Event_Album>(this.attach_Event_Album), new Action<Event_Album>(this.detach_Event_Album));
-		this._Event_LectureEx = default(EntityRef<Event_LectureEx>);
-		OnCreated();
-	}
-	
-	[global::System.Runtime.Serialization.OnDeserializingAttribute()]
-	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
-	public void OnDeserializing(StreamingContext context)
-	{
-		this.Initialize();
-	}
-	
-	[global::System.Runtime.Serialization.OnSerializingAttribute()]
-	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
-	public void OnSerializing(StreamingContext context)
-	{
-		this.serializing = true;
-	}
-	
-	[global::System.Runtime.Serialization.OnSerializedAttribute()]
-	[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
-	public void OnSerialized(StreamingContext context)
-	{
-		this.serializing = false;
-	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event_LectureEx")]
-[global::System.Runtime.Serialization.DataContractAttribute()]
-public partial class Event_LectureEx : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private int _event_id;
-	
-	private string _Brand;
-	
-	private string _speakerinf;
-	
-	private EntityRef<EventMain> _EventMain;
-	
-    #region 可扩展性方法定义
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void Onevent_idChanging(int value);
-    partial void Onevent_idChanged();
-    partial void OnBrandChanging(string value);
-    partial void OnBrandChanged();
-    partial void OnspeakerinfChanging(string value);
-    partial void OnspeakerinfChanged();
-    #endregion
-	
-	public Event_LectureEx()
-	{
-		this.Initialize();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_event_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-	public int event_id
-	{
-		get
-		{
-			return this._event_id;
-		}
-		set
-		{
-			if ((this._event_id != value))
-			{
-				if (this._EventMain.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.Onevent_idChanging(value);
-				this.SendPropertyChanging();
-				this._event_id = value;
-				this.SendPropertyChanged("event_id");
-				this.Onevent_idChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Brand", DbType="NVarChar(20)")]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-	public string Brand
-	{
-		get
-		{
-			return this._Brand;
-		}
-		set
-		{
-			if ((this._Brand != value))
-			{
-				this.OnBrandChanging(value);
-				this.SendPropertyChanging();
-				this._Brand = value;
-				this.SendPropertyChanged("Brand");
-				this.OnBrandChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_speakerinf", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-	[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-	public string speakerinf
-	{
-		get
-		{
-			return this._speakerinf;
-		}
-		set
-		{
-			if ((this._speakerinf != value))
-			{
-				this.OnspeakerinfChanging(value);
-				this.SendPropertyChanging();
-				this._speakerinf = value;
-				this.SendPropertyChanged("speakerinf");
-				this.OnspeakerinfChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_LectureEx", Storage="_EventMain", ThisKey="event_id", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EventMain_Event_MultipleTime", Storage="_EventMain", ThisKey="Event_Id", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
 	public EventMain EventMain
 	{
 		get
@@ -1895,17 +2132,17 @@ public partial class Event_LectureEx : INotifyPropertyChanging, INotifyPropertyC
 				if ((previousValue != null))
 				{
 					this._EventMain.Entity = null;
-					previousValue.Event_LectureEx = null;
+					previousValue.Event_MultipleTime.Remove(this);
 				}
 				this._EventMain.Entity = value;
 				if ((value != null))
 				{
-					value.Event_LectureEx = this;
-					this._event_id = value.Id;
+					value.Event_MultipleTime.Add(this);
+					this._Event_Id = value.Id;
 				}
 				else
 				{
-					this._event_id = default(int);
+					this._Event_Id = default(int);
 				}
 				this.SendPropertyChanged("EventMain");
 			}

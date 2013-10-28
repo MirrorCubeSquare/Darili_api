@@ -1,89 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 9.875" name="Darili_Linq">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 14.25, 14.625" name="Darili_Linq">
   <DataContextMoniker Name="/Darili_LinqDataContext" />
   <nestedChildShapes>
-    <classShape Id="88373f49-e1d8-455f-8fb5-f844c199cd9d" absoluteBounds="3.5, 5.5, 2, 1.6169661458333327">
-      <DataClassMoniker Name="/Darili_LinqDataContext/Event_BM" />
-      <nestedChildShapes>
-        <elementListCompartment Id="731ec534-5d3b-45ad-9cd1-df21e13457ea" absoluteBounds="3.515, 5.96, 1.9700000000000002, 1.0569661458333333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="ce41c341-6d7b-4b36-93cb-e0cfaad0e84c" absoluteBounds="3.5, 7.875, 2, 1.7855859374999996">
-      <DataClassMoniker Name="/Darili_LinqDataContext/Event_MultipleTime" />
-      <nestedChildShapes>
-        <elementListCompartment Id="9309b96a-f257-4e44-a5eb-7d0ba0bbb5a7" absoluteBounds="3.515, 8.335, 1.9700000000000002, 1.2255859375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="02bc553e-6762-4ca1-8e1b-815da0c9b292" absoluteBounds="3.5, 3.25, 2, 1.448346354166667">
-      <DataClassMoniker Name="/Darili_LinqDataContext/Lecture" />
-      <nestedChildShapes>
-        <elementListCompartment Id="888b9a56-569a-402c-9e94-51426f5a9dcd" absoluteBounds="3.515, 3.71, 1.9700000000000002, 0.88834635416666674" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="c6666c3f-4d8f-4e2a-a357-4be431c9d877" absoluteBounds="6.75, 3, 2, 1.2797265625">
-      <DataClassMoniker Name="/Darili_LinqDataContext/Host" />
-      <nestedChildShapes>
-        <elementListCompartment Id="a89daaf6-4878-4725-999b-f9725c88cd4c" absoluteBounds="6.765, 3.46, 1.9700000000000002, 0.7197265625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="f34d11f4-75fc-4f1d-9678-0d0f39caa7d4" absoluteBounds="6.375, 0.5, 2, 1.4483463541666668">
       <DataClassMoniker Name="/Darili_LinqDataContext/Event_Album" />
       <nestedChildShapes>
         <elementListCompartment Id="27e131b7-de17-473a-a371-bba707cfb482" absoluteBounds="6.3900000000000006, 0.96, 1.9700000000000002, 0.88834635416666674" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="2b3c11b3-743d-4d60-80b7-3d1cb843b057" absoluteBounds="0.75, 5.875, 2, 3.1345442708333331">
-      <DataClassMoniker Name="/Darili_LinqDataContext/EventMain" />
+    <classShape Id="31367e67-21bf-402f-8d6a-f49922acf48e" absoluteBounds="6.375, 8.375, 2, 1.4483463541666666">
+      <DataClassMoniker Name="/Darili_LinqDataContext/Event_Album1" />
       <nestedChildShapes>
-        <elementListCompartment Id="004fc1c3-f309-4a13-b1c5-7ef8f2b86630" absoluteBounds="0.76500000000000012, 6.335, 1.9700000000000002, 2.574544270833333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="b25e7c02-b082-40c9-ac77-27710a4c31b4" absoluteBounds="6.39, 8.835, 1.9700000000000002, 0.88834635416666674" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.75 : 6.49598307291667); (3.5 : 6.49598307291667)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Event_BM" />
-      <nodes>
-        <classShapeMoniker Id="2b3c11b3-743d-4d60-80b7-3d1cb843b057" />
-        <classShapeMoniker Id="88373f49-e1d8-455f-8fb5-f844c199cd9d" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 8.44227213541667); (3.5 : 8.44227213541667)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Event_MultipleTime" />
-      <nodes>
-        <classShapeMoniker Id="2b3c11b3-743d-4d60-80b7-3d1cb843b057" />
-        <classShapeMoniker Id="ce41c341-6d7b-4b36-93cb-e0cfaad0e84c" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(1.75 : 5.875); (1.75 : 3.97417317708333); (2.19791916666667 : 3.97417317708333 : JumpStart); (2.36458583333333 : 3.97417317708333 : JumpEnd); (3.5 : 3.97417317708333)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Lecture" />
-      <nodes>
-        <classShapeMoniker Id="2b3c11b3-743d-4d60-80b7-3d1cb843b057" />
-        <classShapeMoniker Id="02bc553e-6762-4ca1-8e1b-815da0c9b292" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 7.49598307291667); (7.75 : 7.49598307291667); (7.75 : 4.2797265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Host" />
-      <nodes>
-        <classShapeMoniker Id="2b3c11b3-743d-4d60-80b7-3d1cb843b057" />
-        <classShapeMoniker Id="c6666c3f-4d8f-4e2a-a357-4be431c9d877" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.2812525 : 5.875); (2.2812525 : 1.22417317708333); (6.375 : 1.22417317708333)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <classShape Id="0114613e-bb4e-4b1f-8317-643281a0ce1a" absoluteBounds="6.375, 12.75, 2, 1.6169661458333344">
+      <DataClassMoniker Name="/Darili_LinqDataContext/Event_BM" />
+      <nestedChildShapes>
+        <elementListCompartment Id="07dcd636-f48a-428f-8252-ac88992569fb" absoluteBounds="6.39, 13.21, 1.9700000000000002, 1.0569661458333333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="134aa2ba-5904-44c9-85e6-a5d366a67537" absoluteBounds="6.375, 4.375, 2, 1.2797265625000005">
+      <DataClassMoniker Name="/Darili_LinqDataContext/Event_LectureEx" />
+      <nestedChildShapes>
+        <elementListCompartment Id="46a8acae-1203-40ae-9c98-5ba63cb46b72" absoluteBounds="6.39, 4.835, 1.9700000000000002, 0.7197265625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="aace0249-9358-41a0-89cd-5c305be83c66" absoluteBounds="3.625, 0.75, 2, 3.1345442708333326">
+      <DataClassMoniker Name="/Darili_LinqDataContext/EventMain" />
+      <nestedChildShapes>
+        <elementListCompartment Id="08cdf759-0f3e-4d29-8582-eb3ef7c4d8c4" absoluteBounds="3.64, 1.21, 1.9700000000000002, 2.574544270833333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="8ff847f2-ded8-4d03-95de-b553c83b1aa7" absoluteBounds="6.375, 10.625, 2, 1.4483463541666666">
+      <DataClassMoniker Name="/Darili_LinqDataContext/Lecture" />
+      <nestedChildShapes>
+        <elementListCompartment Id="19255cfe-ce70-4577-9627-15b562e24b2b" absoluteBounds="6.39, 11.085, 1.9700000000000002, 0.88834635416666674" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="39e08789-61fb-444a-a482-272b9455600c" absoluteBounds="6.375, 6.375, 2, 1.2797265625000005">
+      <DataClassMoniker Name="/Darili_LinqDataContext/Host" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5d52b58c-180a-41ad-99eb-595e7e177c29" absoluteBounds="6.39, 6.835, 1.9700000000000002, 0.7197265625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.625 : 1.34917317708333); (6.375 : 1.34917317708333)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Event_Album" />
       <nodes>
-        <classShapeMoniker Id="2b3c11b3-743d-4d60-80b7-3d1cb843b057" />
+        <classShapeMoniker Id="aace0249-9358-41a0-89cd-5c305be83c66" />
         <classShapeMoniker Id="f34d11f4-75fc-4f1d-9678-0d0f39caa7d4" />
       </nodes>
     </associationConnector>
-    <classShape Id="41a45a20-dc30-4103-b5af-4c9d8979a2a2" absoluteBounds="4.25, 2.125, 2, 1.2797265625">
-      <DataClassMoniker Name="/Darili_LinqDataContext/Event_LectureEx" />
-      <nestedChildShapes>
-        <elementListCompartment Id="f0bfff08-812b-4aa2-ba7e-18de28bdd8f7" absoluteBounds="4.265, 2.585, 1.9700000000000002, 0.7197265625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <associationConnector edgePoints="[(1.2187475 : 5.875); (1.2187475 : 2.65625); (2.19791916666667 : 2.65625 : JumpStart); (2.36458583333333 : 2.65625 : JumpEnd); (4.25 : 2.65625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4.625 : 3.88454427083333); (4.625 : 9.09917317708333); (5.07291916666667 : 9.09917317708333 : JumpStart); (5.23958583333333 : 9.09917317708333 : JumpEnd); (5.33854541666667 : 9.09917317708333 : JumpStart); (5.50521208333333 : 9.09917317708333 : JumpEnd); (6.375 : 9.09917317708333)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Event_Album1" />
+      <nodes>
+        <classShapeMoniker Id="aace0249-9358-41a0-89cd-5c305be83c66" />
+        <classShapeMoniker Id="31367e67-21bf-402f-8d6a-f49922acf48e" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.1562525 : 3.88454427083333); (5.1562525 : 13.5584830729167); (6.375 : 13.5584830729167)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Event_BM" />
+      <nodes>
+        <classShapeMoniker Id="aace0249-9358-41a0-89cd-5c305be83c66" />
+        <classShapeMoniker Id="0114613e-bb4e-4b1f-8317-643281a0ce1a" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.0937475 : 3.88454427083333); (4.0937475 : 5.01486328125); (4.27604041666667 : 5.01486328125 : JumpStart); (4.44270708333333 : 5.01486328125 : JumpEnd); (4.54166666666667 : 5.01486328125 : JumpStart); (4.70833333333333 : 5.01486328125 : JumpEnd); (4.80729291666667 : 5.01486328125 : JumpStart); (4.97395958333333 : 5.01486328125 : JumpEnd); (5.07291916666667 : 5.01486328125 : JumpStart); (5.23958583333333 : 5.01486328125 : JumpEnd); (5.33854541666667 : 5.01486328125 : JumpStart); (5.50521208333333 : 5.01486328125 : JumpEnd); (6.375 : 5.01486328125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Event_LectureEx" />
       <nodes>
-        <classShapeMoniker Id="2b3c11b3-743d-4d60-80b7-3d1cb843b057" />
-        <classShapeMoniker Id="41a45a20-dc30-4103-b5af-4c9d8979a2a2" />
+        <classShapeMoniker Id="aace0249-9358-41a0-89cd-5c305be83c66" />
+        <classShapeMoniker Id="134aa2ba-5904-44c9-85e6-a5d366a67537" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.42187875 : 3.88454427083333); (5.42187875 : 11.3491731770833); (6.375 : 11.3491731770833)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Lecture" />
+      <nodes>
+        <classShapeMoniker Id="aace0249-9358-41a0-89cd-5c305be83c66" />
+        <classShapeMoniker Id="8ff847f2-ded8-4d03-95de-b553c83b1aa7" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.89062625 : 3.88454427083333); (4.89062625 : 7.01486328125); (5.07291916666667 : 7.01486328125 : JumpStart); (5.23958583333333 : 7.01486328125 : JumpEnd); (5.33854541666667 : 7.01486328125 : JumpStart); (5.50521208333333 : 7.01486328125 : JumpEnd); (6.375 : 7.01486328125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Host" />
+      <nodes>
+        <classShapeMoniker Id="aace0249-9358-41a0-89cd-5c305be83c66" />
+        <classShapeMoniker Id="39e08789-61fb-444a-a482-272b9455600c" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="29ae503c-8a39-4160-b601-eaf5c9daef22" absoluteBounds="12, 7, 2, 1.7855859375">
+      <DataClassMoniker Name="/Darili_LinqDataContext/Event_MultipleTime" />
+      <nestedChildShapes>
+        <elementListCompartment Id="94838213-62f6-48f1-973f-e54e9ee53096" absoluteBounds="12.015, 7.46, 1.9700000000000002, 1.2255859375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.35937375 : 3.88454427083333); (4.35937375 : 8.01486328125); (4.54166666666667 : 8.01486328125 : JumpStart); (4.70833333333333 : 8.01486328125 : JumpEnd); (5.07291916666667 : 8.01486328125 : JumpStart); (5.23958583333333 : 8.01486328125 : JumpEnd); (5.33854541666667 : 8.01486328125 : JumpStart); (5.50521208333333 : 8.01486328125 : JumpEnd); (12 : 8.01486328125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/Darili_LinqDataContext/EventMain/EventMain_Event_MultipleTime" />
+      <nodes>
+        <classShapeMoniker Id="aace0249-9358-41a0-89cd-5c305be83c66" />
+        <classShapeMoniker Id="29ae503c-8a39-4160-b601-eaf5c9daef22" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>

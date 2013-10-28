@@ -19,7 +19,7 @@ public partial class test_add_poster : System.Web.UI.Page
         try
             {
 			string id = Session["post_id"] != null ? Session["post_id"].ToString() : "1";
-                if (Request.Files.Count > 0 && Darili_User.IsAuthenticated() )
+                if (Request.Files.Count > 0 && Page.User.Identity.Name!="")
                 {
 			
                     PosterDataContext ctx = new PosterDataContext();

@@ -41,7 +41,7 @@ public partial class Event_Data : System.Web.UI.Page
                 else
                 {
                     if (timeoffset == "0" || timeoffset == "1")
-                        events = Event.GetTimeSpan(DateTime.Now.Date+new TimeSpan(int.Parse(timeoffset),0,0,0), DateTime.Now.Date + new TimeSpan(Int32.Parse(timeoffset) + 1, 0, 0, 0), cat, subcat, false, int.Parse(perpage), int.Parse(page));
+                        events = Event.GetTimeSpan(DateTime.Now.Date+new TimeSpan(int.Parse(timeoffset),0,0,0), DateTime.Now.Date + new TimeSpan(Int32.Parse(timeoffset) + 0, 23, 59, 59), cat, subcat, false, int.Parse(perpage), int.Parse(page));
                     if (timeoffset == "2")
                     {
                         int offset1 = int.Parse(Darili_EventManuever.Convert_DayOfWeek(DateTime.Now.DayOfWeek));
@@ -50,7 +50,7 @@ public partial class Event_Data : System.Web.UI.Page
                     if (timeoffset == "3")
                     {
                         int offset1 = int.Parse(Darili_EventManuever.Convert_DayOfWeek(DateTime.Now.DayOfWeek));
-                        events = Event.GetTimeSpan(DateTime.Now.Date + new TimeSpan(-offset1 + 7, 0, 0, 0), DateTime.Now.Date + new TimeSpan(-offset1 + 14, 0, 0, 0), cat, subcat, false, int.Parse(perpage), int.Parse(page));
+                        events = Event.GetTimeSpan(DateTime.Now.Date + new TimeSpan(-offset1 + 6, 23, 59, 59), DateTime.Now.Date + new TimeSpan(-offset1 + 13, 23, 59, 59), cat, subcat, false, int.Parse(perpage), int.Parse(page));
 
                     }
                     if (timeoffset != "0" && timeoffset != "1" && timeoffset != "2" && timeoffset != "3")

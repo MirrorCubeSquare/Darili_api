@@ -17,11 +17,8 @@ namespace Darili_api
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             string NickName = HttpContext.Current.User.Identity.Name;
             var Publisher = ctx.EventMain.Where(P => P.Id == eid).Select(p => p.Publisher).First();
-            var ctx2 = new Event_orgDataContext();
            
-            var OrgNamequery = ctx2.Event_Org.Where(p => p.NickName == NickName).Select(p => p.Org_Name);
-            var orgname = OrgNamequery.ToList();
-            return (Publisher == NickName || orgname.Contains(NickName));
+            return (Publisher == NickName || IsOrgManager(Publisher,NickName));
 
         }
         public Event_RoleControl()
@@ -134,8 +131,10 @@ namespace Darili_api
         {
             Locked = -3,
             Internal = -1,
-            Closed = -2,
+            Closed = -4,
+            InternalClosed=-5,
             PublicViewable = 1,
+            ToSupervise=-2,
             HotEvent = 2,
             FixedTop = 999
 

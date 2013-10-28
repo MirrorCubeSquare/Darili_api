@@ -32,9 +32,9 @@ public partial class Subscribe : System.Web.UI.Page
                         if (!Darili_Subsciption.SubscribeExists(eid, uid))
                         {
                             //var json = JsonConvert.SerializeXNode(Ele);
-
+                            
                             Darili_Subsciption.SubscribeEvent(eid, Jobject);
-                            Response.Write(1);
+                            //Response.Write(1);
                         }
                         else
                         {
@@ -46,9 +46,15 @@ public partial class Subscribe : System.Web.UI.Page
                             try
                             {
                                 ctx.SubmitChanges();
+                                if (!String.IsNullOrEmpty(json))
+                                {
+                                    Darili_Subsciption.SubscribeEvent(eid, Jobject);
+                                    Response.Write(1);
+                                }
                             }
-                            catch (Exception exp)
+                            catch (ArgumentNullException exp)
                             {
+                                Response.Write("字段有留空");
                             }
                         }
                     }

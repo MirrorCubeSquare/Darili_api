@@ -20,7 +20,7 @@ public partial class test_addevent : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //以下为测试用代码
-        if (!Event_RoleControl.AllowAccess(Event_RoleControl.RoleControlLevel.NeedOrganization))
+        if (!Event_RoleControl.AllowAccess(Event_RoleControl.RoleControlLevel.AllAcceptable))
         {
             Response.StatusCode = 403;
             Response.End();
@@ -97,10 +97,10 @@ public partial class test_addevent : System.Web.UI.Page
                     }
                     else
                     {
-                        data.ViewFlag = (short)-1;
+                        data.ViewFlag = (short)-2;
                     }
                 }
-                if (Event_RoleControl.IsOrg(OrgName, Page.User.Identity.Name))
+                if (Event_RoleControl.IsOrgManager(OrgName, Page.User.Identity.Name))
                 {
                     data.Publisher = OrgName;
                 }

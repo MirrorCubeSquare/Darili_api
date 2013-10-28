@@ -142,6 +142,16 @@ public class Darili_Extra
         }
         */
     }
+    public static Tuple<int,int,int>TimeLeft2(Event eve)
+    {
+
+        
+            TimeSpan span = eve.EndTime - DateTime.Now;
+            return new Tuple<int, int, int>(span.Days, span.Hours, span.Minutes);
+        
+        
+
+}
     public static XElement[] GetAlbum(int id, string FatherPath)
     {
         List<FileInfo> result = new List<FileInfo>();

@@ -84,11 +84,19 @@ public class Darili_Subsciption
                             e_toadd.Add(new XAttribute("Name", Parameters.Value));
                             toAdd.sdetail.Add(e_toadd);
                         }
+                        else
+                        {
+                            if(Darili_Subsciption.NeedSubscribe(eid))
+                            {
+                                throw new ArgumentNullException(Parameters.Value, "必填字段未填写");
+                            }
+                        }
 
                     }
                     ctx.Event_Subscription.InsertOnSubmit(toAdd);
                     ctx.SubmitChanges();
-
+                    HttpContext.Current.Response.Clear();
+                   HttpContext.Current.Response.Write(1);
                 }
                 else
                 {

@@ -19,6 +19,7 @@ public partial class ModifyEvent : System.Web.UI.Page
     }
     protected void Page_Load(object sender, EventArgs e)
     {
+        
         //以下为测试用代码
         if (!Page.User.IsInRole("Admin"))
         {
@@ -30,6 +31,7 @@ public partial class ModifyEvent : System.Web.UI.Page
         {
             try
             {
+                
                 //以下为测试用代码
                 string Publisher = Page.User.Identity.Name;
                 Response.AddHeader("Access-Control-Allow-Origin", "*");
@@ -54,6 +56,11 @@ public partial class ModifyEvent : System.Web.UI.Page
                 }
                 JObject obj = JObject.Parse(input);
                 int eid = (int)obj["id"];
+                if (!Event_RoleControl.OwnerOrAdmin(eid))
+                {
+                    Response.StatusCode = 403;
+                    Response.End();
+                }
                 EventMain toModify = ctx.EventMain.Where(p => p.Id == eid).Select(p => p).First();
                 #region 处理基础信息
                
@@ -170,7 +177,8 @@ public partial class ModifyEvent : System.Web.UI.Page
                 #endregion
 
                 #region 处理报名时间
-                ctx.Event_BM.DeleteOnSubmit(toModify.Event_BM);
+               
+                
                 if (obj["PublishTime"] != null)
                 {
                     var event_bm = new Event_BM();

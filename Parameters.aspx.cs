@@ -17,7 +17,7 @@ public partial class Parameters : System.Web.UI.Page
             XElement root = Darili_Extra.ForceArray(new XElement("Root"), true);
             if (sub.root != null)
             {
-                foreach (var elements in sub.root.Elements())
+                foreach (var elements in sub.root.Elements().Reverse())
                 {
                     root.Add(Darili_Extra.ForceArray(elements, false));
                 }

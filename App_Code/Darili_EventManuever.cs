@@ -34,8 +34,16 @@ public class Darili_EventManuever
         {
         Darili_LinqDataContext ctx = new Darili_LinqDataContext();
         var toDel = ctx.EventMain.Where(p => p.Id == eid).First();
-        toDel.ViewFlag = (short)Event_ViewControl.ViewLevel.Closed;
-        ctx.SubmitChanges();
+        if (toDel.ViewFlag == (short)Event_ViewControl.ViewLevel.PublicViewable)
+        {
+            toDel.ViewFlag = (short)Event_ViewControl.ViewLevel.Closed;
+        }
+        else if (toDel.ViewFlag == (short)Event_ViewControl.ViewLevel.Internal)
+        {
+            toDel.ViewFlag = (short)Event_ViewControl.ViewLevel.InternalClosed;
+        }
+
+                ctx.SubmitChanges();
         }
         
     }
@@ -45,8 +53,15 @@ public class Darili_EventManuever
         {
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
             var toDel = ctx.EventMain.Where(p => p.Id == eid).First();
-            toDel.ViewFlag = (short)Event_ViewControl.ViewLevel.PublicViewable;
-            ctx.SubmitChanges();
+            if (toDel.ViewFlag == (short)Event_ViewControl.ViewLevel.Closed)
+            {
+                toDel.ViewFlag = (short)Event_ViewControl.ViewLevel.PublicViewable;
+            }
+            else if (toDel.ViewFlag == (short)Event_ViewControl.ViewLevel.InternalClosed)
+            {
+                toDel.ViewFlag = (short)Event_ViewControl.ViewLevel.Internal;
+            }
+                ctx.SubmitChanges();
         }
     }
     public static Event[] SearchTime(DateTime StartTime, DateTime EndTime, string type, string subtype, bool IsAll, int perpage, int page)
@@ -79,7 +94,7 @@ public class Darili_EventManuever
         predicate2 = predicate2.Or(PredicateStartTime
             ).Or(PredicateEndTime).Or(PredicateInside);
         predicate2 = predicate.And(predicate2);
-        var result = ctx.EventMain.Where(predicate2).Skip(perpage * page).Take(perpage);
+        var result = ctx.EventMain.Where(predicate2).OrderByDescending(p => p.StartTime).ThenByDescending(p => p.PublishTime).Skip(perpage * page).Take(perpage);
         EventMain[] temp = result.ToArray();
 
         foreach (EventMain t in temp)

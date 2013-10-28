@@ -515,19 +515,106 @@ public class Darili_User
                          select entry.User_Id).First();
             if (quary == null)
             {
-                try
+                /*try
                 {
                     return Get_StuId(HttpContext.Current.Request.Cookies["webpy_session_id"]);
                 }
                 catch
                 {
                     return -1;
-                }
+                }*/
+                return -1;
             }
             else return quary;
         }
         catch { return -1; }
 
 
+    }
+    public static string Get_Stuno_Local(string nickname)
+    {
+        var ctx = new Darili_UserDataContext();
+        try
+        {
+
+            var quary = (from entry in ctx.Event_Users
+                         where entry.User_NickName == nickname
+                         select entry.User_Stuno);
+            if (quary.Count() > 0)
+            {
+                var number = quary.First();
+                if (!String.IsNullOrEmpty(number))
+                {
+                    return number;
+
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            else
+            {
+                return null;
+            }
+           
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+
+    }
+    //在登录情况下，获取指定UID的profile 
+    public static Darili_UserDetail Get_Profile_Remote(int uid)
+    {
+        var oCookie = HttpContext.Current.Request.Cookies["webpy_session_id"];
+
+        var id = Get_StuId(oCookie);
+        CookieContainer cookies = new CookieContainer();
+        HttpWebRequest request = WebRequest.Create("http://stu.fudan.edu.cn/user/profile/" + id.ToString()) as HttpWebRequest;
+        request.CookieContainer = cookies;
+        Cookie oC = new Cookie();
+        // Convert between the System.Net.Cookie to a System.Web.HttpCookie...
+        oC.Domain = request.RequestUri.Host;
+        oC.Expires = oCookie.Expires;
+        oC.Name = oCookie.Name;
+        oC.Path = oCookie.Path;
+        oC.Secure = oCookie.Secure;
+        oC.Value = oCookie.Value;
+        request.CookieContainer.Add(oC);
+        request.UserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.4 (KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4";
+        request.Accept = "text/plain,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        request.Timeout = 0x1388;
+        request.Method = "GET";
+        HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+        if (response.StatusCode.Equals(HttpStatusCode.OK))
+        {
+            string content = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("GB2312")).ReadToEnd();
+            Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+            String success;
+            if (values.TryGetValue("success", out success))
+            {
+                if (success.Equals("1"))
+                {
+                    string weibo, major, name, dormitory, grade, gender, birthday, phone;
+                    values.TryGetValue("weibo", out weibo);
+                    values.TryGetValue("major", out major);
+                    values.TryGetValue("name", out name);
+                    values.TryGetValue("dormitory", out dormitory);
+                    values.TryGetValue("phone", out phone);
+                    values.TryGetValue("birthday", out birthday);
+                    values.TryGetValue("gender", out gender);
+                    values.TryGetValue("grade", out grade);
+                    return new Darili_UserDetail(weibo, major, name, dormitory, phone, birthday, grade, gender);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        return null;
     }
 }

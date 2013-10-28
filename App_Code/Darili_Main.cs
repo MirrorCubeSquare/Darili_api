@@ -155,6 +155,7 @@ namespace Darili_api
                 Xml.Add(new XElement("liked", value.liked));
                 Xml.Add(new XElement("subscribed",value.subscribed));
                 var timeleft=Darili_Extra.TimeLeft(value);
+                var timeleft2 = Darili_Extra.TimeLeft2(value);
                 Xml.Add(new XElement("Title", value.Title),
                         new XElement("Subtitle",value.Subtitle),
                         new XElement("Location", value.Location),
@@ -178,6 +179,7 @@ namespace Darili_api
                 {
                     Xml.Add(new XElement("timeleft", new XElement("day", timeleft.Item1), new XElement("hour", timeleft.Item2), new XElement("min", timeleft.Item3)));
                 }
+                Xml.Add(new XElement("timeleft2", new XElement("day", timeleft2.Item1), new XElement("hour", timeleft2.Item2), new XElement("min", timeleft2.Item3)));
                 Xml.Add(MultipleTime);
 
                 return Xml;
@@ -369,8 +371,7 @@ namespace Darili_api
             Event_orgDataContext orgctx = new Event_orgDataContext();
             List<string>list2 =new List<string>();
             list2.Add(people);
-            list2.AddRange(orgctx.Event_MinorOrg.Where(p => p.NickName == people).Select(p => p.Org_Name).ToList());
-            list2.AddRange(orgctx.Event_Org.Where(p => p.NickName == people).Select(p => p.Org_Name).ToList());
+            
             List<int> list3 = new List<int>();
             var predicate =PredicateBuilder.False<EventMain>();
             for (int i = 0; i < list2.Count(); i++)
@@ -382,8 +383,8 @@ namespace Darili_api
             var quary = from entry in ctx.EventMain
                         where list2.Contains(entry.Publisher)
                         select entry;
-            
-            EventMain[] temp = quary.ToArray();
+
+            EventMain[] temp = quary.Skip(perpage * page).Take(perpage).ToArray();
             List<Event> list = new List<Event>();
             foreach (EventMain t in temp)
             {
@@ -452,7 +453,7 @@ namespace Darili_api
             predicate2 = predicate.And(predicate2);
 
             Darili_LinqDataContext ctx = new Darili_LinqDataContext();
-            var query = ctx.EventMain.Where(predicate2).OrderByDescending(p=>p.PublishTime).Select(p => p).Skip(perpage * page).Take(perpage);
+            var query = ctx.EventMain.Where(predicate2).OrderByDescending(p => p.StartTime).ThenByDescending(p => p.PublishTime).Select(p => p).Skip(perpage * page).Take(perpage);
             
             EventMain[] temp = query.ToArray();
             List<Event> list = new List<Event>();

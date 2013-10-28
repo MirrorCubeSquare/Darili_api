@@ -19,7 +19,7 @@ public partial class ViewControl : System.Web.UI.Page
             {
                 Darili_EventManuever.OpenEvent(eid);
             }
-            else if (viewflag == (short)Event_ViewControl.ViewLevel.PublicViewable)
+            else if (viewflag == (short)Event_ViewControl.ViewLevel.PublicViewable||viewflag==(short)Event_ViewControl.ViewLevel.Internal)
             {
                 Darili_EventManuever.CloseEvent(eid);
             }
