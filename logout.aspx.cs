@@ -12,6 +12,7 @@ public partial class logout : System.Web.UI.Page
     {
         Session.Remove("OrgName");
         Session.Remove("IsMinorOrg");
+        Session.Clear();
         FormsAuthentication.SignOut();
         Response.Redirect("http://stu.fudan.edu.cn/user/logout?returnurl=http://stu.fudan.edu.cn/event/main.html");
     }
